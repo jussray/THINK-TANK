@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Think Tank — Where ideas get interviewed</title>
+<style>
+:root{--ink:#14161A;--ink-2:#1C1F25;--paper:#EDEAE2;--paper-dim:#B9B6AD;--brass:#C9A227;--teal:#3F9D89;--rust:#B5462F;--line:#33363C}
+*{box-sizing:border-box}body{margin:0;background:var(--ink);color:var(--paper);font-family:Inter,system-ui,sans-serif}.wrap{max-width:960px;margin:0 auto;padding:0 24px}nav{position:sticky;top:0;background:#14161ae8;border-bottom:1px solid var(--line);z-index:10}.nav{display:flex;justify-content:space-between;align-items:center;padding:16px 24px}.brand{font-family:Georgia,serif;font-size:20px;font-weight:700}.dot{color:var(--brass)}a,button{font:inherit}.btn{display:inline-block;border:1px solid var(--line);border-radius:3px;padding:12px 18px;background:transparent;color:var(--paper);text-decoration:none;cursor:pointer}.btn.primary{background:var(--brass);border-color:var(--brass);color:var(--ink);font-weight:700}.hero{padding:72px 0 48px;border-bottom:1px solid var(--line)}.eyebrow,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--paper-dim)}h1,h2,h3{font-family:Georgia,serif;margin:0}.hero h1{font-size:clamp(38px,6vw,58px);line-height:1.02;max-width:14ch;margin-top:18px}.hero p{max-width:52ch;color:var(--paper-dim);font-size:17px;line-height:1.6}.section{padding:64px 0;border-bottom:1px solid var(--line)}.interview-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:22px}.panel{border:1px solid var(--line);border-radius:6px;background:var(--ink-2);overflow:hidden}.panel-head{padding:12px 16px;border-bottom:1px solid var(--line);font-size:12px;color:var(--paper-dim);display:flex;justify-content:space-between}.panel-body{padding:18px}.field{display:grid;gap:8px;margin-bottom:14px}.field label{font-size:13px;color:var(--paper-dim)}input,textarea{width:100%;background:#101216;border:1px solid var(--line);color:var(--paper);border-radius:4px;padding:12px;font:inherit}textarea{min-height:110px;resize:vertical}.transcript{display:grid;gap:12px;max-height:420px;overflow:auto;padding-right:4px}.msg{border-left:2px solid var(--line);padding:8px 10px;background:#17191e}.msg .role{font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}.msg.interviewer{border-color:var(--teal)}.msg.interviewer .role{color:var(--teal)}.msg.critic{border-color:var(--rust)}.msg.critic .role{color:#D97B5F}.msg.scorecard{border-color:var(--brass)}.msg.scorecard .role{color:var(--brass)}.msg.synthesizer{border-color:#8B9DC3}.msg.synthesizer .role{color:#8B9DC3}.msg.matchmaker{border-color:#C38BB0}.msg.matchmaker .role{color:#C38BB0}.stack{display:grid;gap:14px}.card{border:1px solid var(--line);border-radius:6px;padding:16px;background:#17191e}.card h3{font-size:18px;margin-bottom:8px}.muted{color:var(--paper-dim)}.score{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.8}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.status{font-size:12px;color:var(--paper-dim)}.hidden{display:none}.version{font-size:12px;padding:8px 0;border-top:1px solid var(--line)}.version:first-child{border-top:0}.roster{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:24px}.rolecard{border:1px solid var(--line);padding:16px;border-radius:6px}.rolecard b{display:block;margin-bottom:6px}.footer{padding:30px 24px;color:var(--paper-dim);font-size:12px}@media(max-width:780px){.interview-grid{grid-template-columns:1fr}.hero{padding-top:54px}}
+</style>
+</head>
+<body>
+<nav><div class="wrap nav"><div class="brand">Think Tank<span class="dot">.</span></div><a class="btn primary" href="#interview">Start free</a></div></nav>
+<header class="hero"><div class="wrap"><div class="eyebrow">Idea validation, run like an interview</div><h1>Your idea sits down. Five agents ask the hard questions.</h1><p>Think Tank turns a founder thought into a durable Idea Record, challenges it, scores it against a fixed rubric, and keeps every pivot on the record.</p><a class="btn primary" href="#interview">Start your first interview →</a></div></header>
+<section class="section" id="interview"><div class="wrap">
+<div class="eyebrow">Live V0</div><h2 style="font-size:34px;margin:12px 0 28px">One idea. One shared record.</h2>
+<div class="interview-grid">
+<div class="panel">
+<div class="panel-head"><span>INTERVIEW SESSION</span><span id="sessionState">READY</span></div>
+<div class="panel-body">
+<div id="setup">
+<div class="field"><label for="ideaInput">What are you thinking about building?</label><textarea id="ideaInput" placeholder="A subscription box for..." data-testid="idea-input"></textarea></div>
+<button class="btn primary" id="startBtn" data-testid="start-interview">Start interview</button>
+</div>
+<div id="conversation" class="hidden">
+<div class="transcript" id="transcript" data-testid="transcript"></div>
+<div class="field" style="margin-top:16px"><label for="answerInput">Your answer</label><textarea id="answerInput" data-testid="answer-input"></textarea></div>
+<div class="actions"><button class="btn primary" id="answerBtn" data-testid="submit-answer">Answer</button><button class="btn" id="resetBtn">New idea</button></div>
+</div>
+</div></div>
+<aside class="stack">
+<div class="card"><h3>Idea Record</h3><div id="recordSummary" class="muted" data-testid="idea-record">No active record yet.</div></div>
+<div class="card"><h3>Scorecard</h3><div id="scorecard" class="score muted" data-testid="scorecard">Complete the interview to score the idea.</div></div>
+<div class="card"><h3>Versions</h3><div id="versions" class="muted" data-testid="versions">No versions saved.</div></div>
+</aside>
+</div>
+<div class="roster">
+<div class="rolecard"><b>01 Interviewer</b><span class="muted">Collects the founder's claims.</span></div>
+<div class="rolecard"><b>02 Critic</b><span class="muted">Challenges weak assumptions.</span></div>
+<div class="rolecard"><b>03 Scorecard</b><span class="muted">Scores a fixed rubric.</span></div>
+<div class="rolecard"><b>04 Synthesizer</b><span class="muted">Turns answers into the record.</span></div>
+<div class="rolecard"><b>05 Matchmaker</b><span class="muted">Names a strategic pattern to test.</span></div>
+</div>
+</div></section>
+<footer class="footer"><div class="wrap">Think Tank · V0 interview loop · local-first persistence</div></footer>
+<script>
+const STORAGE_KEY='think-tank.idea-record.v0';
+const QUESTIONS=[
+  'Who is paying for this, specifically, and what painful job are they hiring it to do?',
+  'What do they use today instead of you?',
+  'What is the smallest reason they would switch this month?',
+  'What would make this hard to copy if it starts working?'
+];
+const $=id=>document.getElementById(id);
+let record=null;
+let questionIndex=0;
+
+function now(){return new Date().toISOString()}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(record));renderRecord()}
+function load(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')}catch{return null}}
+function addMessage(role,text){const node=document.createElement('div');node.className=`msg ${role.toLowerCase()}`;node.innerHTML=`<div class="role">${role}</div><div></div>`;node.lastElementChild.textContent=text;$('transcript').appendChild(node);$('transcript').scrollTop=$('transcript').scrollHeight}
+function rubric(r){
+  const answers=r.answers.map(a=>a.answer.trim());
+  const specificity=answers.filter(a=>a.length>=35).length;
+  const market=Math.min(10,3+specificity*2);
+  const differentiation=Math.min(10,2+(answers[2]?.length>=45?3:1)+(answers[3]?.length>=45?3:1));
+  const timing=Math.min(10,3+(answers[0]?.length>=45?2:0)+(answers[2]?.length>=35?2:0));
+  return {market,differentiation,timing,total:Math.round((market+differentiation+timing)/3)};
+}
+function critic(r){
+  const shortest=[...r.answers].sort((a,b)=>a.answer.length-b.answer.length)[0];
+  return shortest&&shortest.answer.length<35?'Your weakest evidence is still too general. Name a concrete behavior, buyer, or switching trigger before treating this as validated.':'The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.';
+}
+function synthesize(r){
+  const a=r.answers;
+  return {customer:a[0]?.answer||'',alternative:a[1]?.answer||'',wedge:a[2]?.answer||'',moat:a[3]?.answer||''};
+}
+function matchPattern(r){const text=r.idea.toLowerCase();if(text.includes('subscription'))return'Retention-first business: test repeat value before acquisition scale.';if(text.includes('marketplace'))return'Two-sided cold start: prove one constrained side first.';return'Founder-led wedge: test the narrowest painful use case before broadening.'}
+function finish(){
+  record.scorecard=rubric(record);record.critique=critic(record);record.modules=synthesize(record);record.pattern=matchPattern(record);record.status='complete';record.updatedAt=now();
+  const version={version:record.versions.length+1,createdAt:now(),idea:record.idea,scorecard:record.scorecard,modules:record.modules};record.versions.push(version);save();
+  addMessage('CRITIC',record.critique);addMessage('SCORECARD',`Market ${record.scorecard.market}/10 · Differentiation ${record.scorecard.differentiation}/10 · Timing ${record.scorecard.timing}/10`);addMessage('SYNTHESIZER',`Record built: customer, current alternative, wedge, and moat are now captured.`);addMessage('MATCHMAKER',record.pattern);
+  $('answerInput').disabled=true;$('answerBtn').disabled=true;$('sessionState').textContent='COMPLETE';
+}
+function ask(){addMessage('INTERVIEWER',QUESTIONS[questionIndex]);$('sessionState').textContent=`QUESTION ${questionIndex+1}/${QUESTIONS.length}`}
+function start(){const idea=$('ideaInput').value.trim();if(!idea)return;$('setup').classList.add('hidden');$('conversation').classList.remove('hidden');$('transcript').innerHTML='';record={id:crypto.randomUUID(),idea,status:'interviewing',createdAt:now(),updatedAt:now(),answers:[],modules:{},scorecard:null,critique:'',pattern:'',versions:load()?.versions||[]};questionIndex=0;save();ask()}
+function answer(){const value=$('answerInput').value.trim();if(!value||!record)return;record.answers.push({question:QUESTIONS[questionIndex],answer:value,createdAt:now()});record.updatedAt=now();save();$('answerInput').value='';questionIndex++;if(questionIndex<QUESTIONS.length)ask();else finish()}
+function reset(){localStorage.removeItem(STORAGE_KEY);record=null;questionIndex=0;$('conversation').classList.add('hidden');$('setup').classList.remove('hidden');$('ideaInput').value='';$('answerInput').value='';$('answerInput').disabled=false;$('answerBtn').disabled=false;$('transcript').innerHTML='';$('sessionState').textContent='READY';renderRecord()}
+function renderRecord(){
+  const r=record||load();if(!r){$('recordSummary').textContent='No active record yet.';$('scorecard').textContent='Complete the interview to score the idea.';$('versions').textContent='No versions saved.';return}
+  $('recordSummary').innerHTML=`<strong>${escapeHtml(r.idea)}</strong><br><span class="muted">${r.answers?.length||0}/${QUESTIONS.length} answers · ${r.status}</span>`;
+  $('scorecard').textContent=r.scorecard?`Market ${r.scorecard.market}/10\nDifferentiation ${r.scorecard.differentiation}/10\nTiming ${r.scorecard.timing}/10\nOverall ${r.scorecard.total}/10`:'Awaiting completed interview.';
+  const versions=r.versions||[];$('versions').innerHTML=versions.length?versions.slice().reverse().map(v=>`<div class="version">v${v.version} · overall ${v.scorecard.total}/10</div>`).join(''):'No versions saved.';
+}
+function escapeHtml(value){const div=document.createElement('div');div.textContent=value;return div.innerHTML}
+$('startBtn').addEventListener('click',start);$('answerBtn').addEventListener('click',answer);$('resetBtn').addEventListener('click',reset);renderRecord();
+</script>
+</body>
+</html>
