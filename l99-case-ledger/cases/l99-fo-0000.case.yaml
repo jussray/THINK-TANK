@@ -1,0 +1,92 @@
+case_id: l99-fo-0000
+status: verified_unanchored_receipt
+governance_mode: manual_governance
+
+selection:
+  candidate_attempt: 2
+  repository: jussray/jussray
+  selector_mode: chief-compatible-advisory
+  canonical_chief_runtime_receipt: unavailable
+
+observation:
+  authorized_subject_sha: 5cb21686fadd1dddb17aa81be29de4e180b67970
+  defect_reproduced: true
+  defect: "Public profile portfolio identity was stale relative to the authoritative StoryEngine repository, which now identifies itself as L99."
+  cause_hypothesis: "The profile map predated the current L99 identity and was not re-observed afterward."
+  alternative_explanations: []
+
+authorization:
+  authorized_by: Juss
+  scope_classification: trivial
+  maximum_files_changed: 1
+  maximum_lines_changed: 40
+  mutation_repositories:
+    - jussray/jussray
+
+fix:
+  procedure: goalfix
+  first_mutating_commit: 0fb40f87621550dd198cf76461e9731caa30abea
+  first_mutating_commit_parent: 5cb21686fadd1dddb17aa81be29de4e180b67970
+  changed_paths:
+    - README.md
+  additions: 2
+  deletions: 1
+
+execution_friction:
+  unexpected_noop_commits:
+    - 491bba61797be058632d7c899ce4416b3e075b9c
+    - 07ee31f9486293530ea28318927082264684b58c
+  noop_commit_effect: "Both later commits contain zero additions, zero deletions, and no changed files."
+  failed_ref_rewind_attempt: true
+  failed_ref_rewind_effect: "GitHub rejected the non-fast-forward ref update; repository content was not rewound."
+
+verification:
+  current_main_sha: 07ee31f9486293530ea28318927082264684b58c
+  current_readme_blob_sha: 5b2e1570b6cb8f177dcd371627af6bbc9cc75394
+  authorized_parent_chain_verified: true
+  files_changed_from_authorized_head: 1
+  net_content_changes: 3
+  native_ci: not_present
+  playwright: not_applicable_markdown_only
+  storyengine_link_resolves: true
+  storyengine_authoritative_identity: L99
+  exact_head_content_verified: true
+
+submission:
+  mode: owned_repo_direct_main_commit
+  delivered: true
+  release_or_deploy: not_applicable
+
+measurement:
+  delivery:
+    state: verified
+  quality:
+    state: verified
+  friction:
+    state: negative_process_signal
+    evidence: "Two accidental no-op commits were created during verification."
+  ecosystem:
+    baseline:
+      profile_repo_stars: 0
+      profile_repo_forks: 0
+      profile_repo_watchers: 0
+    causal_claim_allowed: false
+
+learning:
+  decision: "Keep content fix; preserve process friction in the receipt instead of rewriting history."
+  reusable_patterns:
+    - "SELECT eligibility is provisional until repository-local policy is read."
+    - "Authorization must bind to SHA-bound observation, not narrative."
+    - "A successful repair can still expose a process-control failure."
+    - "After FIX, verification mode must fail closed against mutation-capable actions."
+  limitations:
+    - "No canonical Chief runtime selection receipt exists for Case 0."
+    - "FCR governance was manual, not automated."
+    - "Receipt is not stored in an authorized Git repository."
+    - "The SHA-256 below is locally computed and not externally anchored."
+
+receipt:
+  canonical_json_sha256: 2bc63cc9127d09576dbcc80bbd0bd65afa338288da56a8e307c31e9f30d0a0b1
+  hash_status: computed_local_unanchored
+  immutable_hash: null
+  storage_status: local_artifact_only

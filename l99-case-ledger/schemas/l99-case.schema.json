@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authorization": {
+      "type": "object"
+    },
+    "case_id": {
+      "const": "l99-fo-0000",
+      "type": "string"
+    },
+    "execution_friction": {
+      "type": "object"
+    },
+    "fix": {
+      "type": "object"
+    },
+    "governance_mode": {
+      "type": "string"
+    },
+    "learning": {
+      "type": "object"
+    },
+    "measurement": {
+      "type": "object"
+    },
+    "observation": {
+      "type": "object"
+    },
+    "selection": {
+      "type": "object"
+    },
+    "status": {
+      "type": "string"
+    },
+    "submission": {
+      "type": "object"
+    },
+    "verification": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "case_id",
+    "status",
+    "governance_mode",
+    "selection",
+    "observation",
+    "authorization",
+    "fix",
+    "execution_friction",
+    "verification",
+    "submission",
+    "measurement",
+    "learning"
+  ],
+  "title": "L99 Field Ops Case v0",
+  "type": "object"
+}
