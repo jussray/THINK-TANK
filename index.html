@@ -34,12 +34,12 @@
 <div class="panel-head"><span>INTERVIEW SESSION</span><span id="sessionState">READY</span></div>
 <div class="panel-body">
 <div id="setup">
-<div class="field"><label for="ideaInput">What are you thinking about building?</label><textarea id="ideaInput" placeholder="A subscription box for..." data-testid="idea-input"></textarea></div>
+<div class="field"><label for="ideaInput">What are you thinking about building?</label><textarea id="ideaInput" maxlength="4000" placeholder="A subscription box for..." data-testid="idea-input"></textarea></div>
 <button class="btn primary" id="startBtn" data-testid="start-interview">Start interview</button>
 </div>
 <div id="conversation" class="hidden">
 <div class="transcript" id="transcript" data-testid="transcript"></div>
-<div class="field" style="margin-top:16px"><label for="answerInput">Your answer</label><textarea id="answerInput" data-testid="answer-input"></textarea></div>
+<div class="field" style="margin-top:16px"><label for="answerInput">Your answer</label><textarea id="answerInput" maxlength="8000" data-testid="answer-input"></textarea></div>
 <div class="actions"><button class="btn primary" id="answerBtn" data-testid="submit-answer">Answer</button><button class="btn" id="resetBtn" data-testid="new-idea">New idea</button></div>
 </div>
 </div></div>
@@ -71,6 +71,10 @@
 <script>
 const STORAGE_KEY='think-tank.idea-record.v0';
 const EXPORT_FORMAT='think-tank-export-v1';
+const MAX_IMPORT_BYTES=1_000_000;
+const MAX_IDEA_CHARS=4000;
+const MAX_ANSWER_CHARS=8000;
+const MAX_VERSIONS=200;
 const QUESTIONS=[
   'Who is paying for this, specifically, and what painful job are they hiring it to do?',
   'What do they use today instead of you?',
@@ -80,103 +84,26 @@ const QUESTIONS=[
 const $=id=>document.getElementById(id);
 let record=null;
 let questionIndex=0;
-
 function now(){return new Date().toISOString()}
 function setPortabilityStatus(message){$('portabilityStatus').textContent=message}
 function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(record));renderRecord()}
 function load(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')}catch{return null}}
 function addMessage(role,text){const node=document.createElement('div');node.className=`msg ${role.toLowerCase()}`;const roleNode=document.createElement('div');roleNode.className='role';roleNode.textContent=role;const textNode=document.createElement('div');textNode.textContent=text;node.append(roleNode,textNode);$('transcript').appendChild(node);$('transcript').scrollTop=$('transcript').scrollHeight}
-function rubric(r){
-  const answers=r.answers.map(a=>a.answer.trim());
-  const specificity=answers.filter(a=>a.length>=35).length;
-  const market=Math.min(10,3+specificity*2);
-  const differentiation=Math.min(10,2+(answers[2]?.length>=45?3:1)+(answers[3]?.length>=45?3:1));
-  const timing=Math.min(10,3+(answers[0]?.length>=45?2:0)+(answers[2]?.length>=35?2:0));
-  return {market,differentiation,timing,total:Math.round((market+differentiation+timing)/3)};
-}
-function critic(r){
-  const shortest=[...r.answers].sort((a,b)=>a.answer.length-b.answer.length)[0];
-  return shortest&&shortest.answer.length<35?'Your weakest evidence is still too general. Name a concrete behavior, buyer, or switching trigger before treating this as validated.':'The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.';
-}
-function synthesize(r){
-  const a=r.answers;
-  return {customer:a[0]?.answer||'',alternative:a[1]?.answer||'',wedge:a[2]?.answer||'',moat:a[3]?.answer||''};
-}
+function rubric(r){const answers=r.answers.map(a=>a.answer.trim());const specificity=answers.filter(a=>a.length>=35).length;const market=Math.min(10,3+specificity*2);const differentiation=Math.min(10,2+(answers[2]?.length>=45?3:1)+(answers[3]?.length>=45?3:1));const timing=Math.min(10,3+(answers[0]?.length>=45?2:0)+(answers[2]?.length>=35?2:0));return {market,differentiation,timing,total:Math.round((market+differentiation+timing)/3)}}
+function critic(r){const shortest=[...r.answers].sort((a,b)=>a.answer.length-b.answer.length)[0];return shortest&&shortest.answer.length<35?'Your weakest evidence is still too general. Name a concrete behavior, buyer, or switching trigger before treating this as validated.':'The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.'}
+function synthesize(r){const a=r.answers;return {customer:a[0]?.answer||'',alternative:a[1]?.answer||'',wedge:a[2]?.answer||'',moat:a[3]?.answer||''}}
 function matchPattern(r){const text=r.idea.toLowerCase();if(text.includes('subscription'))return'Retention-first business: test repeat value before acquisition scale.';if(text.includes('marketplace'))return'Two-sided cold start: prove one constrained side first.';return'Founder-led wedge: test the narrowest painful use case before broadening.'}
-function finish(){
-  record.scorecard=rubric(record);record.critique=critic(record);record.modules=synthesize(record);record.pattern=matchPattern(record);record.status='complete';record.updatedAt=now();
-  const version={version:record.versions.length+1,createdAt:now(),idea:record.idea,scorecard:record.scorecard,modules:record.modules};record.versions.push(version);save();
-  addMessage('CRITIC',record.critique);addMessage('SCORECARD',`Market ${record.scorecard.market}/10 · Differentiation ${record.scorecard.differentiation}/10 · Timing ${record.scorecard.timing}/10`);addMessage('SYNTHESIZER','Record built: customer, current alternative, wedge, and moat are now captured.');addMessage('MATCHMAKER',record.pattern);
-  $('answerInput').disabled=true;$('answerBtn').disabled=true;$('sessionState').textContent='COMPLETE';
-}
+function finish(){record.scorecard=rubric(record);record.critique=critic(record);record.modules=synthesize(record);record.pattern=matchPattern(record);record.status='complete';record.updatedAt=now();const version={version:record.versions.length+1,createdAt:now(),idea:record.idea,scorecard:record.scorecard,modules:record.modules};record.versions.push(version);save();addMessage('CRITIC',record.critique);addMessage('SCORECARD',`Market ${record.scorecard.market}/10 · Differentiation ${record.scorecard.differentiation}/10 · Timing ${record.scorecard.timing}/10`);addMessage('SYNTHESIZER','Record built: customer, current alternative, wedge, and moat are now captured.');addMessage('MATCHMAKER',record.pattern);$('answerInput').disabled=true;$('answerBtn').disabled=true;$('sessionState').textContent='COMPLETE'}
 function ask(){addMessage('INTERVIEWER',QUESTIONS[questionIndex]);$('sessionState').textContent=`QUESTION ${questionIndex+1}/${QUESTIONS.length}`}
 function start(){const idea=$('ideaInput').value.trim();if(!idea)return;$('setup').classList.add('hidden');$('conversation').classList.remove('hidden');$('transcript').textContent='';record={id:crypto.randomUUID(),idea,status:'interviewing',createdAt:now(),updatedAt:now(),answers:[],modules:{},scorecard:null,critique:'',pattern:'',versions:load()?.versions||[]};questionIndex=0;save();ask()}
 function answer(){const value=$('answerInput').value.trim();if(!value||!record)return;record.answers.push({question:QUESTIONS[questionIndex],answer:value,createdAt:now()});record.updatedAt=now();save();$('answerInput').value='';questionIndex++;if(questionIndex<QUESTIONS.length)ask();else finish()}
 function reset(){localStorage.removeItem(STORAGE_KEY);record=null;questionIndex=0;$('conversation').classList.add('hidden');$('setup').classList.remove('hidden');$('ideaInput').value='';$('answerInput').value='';$('answerInput').disabled=false;$('answerBtn').disabled=false;$('transcript').textContent='';$('sessionState').textContent='READY';setPortabilityStatus('Ready.');renderRecord()}
 function appendText(parent,tag,text,className){const node=document.createElement(tag);if(className)node.className=className;node.textContent=text;parent.appendChild(node);return node}
-function renderRecord(){
-  const r=record||load();
-  const summary=$('recordSummary');
-  const score=$('scorecard');
-  const versionsNode=$('versions');
-  if(!r){summary.textContent='No active record yet.';score.textContent='Complete the interview to score the idea.';versionsNode.textContent='No versions saved.';return}
-  summary.textContent='';
-  appendText(summary,'strong',r.idea);
-  summary.appendChild(document.createElement('br'));
-  appendText(summary,'span',`${r.answers?.length||0}/${QUESTIONS.length} answers · ${r.status}`,'muted');
-  score.textContent=r.scorecard?`Market ${r.scorecard.market}/10\nDifferentiation ${r.scorecard.differentiation}/10\nTiming ${r.scorecard.timing}/10\nOverall ${r.scorecard.total}/10`:'Awaiting completed interview.';
-  const versions=Array.isArray(r.versions)?r.versions:[];
-  versionsNode.textContent='';
-  if(!versions.length){versionsNode.textContent='No versions saved.';return}
-  [...versions].reverse().forEach(v=>appendText(versionsNode,'div',`v${v.version} · overall ${v.scorecard?.total ?? 'n/a'}/10`,'version'));
-}
-function validateImportedRecord(candidate){
-  if(!candidate||typeof candidate!=='object')throw new Error('Missing Idea Record.');
-  if(typeof candidate.id!=='string'||!candidate.id)throw new Error('Idea Record id is invalid.');
-  if(typeof candidate.idea!=='string'||!candidate.idea.trim())throw new Error('Idea text is invalid.');
-  if(!Array.isArray(candidate.answers)||candidate.answers.length>QUESTIONS.length)throw new Error('Answer set is invalid.');
-  for(const entry of candidate.answers){if(!entry||typeof entry.question!=='string'||typeof entry.answer!=='string')throw new Error('Answer entry is invalid.')}
-  if(!Array.isArray(candidate.versions))throw new Error('Version history is invalid.');
-  if(!['interviewing','complete'].includes(candidate.status))throw new Error('Idea Record status is invalid.');
-  return JSON.parse(JSON.stringify(candidate));
-}
-function exportRecord(){
-  const current=record||load();
-  if(!current){setPortabilityStatus('Nothing to export yet. Complete or start an interview first.');return}
-  const payload={format:EXPORT_FORMAT,exportedAt:now(),record:current};
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const link=document.createElement('a');
-  link.href=url;
-  link.download=`think-tank-${current.id}.json`;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
-  setPortabilityStatus('Portable Idea Record exported.');
-}
-async function importRecordFile(file){
-  if(!file)return;
-  try{
-    const payload=JSON.parse(await file.text());
-    if(payload?.format!==EXPORT_FORMAT)throw new Error('Unsupported export format.');
-    const imported=validateImportedRecord(payload.record);
-    record=imported;
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(imported));
-    renderRecord();
-    setPortabilityStatus(`Imported Idea Record ${imported.id}.`);
-  }catch(error){
-    setPortabilityStatus(`Import refused: ${error instanceof Error?error.message:'invalid file'}`);
-  }finally{
-    $('importInput').value='';
-  }
-}
-$('startBtn').addEventListener('click',start);
-$('answerBtn').addEventListener('click',answer);
-$('resetBtn').addEventListener('click',reset);
-$('exportBtn').addEventListener('click',exportRecord);
-$('importInput').addEventListener('change',event=>importRecordFile(event.target.files?.[0]));
-renderRecord();
+function renderRecord(){const r=record||load();const summary=$('recordSummary');const score=$('scorecard');const versionsNode=$('versions');if(!r){summary.textContent='No active record yet.';score.textContent='Complete the interview to score the idea.';versionsNode.textContent='No versions saved.';return}summary.textContent='';appendText(summary,'strong',r.idea);summary.appendChild(document.createElement('br'));appendText(summary,'span',`${r.answers?.length||0}/${QUESTIONS.length} answers · ${r.status}`,'muted');score.textContent=r.scorecard?`Market ${r.scorecard.market}/10\nDifferentiation ${r.scorecard.differentiation}/10\nTiming ${r.scorecard.timing}/10\nOverall ${r.scorecard.total}/10`:'Awaiting completed interview.';const versions=Array.isArray(r.versions)?r.versions:[];versionsNode.textContent='';if(!versions.length){versionsNode.textContent='No versions saved.';return}[...versions].reverse().forEach(v=>appendText(versionsNode,'div',`v${v.version} · overall ${v.scorecard?.total ?? 'n/a'}/10`,'version'))}
+function validateImportedRecord(candidate){if(!candidate||typeof candidate!=='object')throw new Error('Missing Idea Record.');if(typeof candidate.id!=='string'||!candidate.id)throw new Error('Idea Record id is invalid.');if(typeof candidate.idea!=='string'||!candidate.idea.trim()||candidate.idea.length>MAX_IDEA_CHARS)throw new Error('Idea text is invalid.');if(!Array.isArray(candidate.answers)||candidate.answers.length>QUESTIONS.length)throw new Error('Answer set is invalid.');for(const entry of candidate.answers){if(!entry||typeof entry.question!=='string'||typeof entry.answer!=='string'||entry.question.length>500||entry.answer.length>MAX_ANSWER_CHARS)throw new Error('Answer entry is invalid.')}if(!Array.isArray(candidate.versions)||candidate.versions.length>MAX_VERSIONS)throw new Error('Version history is invalid.');if(!['interviewing','complete'].includes(candidate.status))throw new Error('Idea Record status is invalid.');return JSON.parse(JSON.stringify(candidate))}
+function exportRecord(){const current=record||load();if(!current){setPortabilityStatus('Nothing to export yet. Complete or start an interview first.');return}const payload={format:EXPORT_FORMAT,exportedAt:now(),record:current};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=`think-tank-${current.id}.json`;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);setPortabilityStatus('Portable Idea Record exported.')}
+async function importRecordFile(file){if(!file)return;try{if(file.size>MAX_IMPORT_BYTES)throw new Error('File is too large.');const payload=JSON.parse(await file.text());if(payload?.format!==EXPORT_FORMAT)throw new Error('Unsupported export format.');const imported=validateImportedRecord(payload.record);record=imported;localStorage.setItem(STORAGE_KEY,JSON.stringify(imported));renderRecord();setPortabilityStatus(`Imported Idea Record ${imported.id}.`)}catch(error){setPortabilityStatus(`Import refused: ${error instanceof Error?error.message:'invalid file'}`)}finally{$('importInput').value=''}}
+$('startBtn').addEventListener('click',start);$('answerBtn').addEventListener('click',answer);$('resetBtn').addEventListener('click',reset);$('exportBtn').addEventListener('click',exportRecord);$('importInput').addEventListener('change',event=>importRecordFile(event.target.files?.[0]));renderRecord();
 </script>
 </body>
 </html>

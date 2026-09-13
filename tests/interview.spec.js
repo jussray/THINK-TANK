@@ -84,3 +84,16 @@ test('mobile interview surface has no horizontal overflow', async ({ page }) => 
   await expect(page.getByTestId('idea-input')).toBeVisible();
   await expect(page.getByTestId('export-record')).toBeVisible();
 });
+
+test('import refuses oversized files before parsing them', async ({ page }) => {
+  await page.goto('/');
+
+  await page.getByTestId('import-record').setInputFiles({
+    name: 'too-large.json',
+    mimeType: 'application/json',
+    buffer: Buffer.alloc(1_000_001, 32)
+  });
+
+  await expect(page.getByTestId('portability-status')).toContainText('File is too large');
+  await expect(page.getByTestId('idea-record')).toContainText('No active record');
+});
