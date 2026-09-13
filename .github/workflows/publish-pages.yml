@@ -1,0 +1,82 @@
+name: Publish public runtime
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_head_sha:
+        description: Exact current main SHA approved for public publication
+        required: true
+        type: string
+      publication_approval_id:
+        description: Auditable founder approval reference
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: think-tank-pages
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Bind publication to exact main and approval
+        shell: bash
+        env:
+          EXPECTED_HEAD_SHA: ${{ inputs.expected_head_sha }}
+          PUBLICATION_APPROVAL_ID: ${{ inputs.publication_approval_id }}
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test -n "$PUBLICATION_APPROVAL_ID"
+          if [[ ! "$PUBLICATION_APPROVAL_ID" =~ ^[A-Za-z0-9._:-]{8,200}$ ]]; then
+            echo "publication_approval_id must be an auditable 8-200 character reference" >&2
+            exit 1
+          fi
+          if [[ "$EXPECTED_HEAD_SHA" != "$actual" ]]; then
+            echo "approved SHA $EXPECTED_HEAD_SHA is stale; current main is $actual" >&2
+            exit 1
+          fi
+          echo "Exact publication subject verified: $actual"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+
+  package:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Build static publication artifact
+        run: |
+          mkdir -p _site
+          cp index.html _site/index.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: package
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy exact verified artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
