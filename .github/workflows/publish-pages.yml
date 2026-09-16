@@ -64,8 +64,13 @@ jobs:
           ref: main
       - name: Build static publication artifact
         run: |
+          set -euo pipefail
           mkdir -p _site
           cp index.html _site/index.html
+          cp robots.txt _site/robots.txt
+          cp crawlers.json _site/crawlers.json
+          grep -q '^User-agent: GPTBot$' _site/robots.txt
+          grep -q '"model_training": "deny"' _site/crawlers.json
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
