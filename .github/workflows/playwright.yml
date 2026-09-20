@@ -25,6 +25,8 @@ jobs:
         run: npm run test:e2e
       - name: Build inspected static artifact
         run: npm run build:static
+      - name: Offline packaged file sovereignty Playwright
+        run: npm run test:e2e:file
       - name: Packaged runtime Playwright
         run: npm run test:e2e:artifact
       - if: failure()
