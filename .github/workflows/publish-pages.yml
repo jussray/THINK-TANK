@@ -56,7 +56,12 @@ jobs:
       - run: npm run check:domain-purity
       - run: npm run test:unit
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+      - name: Source runtime Playwright
+        run: npm run test:e2e
+      - name: Build inspected static artifact
+        run: npm run build:static
+      - name: Packaged runtime Playwright
+        run: npm run test:e2e:artifact
 
   package:
     needs: verify
@@ -65,23 +70,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-      - name: Build static publication artifact
-        run: |
-          set -euo pipefail
-          mkdir -p _site/app/stores _site/app/domain
-          cp index.html _site/index.html
-          cp app/stores/*.js _site/app/stores/
-          cp app/domain/*.js _site/app/domain/
-          test -f _site/index.html
-          test -f _site/app/stores/idea-store.js
-          test -f _site/app/stores/local-idea-store.js
-          test -f _site/app/stores/memory-idea-store.js
-          test -f _site/app/domain/deterministic-engine.js
-          if find _site -type f \( -name '.env' -o -name '.env.*' -o -name '*.pem' -o -name '*.key' -o -name '*.p12' -o -name '*.pfx' \) | grep -q .; then
-            echo "Refusing publication artifact containing sensitive file types" >&2
-            exit 1
-          fi
-          test ! -e _site/.git
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Rebuild inspected publication artifact from verified main
+        run: npm run build:static
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
