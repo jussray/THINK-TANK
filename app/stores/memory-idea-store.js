@@ -4,11 +4,13 @@
   class MemoryIdeaStore extends root.ThinkTankStores.IdeaStore {
     constructor(initialRecord = null) {
       super();
-      this.currentRecord = initialRecord == null ? null : structuredClone(initialRecord);
+      this.currentRecord = initialRecord == null
+        ? null
+        : root.ThinkTankContracts.normalizeIdeaRecordV1(initialRecord);
     }
 
     async saveCurrent(record) {
-      this.currentRecord = structuredClone(record);
+      this.currentRecord = root.ThinkTankContracts.normalizeIdeaRecordV1(record);
       return structuredClone(this.currentRecord);
     }
 
@@ -17,7 +19,8 @@
     }
 
     async loadCurrent() {
-      return this.currentRecord == null ? null : structuredClone(this.currentRecord);
+      if (this.currentRecord == null) return null;
+      return structuredClone(root.ThinkTankContracts.validateIdeaRecordV1(this.currentRecord));
     }
   }
 

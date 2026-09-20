@@ -3,7 +3,8 @@ import { spawnSync } from 'node:child_process';
 
 const allowed = new Set([
   'app/stores/local-idea-store.js',
-  'tests/stores/local-idea-store.test.js'
+  'tests/stores/local-idea-store.test.js',
+  'tests/stores/local-storage-test-fixture.js'
 ]);
 
 const result = spawnSync('git', ['grep', '-n', 'localStorage', '--', '*.js'], {
