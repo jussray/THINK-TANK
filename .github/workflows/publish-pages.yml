@@ -30,7 +30,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: Bind publication to exact main and approval
+      - name: Bind publication to exact current main and approval
         shell: bash
         env:
           EXPECTED_HEAD_SHA: ${{ inputs.expected_head_sha }}
@@ -59,7 +59,16 @@ jobs:
       - name: Source runtime Playwright
         run: npm run test:e2e
       - name: Build inspected static artifact
+        env:
+          THINK_TANK_SOURCE_SHA: ${{ inputs.expected_head_sha }}
+          THINK_TANK_RUNTIME_ENV: publication-verify
         run: npm run build:static
+      - name: Verify runtime manifest identity
+        env:
+          THINK_TANK_EXPECTED_SHA: ${{ inputs.expected_head_sha }}
+        run: npm run check:runtime-manifest
+      - name: Offline packaged file sovereignty Playwright
+        run: npm run test:e2e:file
       - name: Packaged runtime Playwright
         run: npm run test:e2e:artifact
 
@@ -69,12 +78,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ inputs.expected_head_sha }}
+      - name: Re-bind package checkout to approved SHA
+        shell: bash
+        env:
+          EXPECTED_HEAD_SHA: ${{ inputs.expected_head_sha }}
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$EXPECTED_HEAD_SHA"
+          echo "Immutable package subject verified: $actual"
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Rebuild inspected publication artifact from verified main
+      - name: Rebuild inspected publication artifact from approved SHA
+        env:
+          THINK_TANK_SOURCE_SHA: ${{ inputs.expected_head_sha }}
+          THINK_TANK_RUNTIME_ENV: github-pages
         run: npm run build:static
+      - name: Verify publication manifest identity
+        env:
+          THINK_TANK_EXPECTED_SHA: ${{ inputs.expected_head_sha }}
+        run: npm run check:runtime-manifest
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
@@ -89,3 +114,22 @@ jobs:
       - name: Deploy exact verified artifact
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify live runtime identity
+        shell: bash
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+          EXPECTED_HEAD_SHA: ${{ inputs.expected_head_sha }}
+        run: |
+          set -euo pipefail
+          manifest_url="${PAGE_URL%/}/version.json"
+          curl --fail --silent --show-error --retry 8 --retry-delay 2 --retry-all-errors "$manifest_url" -o /tmp/think-tank-version.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const manifest = JSON.parse(fs.readFileSync('/tmp/think-tank-version.json', 'utf8'));
+          const expected = process.env.EXPECTED_HEAD_SHA;
+          if (manifest.schemaVersion !== 'ThinkTankRuntimeManifestV1') throw new Error('Live runtime manifest schema mismatch.');
+          if (manifest.source?.sha !== expected) throw new Error(`Live runtime source mismatch: expected ${expected}, got ${manifest.source?.sha}`);
+          if (manifest.runtime?.environment !== 'github-pages') throw new Error(`Live runtime environment mismatch: ${manifest.runtime?.environment}`);
+          if (typeof manifest.manifestFingerprint !== 'string' || !manifest.manifestFingerprint.startsWith('sha256:')) throw new Error('Live runtime fingerprint missing.');
+          console.log(`Live runtime verified: ${manifest.source.sha} ${manifest.manifestFingerprint}`);
+          NODE
