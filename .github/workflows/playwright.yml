@@ -18,9 +18,15 @@ jobs:
           node-version: 24
       - run: npm install
       - run: npm run check:storage-boundary
+      - run: npm run check:domain-purity
       - run: npm run test:unit
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+      - name: Source runtime Playwright
+        run: npm run test:e2e
+      - name: Build inspected static artifact
+        run: npm run build:static
+      - name: Packaged runtime Playwright
+        run: npm run test:e2e:artifact
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
