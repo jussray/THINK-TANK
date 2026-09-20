@@ -32,7 +32,7 @@ test('IdeaRecordV1 normalizes legacy V0 records without inventing content', () =
   assert.equal(normalized.schemaVersion, 'IdeaRecordV1');
   assert.equal(normalized.id, legacy.id);
   assert.equal(normalized.idea, legacy.idea);
-  assert.deepEqual(normalized.answers, []);
+  assert.equal(JSON.stringify(normalized.answers), '[]');
 });
 
 test('IdeaRecordV1 refuses malformed persisted state', () => {
