@@ -2,12 +2,12 @@ const { test, expect } = require('@playwright/test');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 
-test('deterministic V0 survives offline from file URL with reload and export', async ({ page, context }) => {
+test('packaged deterministic V0 survives offline from file URL with reload and export', async ({ page, context }) => {
   const pageErrors = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
 
   await context.setOffline(true);
-  await page.goto(pathToFileURL(path.resolve('index.html')).href);
+  await page.goto(pathToFileURL(path.resolve('_site/index.html')).href);
 
   await expect(page.getByTestId('truth-boundary')).toContainText('deterministic and local-first');
   await page.getByTestId('idea-input').fill('An offline sovereignty probe for a deterministic founder tool.');
