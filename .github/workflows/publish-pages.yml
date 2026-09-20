@@ -52,6 +52,8 @@ jobs:
         with:
           node-version: 24
       - run: npm install
+      - run: npm run check:storage-boundary
+      - run: npm run test:unit
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
 
@@ -64,8 +66,9 @@ jobs:
           ref: main
       - name: Build static publication artifact
         run: |
-          mkdir -p _site
+          mkdir -p _site/app/stores
           cp index.html _site/index.html
+          cp app/stores/*.js _site/app/stores/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
