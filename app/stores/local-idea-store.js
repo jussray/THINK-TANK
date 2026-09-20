@@ -9,8 +9,9 @@
     }
 
     async saveCurrent(record) {
-      this.storage.setItem(this.storageKey, JSON.stringify(record));
-      return record;
+      const normalized = root.ThinkTankContracts.normalizeIdeaRecordV1(record);
+      this.storage.setItem(this.storageKey, JSON.stringify(normalized));
+      return normalized;
     }
 
     async clearCurrent() {
@@ -18,11 +19,15 @@
     }
 
     async loadCurrent() {
+      const raw = this.storage.getItem(this.storageKey);
+      if (raw === null) return null;
+      let parsed;
       try {
-        return JSON.parse(this.storage.getItem(this.storageKey) || 'null');
+        parsed = JSON.parse(raw);
       } catch {
-        return null;
+        throw new root.ThinkTankContracts.ContractValidationError('INVALID_JSON', 'Stored Idea Record is not valid JSON.');
       }
+      return root.ThinkTankContracts.normalizeIdeaRecordV1(parsed);
     }
   }
 
