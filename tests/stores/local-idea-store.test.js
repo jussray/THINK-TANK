@@ -32,7 +32,7 @@ test('LocalIdeaStore preserves the current V0 storage key and round-trips a reco
   const record = { id: 'idea-1', idea: 'Test', versions: [] };
 
   await store.saveCurrent(record);
-  assert.deepEqual(await store.loadCurrent(), record);
+  assert.equal(JSON.stringify(await store.loadCurrent()), JSON.stringify(record));
   assert.ok(data.has('think-tank.idea-record.v0'));
 
   await store.clearCurrent();
