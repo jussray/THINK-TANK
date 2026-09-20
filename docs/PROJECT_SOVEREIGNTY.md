@@ -13,6 +13,33 @@ THINK-TANK must preserve deterministic reasoning, identity, continuity, and evid
 - Provider swaps must not broaden authority, replay stale approvals, duplicate mutations, or weaken evidence requirements.
 - Provider outcomes map into project-owned receipts; provider acceptance is not outcome proof.
 
+## Verified deterministic continuity runtime
+
+The current inspected `_site` artifact is a provider-independent continuity build for deterministic V0.
+
+Current CI proves the following path in Chromium:
+
+```text
+build inspected _site artifact
+  → disable network access
+  → open _site/index.html by file://
+  → complete founder interview
+  → compute deterministic assessment
+  → persist IdeaRecordV1 locally
+  → reload and recover the record
+  → export think-tank-export-v1 JSON
+```
+
+This means the deterministic V0 continuity artifact does not require GitHub Pages, Vercel, Supabase, an AI provider, or a local HTTP server to execute in the browser configuration that is actually tested.
+
+The scope is intentionally precise:
+
+- **VERIFIED:** Chromium offline packaged-file execution, deterministic assessment, reload recovery, and portable export.
+- **NOT UNIVERSALLY CLAIMED:** identical `file://` persistence semantics in every browser or operating system.
+- **NOT INCLUDED:** provider-backed AI, research, authentication, server sync, billing, teams, API access, or public deployment.
+
+The locally served development path remains supported and separately browser-tested. Offline artifact readiness never proves public-runtime identity.
+
 ## World as experience and knowledge
 
 Legitimate real-world interaction may become evidence-bearing experience: human reports, deterministic test outcomes, repository history, provider/runtime observations, experiments, documents, operational failures, and verified outcomes.
