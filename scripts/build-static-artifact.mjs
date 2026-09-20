@@ -10,7 +10,6 @@ const requiredFiles = [
   'app/contracts/runtime-contracts.js',
   'app/stores/idea-store.js',
   'app/stores/local-idea-store.js',
-  'app/stores/memory-idea-store.js',
   'app/domain/deterministic-engine.js',
   'app/policy/capability-service.js',
   'app/policy/local-capability-policy.js'
