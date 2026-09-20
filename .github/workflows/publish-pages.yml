@@ -53,6 +53,7 @@ jobs:
           node-version: 24
       - run: npm install
       - run: npm run check:storage-boundary
+      - run: npm run check:domain-purity
       - run: npm run test:unit
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
@@ -66,9 +67,21 @@ jobs:
           ref: main
       - name: Build static publication artifact
         run: |
-          mkdir -p _site/app/stores
+          set -euo pipefail
+          mkdir -p _site/app/stores _site/app/domain
           cp index.html _site/index.html
           cp app/stores/*.js _site/app/stores/
+          cp app/domain/*.js _site/app/domain/
+          test -f _site/index.html
+          test -f _site/app/stores/idea-store.js
+          test -f _site/app/stores/local-idea-store.js
+          test -f _site/app/stores/memory-idea-store.js
+          test -f _site/app/domain/deterministic-engine.js
+          if find _site -type f \( -name '.env' -o -name '.env.*' -o -name '*.pem' -o -name '*.key' -o -name '*.p12' -o -name '*.pfx' \) | grep -q .; then
+            echo "Refusing publication artifact containing sensitive file types" >&2
+            exit 1
+          fi
+          test ! -e _site/.git
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
