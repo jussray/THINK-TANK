@@ -23,6 +23,8 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Source runtime Playwright
         run: npm run test:e2e
+      - name: Offline file sovereignty Playwright
+        run: npm run test:e2e:file
       - name: Build inspected static artifact
         run: npm run build:static
       - name: Packaged runtime Playwright
