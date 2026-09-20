@@ -4,6 +4,7 @@ import path from 'node:path';
 const out = '_site';
 const requiredFiles = [
   'index.html',
+  'app/contracts/runtime-contracts.js',
   'app/stores/idea-store.js',
   'app/stores/local-idea-store.js',
   'app/stores/memory-idea-store.js',
