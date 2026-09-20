@@ -7,6 +7,10 @@ on:
       - 'build/**'
   pull_request:
 
+concurrency:
+  group: playwright-proof-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   interview-loop:
     runs-on: ubuntu-latest
