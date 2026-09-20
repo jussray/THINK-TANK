@@ -34,21 +34,38 @@ npm run serve
 
 Open `http://127.0.0.1:4173`.
 
+## Verified offline continuity artifact
+
+Build the inspected static artifact:
+
+```bash
+npm run build:static
+```
+
+The current V0 artifact can also be opened directly from `_site/index.html` with no local server. CI proves this path in Chromium with the network disabled: the founder can complete the deterministic interview, persist and recover the Idea Record across reload, and export portable JSON.
+
+This is a **Chromium-tested deterministic continuity guarantee**, not a claim that every browser treats `file://` storage identically. It also does not make provider-backed AI, server sync, auth, billing, or public deployment available offline.
+
 ## Verify with Playwright
 
 ```bash
 npx playwright install chromium
 npm run test:e2e
+npm run build:static
+npm run test:e2e:file
+npm run test:e2e:artifact
 ```
 
-The browser suite proves:
+The browser suites prove:
 
 - the full founder interview;
 - deterministic Critic, Scorecard, Synthesizer, and Matchmaker output;
 - browser persistence across reload;
 - portable JSON export and restore;
-- refusal of an unknown import format;
+- refusal of malformed or unknown imported state;
+- refusal of corrupt stored state as canonical product state;
 - the truth-boundary copy;
+- offline `file://` execution from the packaged `_site` artifact in Chromium;
 - mobile layout without horizontal overflow.
 
 ## Public deployment gate
@@ -60,7 +77,7 @@ The browser suite proves:
 - successful exact-head Playwright proof;
 - GitHub Pages provider configuration.
 
-The workflow is intentionally not triggered by normal pushes. Source readiness is not public-runtime truth.
+The workflow is intentionally not triggered by normal pushes. Source readiness and offline artifact readiness are not public-runtime truth.
 
 ## Acquire readiness
 
