@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test');
+const { seedCorruptIdeaRecord } = require('./stores/local-storage-test-fixture');
 
 async function completeInterview(page) {
   await page.goto('/');
@@ -103,7 +104,7 @@ test('import refuses malformed IdeaRecordV1 even when the export format is known
 
 test('corrupt stored state is surfaced and never rendered as canonical product state', async ({ page }) => {
   await page.goto('/');
-  await page.evaluate(() => localStorage.setItem('think-tank.idea-record.v0', '{not-json'));
+  await seedCorruptIdeaRecord(page);
   await page.reload();
 
   await expect(page.getByTestId('portability-status')).toContainText('Stored Idea Record refused');
