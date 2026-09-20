@@ -4,6 +4,8 @@
   "version": "0.1.0",
   "scripts": {
     "serve": "http-server . -p 4173 -c-1",
+    "check:storage-boundary": "node scripts/check-storage-boundary.mjs",
+    "test:unit": "node --test tests/stores/*.test.js",
     "test:e2e": "playwright test"
   },
   "devDependencies": {
