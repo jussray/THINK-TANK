@@ -1,0 +1,52 @@
+{
+  "engineVersion": "v0.1.0",
+  "rubricVersion": "v0",
+  "cases": [
+    {
+      "name": "specific subscription idea",
+      "record": {
+        "idea": "A subscription inventory assistant for independent shops",
+        "answers": [
+          {"answer": "Independent shops pay because stockouts waste hours and lose repeat sales each week."},
+          {"answer": "They use spreadsheets and manual text messages to track inventory and reorder."},
+          {"answer": "They would switch this month if setup takes under ten minutes and prevents one stockout."},
+          {"answer": "The moat is accumulated supplier response data and workflows tuned to each shop."}
+        ]
+      },
+      "expected": {
+        "scorecard": {"market": 10, "differentiation": 8, "timing": 7, "total": 8},
+        "critique": "The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.",
+        "modules": {
+          "customer": "Independent shops pay because stockouts waste hours and lose repeat sales each week.",
+          "alternative": "They use spreadsheets and manual text messages to track inventory and reorder.",
+          "wedge": "They would switch this month if setup takes under ten minutes and prevents one stockout.",
+          "moat": "The moat is accumulated supplier response data and workflows tuned to each shop."
+        },
+        "pattern": "Retention-first business: test repeat value before acquisition scale."
+      }
+    },
+    {
+      "name": "underspecified marketplace idea",
+      "record": {
+        "idea": "A marketplace for neighborhood helpers",
+        "answers": [
+          {"answer": "Local families."},
+          {"answer": "Group chats."},
+          {"answer": "Faster matching."},
+          {"answer": "Community trust."}
+        ]
+      },
+      "expected": {
+        "scorecard": {"market": 3, "differentiation": 4, "timing": 3, "total": 3},
+        "critique": "Your weakest evidence is still too general. Name a concrete behavior, buyer, or switching trigger before treating this as validated.",
+        "modules": {
+          "customer": "Local families.",
+          "alternative": "Group chats.",
+          "wedge": "Faster matching.",
+          "moat": "Community trust."
+        },
+        "pattern": "Two-sided cold start: prove one constrained side first."
+      }
+    }
+  ]
+}
