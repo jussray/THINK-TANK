@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# THINK-TANK local Node/test/build artifacts
+node_modules/
+_site/
+test-results/
+playwright-report/
+npm-debug.log*

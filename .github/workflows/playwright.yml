@@ -7,12 +7,27 @@ on:
       - 'build/**'
   pull_request:
 
+concurrency:
+  group: playwright-proof-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   interview-loop:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      PROOF_SUBJECT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.PROOF_SUBJECT_SHA }}
+      - name: Bind proof checkout to exact subject
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$PROOF_SUBJECT_SHA"
+          echo "Exact proof subject verified: $actual"
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -24,7 +39,14 @@ jobs:
       - name: Source runtime Playwright
         run: npm run test:e2e
       - name: Build inspected static artifact
+        env:
+          THINK_TANK_SOURCE_SHA: ${{ env.PROOF_SUBJECT_SHA }}
+          THINK_TANK_RUNTIME_ENV: ci-proof
         run: npm run build:static
+      - name: Verify runtime manifest identity
+        env:
+          THINK_TANK_EXPECTED_SHA: ${{ env.PROOF_SUBJECT_SHA }}
+        run: npm run check:runtime-manifest
       - name: Offline packaged file sovereignty Playwright
         run: npm run test:e2e:file
       - name: Packaged runtime Playwright
@@ -36,4 +58,5 @@ jobs:
           path: |
             test-results/
             playwright-report/
+            _site/version.json
           if-no-files-found: ignore
