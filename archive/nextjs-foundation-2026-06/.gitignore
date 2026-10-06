@@ -1,0 +1,7 @@
+.next/
+.env.local
+.env*.local
+next-env.d.ts
+node_modules/
+# root .gitignore (Python template) has a bare "lib/" rule that would swallow src/lib — re-include it here
+!src/lib/
