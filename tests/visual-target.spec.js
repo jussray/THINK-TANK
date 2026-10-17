@@ -21,3 +21,30 @@ test('approved cinematic journey has responsive desktop and mobile browser recei
     await page.screenshot({path:path.join(output, 'think-tank-'+viewport.name+'.png'),fullPage:true,animations:'disabled'});
   }
 });
+
+test('completed interview reveals source-grounded results and survives reload', async ({ page }) => {
+  const output = path.resolve(process.cwd(),'visual-proof');
+  fs.mkdirSync(output,{recursive:true});
+  await page.setViewportSize({width:1536,height:1024});
+  await page.goto('/');
+  await page.getByTestId('idea-input').fill('A guided idea studio for independent makers and founders.');
+  await page.getByTestId('start-interview').click();
+  const responses = [
+    'Independent makers funding their own early decisions about unmet customer needs.',
+    'They use spreadsheets, interviews, friends, and general chatbots.',
+    'They would switch when a clear first-pass record saves their time.',
+    'Their accumulated decision history and revisions create defensibility.'
+  ];
+  for (const response of responses) {
+    await page.getByTestId('answer-input').fill(response);
+    await page.getByTestId('submit-answer').click();
+  }
+  await expect(page.locator('#resultsLive')).toBeVisible();
+  await expect(page.locator('#resultScore')).toContainText('/10');
+  await expect(page.locator('#resultCritique')).not.toBeEmpty();
+  await expect(page.locator('#resultPattern')).not.toBeEmpty();
+  await page.screenshot({path:path.join(output,'think-tank-completed-results.png'),fullPage:true,animations:'disabled'});
+  await page.reload();
+  await expect(page.locator('#resultsLive')).toBeVisible();
+  await expect(page.locator('#resultScore')).toContainText('/10');
+});
