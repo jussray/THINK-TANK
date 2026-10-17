@@ -18,3 +18,15 @@ The founder-approved Library original was re-read on 2026-10-16 and independentl
 The binary is still **not committed to GitHub**, so visual completion remains open. The Cloudflare CI lane now captures 1536 × 1024 desktop and 390 × 844 mobile browser screenshots for founder review. Green tests are not founder visual signoff.
 
 Design references live in public/index.html, public/workspace.html, public/style.css and public/workspace.js.
+
+## Source-backed landscape artwork added 2026-10-17
+
+A **landscape-only** crop of the founder-supplied approved image was committed as `cloudflare/public/hero-vista.webp`. It includes only the luminous portal, mountain horizon, lake reflection, and central figure. The reference's mock navigation, copy, and other six screen panels are intentionally **not** included as raster UI.
+
+- Public asset: `hero-vista.webp`, WebP 480 × 185, 3,482 bytes.
+- Git blob SHA: `bc3355d85994bc3c04badca5afe445c89d603b59`.
+- Raw asset SHA-256: `da77ab5f71efb70b8f870f17b66ec2d1ce06a7f93079cbb3b49d97c3c5a8bcab`.
+- This is a compressed art crop, not the original full-resolution reference. The original six-screen montage remains uncommitted.
+- The CSS uses the art in the real interactive landing and workspace. Responsive layout and browser art-load tests must pass. Founder visual sign-off remains required.
+
+Do not replace editable HTML, real authentication, Council receipts, or saved-idea state with a flattened screenshot. Future high-resolution independent artwork can supersede this small crop without changing application behavior.
