@@ -36,6 +36,13 @@ jobs:
       - name: Dry-run bundle, no deployment
         working-directory: cloudflare
         run: npm run check:build
+      - name: Retain exact Wrangler preview bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: think-tank-cloudflare-bundle-${{ github.sha }}
+          path: cloudflare/.dry-run/
+          if-no-files-found: error
+          retention-days: 7
       - name: Install Chromium
         working-directory: cloudflare
         run: npx playwright install --with-deps chromium
