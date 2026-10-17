@@ -82,3 +82,17 @@ test('offline model does not block saved ideas and never queues unserviceable an
  await expect(page.locator('#submit')).toBeDisabled();
  expect(queuePosts).toBe(0);
 });
+
+
+test('the approved landscape is served as real art, not a flattened interface screenshot',async({page,request})=>{
+ const image=await request.get('/hero-vista.webp');
+ expect(image.ok()).toBe(true);
+ expect(image.headers()['content-type']).toMatch(/image\/webp/);
+ expect((await image.body()).byteLength).toBeGreaterThan(3000);
+ await page.goto('/');
+ const css=await page.locator('.hero-scene').evaluate(node=>getComputedStyle(node).backgroundImage);
+ expect(css).toContain('hero-vista.webp');
+ await expect(page.getByRole('link',{name:/Start Exploring/})).toBeVisible();
+ await page.getByRole('link',{name:/Start Exploring/}).click();
+ await expect(page).toHaveURL(/\/workspace(?:\.html)?$/);
+});
