@@ -108,6 +108,9 @@ BEGIN
   SELECT 1 FROM agent_executions e WHERE e.idea_id=NEW.idea_id
    AND e.status IN ('queued','running')
  ) THEN RAISE(ABORT,'PENDING_RUN') END;
+ SELECT CASE WHEN (SELECT COUNT(*) FROM agent_executions
+  WHERE owner_id=NEW.owner_id AND created_at >= strftime('%Y-%m-%dT00:00:00Z','now'))>=10
+ THEN RAISE(ABORT,'DAILY_LIMIT') END;
 END;
 
 CREATE TRIGGER IF NOT EXISTS execution_queued AFTER INSERT ON agent_executions
