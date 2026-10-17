@@ -15,7 +15,20 @@ function readSha256(file) {
 function expectedSourceSha() {
   const explicit = process.env.THINK_TANK_EXPECTED_SHA?.trim();
   if (explicit) return explicit;
-  return execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+  // Cloudflare Workers Builds always exports the commit being built, but its
+  // build image may not provide a usable git dir. Without this fallback, running
+  // this checker as part of the deploy build would throw on a missing `git`
+  // rather than verify anything -- the gate would break the deploy instead of
+  // guarding it. Mirrors resolveSourceSha in build-static-artifact.mjs.
+  const workersCi = process.env.WORKERS_CI_COMMIT_SHA?.trim();
+  if (workersCi) return workersCi;
+  try {
+    return execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+  } catch {
+    throw new Error(
+      'Cannot determine the expected source SHA. Set THINK_TANK_EXPECTED_SHA (or run inside a Git checkout).'
+    );
+  }
 }
 
 function walk(directory) {

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "build": "npm run build:static",
+    "build": "npm run build:static && npm run check:runtime-manifest",
     "serve": "http-server . -p 4173 -c-1",
     "serve:artifact": "http-server _site -p 4174 -c-1",
     "build:static": "node scripts/build-static-artifact.mjs",
