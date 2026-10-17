@@ -99,6 +99,8 @@ CREATE TABLE IF NOT EXISTS idea_module_versions (
 -- Database-side transaction contract: one INSERT does everything or nothing.
 -- The trigger enforces ownership and the CAS revision before new work is queued.
 CREATE TRIGGER IF NOT EXISTS execution_guard BEFORE INSERT ON agent_executions
+WHEN NOT EXISTS (SELECT 1 FROM agent_executions e WHERE e.idea_id=NEW.idea_id
+ AND e.owner_id=NEW.owner_id AND e.idempotency_key=NEW.idempotency_key)
 BEGIN
  SELECT CASE WHEN NOT EXISTS (
   SELECT 1 FROM ideas WHERE id=NEW.idea_id AND owner_id=NEW.owner_id
