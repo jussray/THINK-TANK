@@ -31,7 +31,7 @@ test('multi-idea storage preserves V0 current key and keeps prior ideas when a n
   await store.clearCurrent();
   assert.equal(await store.loadCurrent(), null);
   await store.saveCurrent(idea('b'));
-  assert.deepEqual((await store.listRecords()).map(item => item.id), ['a','b']);
+  assert.equal(JSON.stringify((await store.listRecords()).map(item => item.id)), JSON.stringify(['a','b']));
   assert.equal((await store.loadCurrent()).id, 'b');
   const restored = await store.selectCurrent('a');
   assert.equal(restored.id, 'a');
@@ -41,7 +41,7 @@ test('multi-idea storage preserves V0 current key and keeps prior ideas when a n
 test('legacy V0 record is surfaced in collection without duplication', async () => {
   const { store, data } = setup();
   data.set('think-tank.idea-record.v0', JSON.stringify(idea('legacy')));
-  assert.deepEqual((await store.listRecords()).map(item => item.id), ['legacy']);
+  assert.equal(JSON.stringify((await store.listRecords()).map(item => item.id)), JSON.stringify(['legacy']));
   await store.saveCurrent(idea('legacy'));
   assert.equal((await store.listRecords()).length, 1);
 });
