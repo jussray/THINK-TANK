@@ -12,7 +12,7 @@ Configure authenticated scheduler to invoke GET /api/worker/tick with Bearer sec
 
 Next run real Playwright signup/login, submit, worker completion, refresh, and cross-user denial on exact deployed SHA.
 
-Council and Court are pinned from jussray/ULTRATHINK-COUNCIL commit 713c8024596d9a11adae7950d558b2c5ee30cc69 in vendor source.
+Council and Court are pinned from jussray/ULTRATHINK-COUNCIL commit 643c0bb9ab5e1152a49814d6351c2ac1b68b81b2 in vendor source.
 
 Council Bus is NOT deployed: origin-bound handoff is PREPARED_NOT_SENT, tracked in Linear ENG-7. Do not create a shadow transport or claim ChatGPT/Claude callback delivery.
 
