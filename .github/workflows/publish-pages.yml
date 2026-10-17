@@ -131,5 +131,28 @@ jobs:
           if (manifest.source?.sha !== expected) throw new Error(`Live runtime source mismatch: expected ${expected}, got ${manifest.source?.sha}`);
           if (manifest.runtime?.environment !== 'github-pages') throw new Error(`Live runtime environment mismatch: ${manifest.runtime?.environment}`);
           if (typeof manifest.manifestFingerprint !== 'string' || !manifest.manifestFingerprint.startsWith('sha256:')) throw new Error('Live runtime fingerprint missing.');
-          console.log(`Live runtime verified: ${manifest.source.sha} ${manifest.manifestFingerprint}`);
+
+          // Recompute the fingerprint from the live manifest's own fields, then
+          // re-fetch and re-hash every served file against it. Reading fields out
+          // of version.json only proved that a JSON file described the right SHA;
+          // it could not detect tampered JS or HTML, which is exactly the risk on
+          // a custom domain, a mirror or a CDN copy.
+          const crypto = await import('node:crypto');
+          const sha256 = (value) => crypto.createHash('sha256').update(value).digest('hex');
+          const { builtAt, manifestFingerprint, ...core } = manifest;
+          if (manifestFingerprint !== `sha256:${sha256(JSON.stringify(core))}`) {
+            throw new Error('Live runtime manifest fingerprint does not match its own fields.');
+          }
+          const hashes = manifest.artifactFileHashes;
+          if (!hashes || typeof hashes !== 'object') throw new Error('Live runtime manifest is missing artifactFileHashes.');
+          const base = process.env.PAGE_URL.replace(/\/$/, '');
+          for (const [file, expectedHash] of Object.entries(hashes)) {
+            const response = await fetch(`${base}/${file}`);
+            if (!response.ok) throw new Error(`Live runtime file unreachable: ${file} (${response.status})`);
+            const actual = `sha256:${sha256(Buffer.from(await response.arrayBuffer()))}`;
+            if (actual !== expectedHash) {
+              throw new Error(`Live runtime content mismatch for ${file}: expected ${expectedHash}, got ${actual}`);
+            }
+          }
+          console.log(`Live runtime verified: ${manifest.source.sha} ${manifestFingerprint} (${Object.keys(hashes).length} files re-hashed)`);
           NODE

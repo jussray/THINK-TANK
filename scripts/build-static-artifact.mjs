@@ -7,6 +7,9 @@ import { execFileSync } from 'node:child_process';
 const out = '_site';
 const requiredFiles = [
   'index.html',
+  // Custom domain for GitHub Pages. Packaged (not just set in repo settings) so
+  // it is covered by artifactFileHashes and cannot be swapped silently.
+  'CNAME',
   'app/contracts/runtime-contracts.js',
   'app/stores/idea-store.js',
   'app/stores/local-idea-store.js',

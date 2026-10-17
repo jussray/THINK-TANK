@@ -25,7 +25,9 @@ Canonical source repository:
 
 https://github.com/jussray/THINK-TANK
 
-A public deployment URL remains **UNKNOWN** until provider evidence verifies one.
+The intended public deployment URL is `https://thinktank.jussco.company`, configured in-repo via `CNAME` and packaged into the inspected artifact.
+
+Whether that URL is **live** remains **UNVERIFIED** here. It becomes verified only when the `publish-pages` deploy job's live check passes against it — that job re-fetches every served file and re-hashes it against `artifactFileHashes`, so a passing run attests to the served application, not merely to a reachable page. Until such a run exists, treat the URL as intended, not as evidence of a deployment.
 
 ## Marketplace boundary
 
