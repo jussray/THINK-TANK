@@ -78,7 +78,7 @@ export async function route(request,env,owner){
    await env.DB.prepare(
     'INSERT INTO agent_executions (id,idea_id,owner_id,idempotency_key,request_hash,run_id,answer_content,input_revision) VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(idea_id,owner_id,idempotency_key) DO NOTHING'
    ).bind(executionId,ideaId,owner,key,hash,runId,answer,idea.revision+1).run();
-   const stored=await env.DB.prepare('SELECT id,request_hash FROM agent_executions WHERE idea_id=? AND owner_id=? AND idempotency_key=?')
+   const stored=await env.DB.prepare('SELECT id,request_hash,status FROM agent_executions WHERE idea_id=? AND owner_id=? AND idempotency_key=?')
     .bind(ideaId,owner,key).first();
    if(!stored)return json({error:'SUBMISSION_FAILED'},503);
    if(stored.request_hash!==hash)return json({error:'IDEMPOTENCY_CONFLICT'},409);
