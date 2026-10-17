@@ -1,6 +1,6 @@
 'use strict';
 const $=id=>document.getElementById(id);
-let ideas=[],activeId=null,detail=null,execution=null,pendingKey=null,pendingAnswer=null,busy=false;
+let ideas=[],activeId=null,detail=null,execution=null,pendingKey=null,pendingAnswer=null,busy=false,interviewReady=false;
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 function status(message){$('status').textContent=message;}
 function el(tag,text,className){const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);if(className)n.className=className;return n;}
@@ -59,7 +59,7 @@ async function updateExecution(id){
 }
 function applyBusy(){
  const executing=execution&&['queued','running'].includes(execution.execution.status);
- $('submit').disabled=busy||!detail||Boolean(executing);
+ $('submit').disabled=busy||!detail||Boolean(executing)||!interviewReady;
  $('create').querySelector('button').disabled=busy;
 }
 async function refreshIdeas(){
@@ -73,8 +73,12 @@ async function refreshIdeas(){
 }
 async function init(){
  try{
-  await api('/api/me');
-  $('blocked').hidden=true;$('app').hidden=false;status('Cloudflare Access authenticated. Your idea records are private to this account.');
+  const account=await api('/api/me');
+  interviewReady=account.capabilities?.interviewer==='configured';
+  $('blocked').hidden=true;$('app').hidden=false;
+  status(interviewReady?'Account authenticated. Interviewer is configured, not yet independently proven live.':
+   'Account authenticated. Save and export ideas now. Interviewer is paused until the model service is configured.');
+  applyBusy();
   await refreshIdeas();if(ideas.length)await activate(ideas[0].id);
   setInterval(async()=>{
    try{
