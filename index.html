@@ -157,17 +157,129 @@ async function save(){record=await ideaStore.saveCurrent(record);await renderRec
 async function load(){try{return await ideaReadModel.loadCurrent()}catch(error){setPortabilityStatus(`Stored Idea Record refused: ${errorMessage(error)}`);return null}}
 function addMessage(role,text){const node=document.createElement('div');node.className=`msg ${role.toLowerCase()}`;const roleNode=document.createElement('div');roleNode.className='role';roleNode.textContent=role;const textNode=document.createElement('div');textNode.textContent=text;node.append(roleNode,textNode);$('transcript').appendChild(node);$('transcript').scrollTop=$('transcript').scrollHeight}
 async function finish(){await requireCapability(C.ANALYSIS_RUN);const assessment=ThinkTankDomain.assessIdea(record);record.scorecard=assessment.scorecard;record.critique=assessment.critique;record.modules=assessment.modules;record.pattern=assessment.pattern;record.status='complete';record.updatedAt=now();const version={schemaVersion:ThinkTankContracts.SCHEMA.IDEA_VERSION,version:record.versions.length+1,createdAt:now(),idea:record.idea,scorecard:record.scorecard,modules:record.modules};record.versions.push(version);await save();addMessage('CRITIC',record.critique);addMessage('SCORECARD',`Market ${record.scorecard.market}/10 · Differentiation ${record.scorecard.differentiation}/10 · Timing ${record.scorecard.timing}/10`);addMessage('SYNTHESIZER','Record built: customer, current alternative, wedge, and moat are now captured.');addMessage('MATCHMAKER',record.pattern);$('answerInput').disabled=true;$('answerBtn').disabled=true;$('sessionState').textContent='COMPLETE';setPortabilityStatus('Interview complete. Your Idea Record and results are saved in this browser.')}
-function ask(){addMessage('INTERVIEWER',QUESTIONS[questionIndex]);$('sessionState').textContent=`QUESTION ${questionIndex+1}/${QUESTIONS.length}`}
+function ask(){
+ $('questionTitle').textContent=QUESTIONS[questionIndex];
+ $('questionCount').textContent=`Question ${questionIndex+1} of ${QUESTIONS.length}`;
+ $('questionProgress').style.width=`${Math.round((questionIndex+1)/QUESTIONS.length*100)}%`;
+ $('backBtn').disabled=questionIndex===0;
+ addMessage('INTERVIEWER',QUESTIONS[questionIndex]);
+ $('sessionState').textContent=`QUESTION ${questionIndex+1}/${QUESTIONS.length}`;
+}
+function back(){
+ if(!record||record.status!=='interviewing'||questionIndex===0)return;
+ questionIndex--;
+ $('answerInput').value=record.answers[questionIndex]?.answer||'';
+ $('transcript').replaceChildren();
+ for(let i=0;i<questionIndex;i++){addMessage('INTERVIEWER',QUESTIONS[i]);addMessage('FOUNDER',record.answers[i].answer)}
+ ask();
+}
 async function resumeInterview(r){if(!r||r.status!=='interviewing')return;record=r;questionIndex=Math.min(Array.isArray(r.answers)?r.answers.length:0,QUESTIONS.length);$('setup').classList.add('hidden');$('conversation').classList.remove('hidden');$('transcript').textContent='';$('answerInput').disabled=false;$('answerBtn').disabled=false;for(let i=0;i<questionIndex;i++){const entry=r.answers[i];addMessage('INTERVIEWER',entry.question||QUESTIONS[i]);addMessage('FOUNDER',entry.answer)}if(questionIndex<QUESTIONS.length){ask();setPortabilityStatus('Recovered in-progress interview.')}else{$('sessionState').textContent='REVIEW REQUIRED';setPortabilityStatus('Recovered all interview answers but no completed assessment. Start a new idea or import a completed record.')}}
 async function start(){const idea=$('ideaInput').value.trim();if(!idea)return;$('setup').classList.add('hidden');$('conversation').classList.remove('hidden');$('transcript').textContent='';const prior=await load();const startedAt=now();record={schemaVersion:ThinkTankContracts.SCHEMA.IDEA_RECORD,id:prior?.id||crypto.randomUUID(),idea,status:'interviewing',createdAt:prior?.createdAt||startedAt,updatedAt:startedAt,answers:[],modules:{},scorecard:null,critique:'',pattern:'',versions:Array.isArray(prior?.versions)?prior.versions:[]};questionIndex=0;await save();setPortabilityStatus(prior?'Continuing this Idea Record as a new pivot.':'Interview started.');ask()}
-async function answer(){const value=$('answerInput').value.trim();if(!value||!record)return;addMessage('FOUNDER',value);record.answers.push({question:QUESTIONS[questionIndex],answer:value,createdAt:now()});record.updatedAt=now();await save();$('answerInput').value='';questionIndex++;if(questionIndex<QUESTIONS.length)ask();else await finish()}
-async function reset(){await ideaStore.clearCurrent();record=null;questionIndex=0;$('conversation').classList.add('hidden');$('setup').classList.remove('hidden');$('ideaInput').value='';$('answerInput').value='';$('answerInput').disabled=false;$('answerBtn').disabled=false;$('transcript').textContent='';$('sessionState').textContent='READY';setPortabilityStatus('Ready.');await renderRecord()}
+async function answer(){
+ const value=$('answerInput').value.trim();
+ if(!value||!record)return;
+ addMessage('FOUNDER',value);
+ record.answers[questionIndex]={question:QUESTIONS[questionIndex],answer:value,createdAt:now()};
+ record.updatedAt=now();
+ await save();
+ $('answerInput').value='';
+ questionIndex++;
+ if(questionIndex<QUESTIONS.length){
+   $('answerInput').value=record.answers[questionIndex]?.answer||'';
+   ask();
+ }else await finish();
+}
+async function reset(){
+ await ideaStore.clearCurrent();record=null;questionIndex=0;
+ $('conversation').classList.add('hidden');$('setup').classList.remove('hidden');
+ $('ideaInput').value='';$('answerInput').value='';$('answerInput').disabled=false;
+ $('answerBtn').disabled=false;$('backBtn').disabled=true;
+ $('transcript').textContent='';$('sessionState').textContent='READY';
+ setPortabilityStatus('Current idea cleared from the workspace; saved ideas remain in My Ideas.');
+ await renderRecord();
+}
 function appendText(parent,tag,text,className){const node=document.createElement(tag);if(className)node.className=className;node.textContent=text;parent.appendChild(node);return node}
-function renderVisualResults(r){const ready=Boolean(r && r.status==='complete' && r.scorecard);$('resultsEmpty').classList.toggle('hidden',ready);$('resultsLive').classList.toggle('hidden',!ready);if(!ready)return;$('resultIdea').textContent=r.idea;$('resultScore').textContent=(r.scorecard.total??'n/a')+'/10';$('resultCritique').textContent=r.critique||'No critique recorded.';$('resultPattern').textContent=r.pattern||'No strategic pattern recorded.'}
-async function renderRecord(){const r=record||await load();renderVisualResults(r);const summary=$('recordSummary');const score=$('scorecard');const versionsNode=$('versions');if(!r){summary.textContent='No active record yet.';score.textContent='Complete the interview to score the idea.';versionsNode.textContent='No versions saved.';return}summary.textContent='';appendText(summary,'strong',r.idea);summary.appendChild(document.createElement('br'));appendText(summary,'span',`${r.answers?.length||0}/${QUESTIONS.length} answers · ${r.status}`,'muted');score.textContent=r.scorecard?`Market ${r.scorecard.market}/10\nDifferentiation ${r.scorecard.differentiation}/10\nTiming ${r.scorecard.timing}/10\nOverall ${r.scorecard.total}/10`:'Awaiting completed interview.';const versions=Array.isArray(r.versions)?r.versions:[];versionsNode.textContent='';if(!versions.length){versionsNode.textContent='No versions saved.';return}[...versions].reverse().forEach(v=>appendText(versionsNode,'div',`v${v.version} · overall ${v.scorecard?.total ?? 'n/a'}/10`,'version'))}
+function renderVisualResults(r){
+ const ready=Boolean(r&&r.status==='complete'&&r.scorecard);
+ $('resultsEmpty').classList.toggle('hidden',ready);
+ $('resultsLive').classList.toggle('hidden',!ready);
+ if(!ready)return;
+ $('resultIdea').textContent=r.idea;
+ $('resultScore').textContent=(r.scorecard.total??'n/a')+'/10';
+ $('resultCritique').textContent=r.critique||'No critique recorded.';
+ $('resultPattern').textContent=r.pattern||'No strategic pattern recorded.';
+ $('resultAnalysis').textContent=`Buyer/job (founder claim): ${r.modules.customer||'Not identified'}.\nCurrent alternative: ${r.modules.alternative||'Not identified'}.`;
+ $('resultOpportunities').textContent=`Proposed switching trigger: ${r.modules.wedge||'Not identified'}. Test it with actual prospective customers before calling it demand.`;
+ $('resultRisks').textContent=r.critique||'External evidence is still needed.';
+ $('resultNext').textContent=`${r.pattern||'Test the narrowest use case.'} Interview actual users and document what would change your decision.`;
+}
+function selectResultTab(name){
+ document.querySelectorAll('[data-result-tab]').forEach(button=>{
+  const chosen=button.dataset.resultTab===name;
+  button.classList.toggle('active',chosen);
+  button.setAttribute('aria-selected',String(chosen));
+ });
+ document.querySelectorAll('[data-result-view]').forEach(view=>view.classList.toggle('hidden',view.dataset.resultView!==name));
+}
+function renderBuildPlan(r){
+ const el=$('buildPlan');el.replaceChildren();
+ const tasks=r?.status==='complete'&&r.modules
+  ? ['Validate the buyer/job hypothesis with actual people: '+(r.modules.customer||'buyer not identified'),
+     'Observe current alternatives: '+(r.modules.alternative||'alternative not identified'),
+     'Test the smallest switching trigger: '+(r.modules.wedge||'trigger not identified'),
+     'Review differentiators and decide whether to revise: '+(r.modules.moat||'defensibility not identified')]
+  : ['Complete an interview to create your first action plan.'];
+ for(const task of tasks)appendText(el,'li',task);
+}
+async function renderIdeaLibrary(){
+ const el=$('libraryRecords');el.replaceChildren();
+ const ideas=await ideaStore.loadAll();
+ if(!ideas.length){appendText(el,'p','No ideas saved yet. Start your first interview above.','library-empty');return}
+ for(const item of ideas){
+  const tile=document.createElement('article');tile.className='idea-tile';
+  appendText(tile,'span',`${item.status==='complete'?'Interview complete':'Interview in progress'} · ${item.versions?.length||0} versions`,'micro-label');
+  appendText(tile,'h3',item.idea);
+  appendText(tile,'p',`${item.answers?.length||0}/4 questions answered · Stored on this device`);
+  const open=document.createElement('button');open.type='button';open.className='btn';open.textContent=item.status==='complete'?'Open idea →':'Resume interview →';
+  open.addEventListener('click',()=>void runCapability(C.IDEA_READ,async()=>{
+    record=await ideaStore.selectCurrent(item.id);
+    questionIndex=record.answers.length;
+    await renderRecord();
+    if(record.status==='interviewing'){
+      await resumeInterview(record);window.location.hash='#interview';
+    }else{
+      $('conversation').classList.add('hidden');$('setup').classList.remove('hidden');$('ideaInput').value=record.idea;
+      $('sessionState').textContent='COMPLETE';window.location.hash='#results';
+    }
+    setPortabilityStatus('Opened saved Idea Record.');
+  }));
+  tile.appendChild(open);el.appendChild(tile);
+ }
+}
+async function renderRecord(){
+ const r=record||await load();
+ renderVisualResults(r);renderBuildPlan(r);
+ const summary=$('recordSummary'),score=$('scorecard'),versionsNode=$('versions');
+ if(!r){
+  summary.textContent='No active record yet.';score.textContent='Complete the interview to score the idea.';versionsNode.textContent='No versions saved.';
+ }else{
+  summary.replaceChildren();
+  appendText(summary,'strong',r.idea);summary.appendChild(document.createElement('br'));
+  appendText(summary,'span',`${r.answers?.length||0}/${QUESTIONS.length} answers · ${r.status}`,'muted');
+  score.textContent=r.scorecard?`Market ${r.scorecard.market}/10\nDifferentiation ${r.scorecard.differentiation}/10\nTiming ${r.scorecard.timing}/10\nOverall ${r.scorecard.total}/10`:'Awaiting completed interview.';
+  versionsNode.replaceChildren();
+  const versions=Array.isArray(r.versions)?r.versions:[];
+  if(!versions.length)versionsNode.textContent='No versions saved.';
+  else [...versions].reverse().forEach(v=>appendText(versionsNode,'div',`v${v.version} · overall ${v.scorecard?.total??'n/a'}/10`,'version'));
+ }
+ await renderIdeaLibrary();
+}
 async function exportRecord(){const current=record||await load();if(!current){setPortabilityStatus('Nothing to export yet. Complete or start an interview first.');return}const normalized=ThinkTankContracts.normalizeIdeaRecordV1(current);record=normalized;const payload={format:EXPORT_FORMAT,exportedAt:now(),record:normalized};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=`think-tank-${normalized.id}.json`;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);setPortabilityStatus('Portable Idea Record exported.')}
 async function importRecordFile(file){if(!file)return;try{if(file.size>MAX_IMPORT_BYTES)throw new Error('File is too large.');const payload=JSON.parse(await file.text());if(payload?.format!==EXPORT_FORMAT)throw new Error('Unsupported export format.');const imported=ThinkTankContracts.normalizeIdeaRecordV1(payload.record);record=await ideaStore.saveCurrent(imported);await renderRecord();await resumeInterview(record);setPortabilityStatus(record.status==='interviewing'?`Imported and resumed Idea Record ${record.id}.`:`Imported Idea Record ${record.id}.`)}catch(error){setPortabilityStatus(`Import refused: ${errorMessage(error)}`)}finally{$('importInput').value=''}}
 async function boot(){try{await requireCapability(C.IDEA_READ);record=await load();await renderRecord();await resumeInterview(record)}catch(error){setPortabilityStatus(`Startup refused: ${errorMessage(error)}`)}}
+document.querySelectorAll('[data-result-tab]').forEach(button=>button.addEventListener('click',()=>selectResultTab(button.dataset.resultTab)));
+$('backBtn').addEventListener('click',back);
+$('newIdeaHub').addEventListener('click',()=>void runCapability(C.IDEA_EDIT,async()=>{await reset();window.location.hash='#interview';}));
 $('startBtn').addEventListener('click',()=>void runCapability(C.IDEA_EDIT,start));$('answerBtn').addEventListener('click',()=>void runCapability(C.IDEA_EDIT,answer));$('resetBtn').addEventListener('click',()=>void runCapability(C.IDEA_EDIT,reset));$('exportBtn').addEventListener('click',()=>void runCapability(C.RECORD_EXPORT,exportRecord));$('importInput').addEventListener('change',event=>void runCapability(C.RECORD_IMPORT,()=>importRecordFile(event.target.files?.[0])));void boot();
 </script>
 </body>
