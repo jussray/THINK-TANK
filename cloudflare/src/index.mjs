@@ -31,7 +31,9 @@ async function digest(text){
 export async function route(request,env,owner){
  const {pathname}=new URL(request.url),method=request.method;
  if(pathname==='/api/me'&&method==='GET')
-  return json({authenticated:true,provider:'cloudflare-access',scope:'think-tank'});
+  return json({authenticated:true,provider:'cloudflare-access',scope:'think-tank',
+   capabilities:{interviewer:env.OPENAI_API_KEY&&env.OPENAI_MODEL?'configured':'unavailable',
+    council:'evidence-review',court:'evidence-review',councilBus:'not-connected'}});
  if(pathname==='/api/ideas'){
   if(method==='GET'){
    const d=await env.DB.prepare('SELECT id,title,revision,created_at FROM ideas WHERE owner_id=? ORDER BY created_at DESC LIMIT 100').bind(owner).all();
@@ -72,6 +74,10 @@ export async function route(request,env,owner){
    if(previous)return previous.request_hash===hash
      ?json({executionId:previous.id,status:previous.status,idempotent:true},202)
      :json({error:'IDEMPOTENCY_CONFLICT'},409);
+   // Do not accept a fresh answer into a queue that no worker can process.
+   // Previously stored runs remain readable even while the model is offline.
+   if(!env.OPENAI_API_KEY||!env.OPENAI_MODEL)
+    return json({error:'INTERVIEWER_UNAVAILABLE'},503);
    const executionId=crypto.randomUUID(),runId=crypto.randomUUID();
    // A single statement + its D1 triggers atomically commits answer, revision,
    // input snapshot, queued run and first event. Trigger rejects stale revision.
