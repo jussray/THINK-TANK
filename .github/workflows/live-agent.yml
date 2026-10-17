@@ -1,0 +1,52 @@
+name: Live agent build and visual gate
+on:
+  push:
+    branches:
+      - 'build/**'
+    paths:
+      - 'live/**'
+      - '.github/workflows/live-agent.yml'
+  pull_request:
+    paths:
+      - 'live/**'
+      - '.github/workflows/live-agent.yml'
+permissions:
+  contents: read
+concurrency:
+  group: live-agent-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  source-and-visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Install isolated live app dependencies
+        working-directory: live
+        run: npm install
+      - name: Core and source-pinned Council tests
+        working-directory: live
+        run: npm test
+      - name: Next build and typecheck
+        working-directory: live
+        run: npm run build
+      - name: Install Chromium
+        working-directory: live
+        run: npx playwright install --with-deps chromium
+      - name: Real responsive route Playwright
+        working-directory: live
+        env:
+          CI: "true"
+        run: npm run test:e2e
+      - name: Preserve failed evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-agent-failure
+          path: |
+            live/test-results/
+            live/.next/
+          if-no-files-found: ignore
