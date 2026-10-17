@@ -36,6 +36,14 @@ jobs:
       - name: Dry-run bundle, no deployment
         working-directory: cloudflare
         run: npm run check:build
+      - name: Install Chromium
+        working-directory: cloudflare
+        run: npx playwright install --with-deps chromium
+      - name: Verify live Wrangler-served UI and auth denial
+        working-directory: cloudflare
+        env:
+          CI: 'true'
+        run: npm run test:e2e
       - name: Production dependency audit
         working-directory: cloudflare
         run: npm audit --omit=dev --audit-level=high
