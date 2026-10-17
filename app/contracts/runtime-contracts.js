@@ -128,6 +128,7 @@
     requireString(record.pattern, 'IdeaRecordV1.pattern', { max: LIMITS.answerChars });
     if (!Array.isArray(record.versions) || record.versions.length > LIMITS.versions) fail('VALIDATION_ERROR', 'IdeaRecordV1.versions is invalid.');
     record.versions.forEach(validateIdeaVersionV1);
+    if (record.workspace !== undefined) normalizeWorkspaceV1(record.workspace);
     return candidate;
   }
 
@@ -141,7 +142,7 @@
   // RangeError out of the clone.
   const IDEA_RECORD_FIELDS = Object.freeze([
     'schemaVersion', 'id', 'idea', 'status', 'createdAt', 'updatedAt',
-    'answers', 'modules', 'scorecard', 'critique', 'pattern', 'versions'
+    'answers', 'modules', 'scorecard', 'critique', 'pattern', 'versions', 'workspace'
   ]);
 
   function pickKnown(candidate, fields) {
@@ -163,8 +164,75 @@
     normalized.critique ??= '';
     normalized.pattern ??= '';
     normalized.versions = Array.isArray(normalized.versions) ? normalized.versions.map(normalizeIdeaVersionV1) : normalized.versions;
+    if (normalized.workspace !== undefined) normalized.workspace = normalizeWorkspaceV1(normalized.workspace);
     validateIdeaRecordV1(normalized);
     return normalized;
+  }
+
+  // Editable founder workspace state is attached to the portable Idea Record.
+  // The deterministic assessment fields above remain separate and unchanged.
+  const WORKSPACE_MODULES = Object.freeze([
+    'Summary', 'Problem', 'Solution', 'Customer', 'Revenue',
+    'MVP roadmap', 'Growth', 'Pitch', 'Action plan', 'Scorecard'
+  ]);
+  const WORKSPACE_SCHEMA = 'IdeaWorkspaceV1';
+
+  function normalizeWorkspaceV1(candidate) {
+    const input = requireObject(candidate, WORKSPACE_SCHEMA);
+    requireEnum(input.schemaVersion, [WORKSPACE_SCHEMA], 'workspace.schemaVersion');
+    const rawModules = requireObject(input.modules, 'workspace.modules');
+    const keys = Object.keys(rawModules);
+    if (keys.length > WORKSPACE_MODULES.length) fail('VALIDATION_ERROR', 'Too many workspace modules.');
+    const modules = {};
+    for (const name of keys) {
+      requireEnum(name, WORKSPACE_MODULES, 'workspace module');
+      const entry = requireObject(rawModules[name], 'workspace module entry');
+      modules[name] = {
+        content: requireString(entry.content, 'workspace content', { max: 8000 }),
+        origin: requireEnum(entry.origin, ['founder', 'accepted-local-proposal'], 'workspace origin'),
+        updatedAt: requireTimestamp(entry.updatedAt, 'workspace module timestamp', { nullable: false })
+      };
+    }
+    if (!Array.isArray(input.proposals) || input.proposals.length > 30) {
+      fail('VALIDATION_ERROR', 'workspace.proposals is invalid.');
+    }
+    const proposals = input.proposals.map((item) => {
+      const proposal = requireObject(item, 'workspace proposal');
+      const raw = requireObject(proposal.modules, 'proposal modules');
+      if (Object.keys(raw).length > WORKSPACE_MODULES.length) fail('VALIDATION_ERROR', 'Proposal modules overflow.');
+      const proposedModules = {};
+      for (const name of Object.keys(raw)) {
+        requireEnum(name, WORKSPACE_MODULES, 'proposal module');
+        proposedModules[name] = requireString(raw[name], 'proposal text', { max: 8000 });
+      }
+      return {
+        id: requireString(proposal.id, 'proposal.id', { min: 1, max: 200 }),
+        createdAt: requireTimestamp(proposal.createdAt, 'proposal.createdAt', { nullable: false }),
+        status: requireEnum(proposal.status, ['pending', 'accepted', 'rejected'], 'proposal.status'),
+        baseRevision: requireTimestamp(proposal.baseRevision, 'proposal.baseRevision', { nullable: false }),
+        answerCount: requireNumber(proposal.answerCount, 'proposal.answerCount', { min: 0, max: 4, integer: true }),
+        modules: proposedModules
+      };
+    });
+    if (!Array.isArray(input.history) || input.history.length > 300) fail('VALIDATION_ERROR', 'workspace.history is invalid.');
+    const history = input.history.map((item) => {
+      const event = requireObject(item, 'workspace event');
+      return {
+        id: requireString(event.id, 'event.id', { min: 1, max: 200 }),
+        at: requireTimestamp(event.at, 'event.at', { nullable: false }),
+        kind: requireEnum(event.kind, [
+          'proposal.generated', 'proposal.accepted', 'proposal.rejected', 'module.saved'
+        ], 'event.kind'),
+        module: requireEnum(event.module ?? '', ['', ...WORKSPACE_MODULES], 'event.module'),
+        proposalId: requireString(event.proposalId ?? '', 'event.proposalId', { max: 200 }),
+        before: requireString(event.before ?? '', 'event.before', { max: 8000 }),
+        after: requireString(event.after ?? '', 'event.after', { max: 8000 })
+      };
+    });
+    if (new Set(proposals.map((p) => p.id)).size !== proposals.length) {
+      fail('VALIDATION_ERROR', 'Duplicate proposal ids.');
+    }
+    return { schemaVersion: WORKSPACE_SCHEMA, modules, proposals, history };
   }
 
   function validateAgentResultV1(candidate) {
@@ -234,6 +302,9 @@
   root.ThinkTankContracts = Object.freeze({
     SCHEMA,
     LIMITS,
+    WORKSPACE_MODULES,
+    WORKSPACE_SCHEMA,
+    normalizeWorkspaceV1,
     ContractValidationError,
     normalizeIdeaRecordV1,
     normalizeIdeaVersionV1,
