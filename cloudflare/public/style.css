@@ -60,7 +60,7 @@ h1,h2,h3{font-family:Georgia,'Times New Roman',serif;letter-spacing:-.025em;font
 .hero-scene .hero-promises blockquote{text-shadow:0 2px 14px #080514}
 .hero-scene .hero-promises li{padding:12px 0}
 .process-section::before{
-  content:"";position:absolute;inset:2% -5% auto;z-index:-1;height:360px;
+  content:"";position:absolute;inset:2% 0 auto;z-index:-1;height:360px;
   background:radial-gradient(ellipse at 50% 35%,#8561d52c,transparent 70%);
   pointer-events:none;
 }
