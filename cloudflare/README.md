@@ -42,3 +42,10 @@ CI: .github/workflows/cloudflare-council.yml.
 - Access policy hardening: preview-only inline policy `ee5a2fa5-6b56-49d1-981e-63ab7c32efa9` accepts the verified Cloudflare account owner; production and four other shared-policy applications remain untouched.
 - No `OPENAI_API_KEY` or `OPENAI_MODEL` is attached to the preview; therefore no real model executions can run.
 - Repo audience and initial status-readback drift corrected on branch after deployed `86d42196` version; redeploy and verify exact SHA before declaring current source live.
+
+## Paused-model guard (2026-10-17)
+- `/api/me` exposes owner-authenticated capability truth (`interviewer: unavailable` without BOTH server-side `OPENAI_API_KEY` and `OPENAI_MODEL`).
+- First-time interview submissions now reject with HTTP 503 `INTERVIEWER_UNAVAILABLE` before writing any execution, so an unconfigured cron cannot strand a founder's answer in an unfinishable queue. A matching already-recorded idempotency replay can still recover its persisted status.
+- The workspace disables Interviewer submissions and communicates the pause, while retaining saving ideas and portable exports. The embedded Worker asset fallback is synced byte-for-byte with the public asset.
+- `preview_urls:false` disables extra deployment-preview hostnames; the account-specific Cloudflare Access-protected Workers subdomain remains the intended pilot entry point.
+- Unit and Playwright regressions establish source behavior only. An authenticated founder model completion remains unverified and model billing remains disabled.
