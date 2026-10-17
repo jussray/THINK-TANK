@@ -24,6 +24,9 @@ function buildArtifact() {
     env: { ...process.env, THINK_TANK_SOURCE_SHA: SHA, THINK_TANK_RUNTIME_ENV: 'test-env' }
   });
   assert.equal(built.status, 0, `build failed: ${built.stderr}`);
+  // The trusted source witness is separate from the HTTP-served artifact.
+  // Mutating version.json can never mutate this baseline.
+  fs.copyFileSync(path.join(dir, '_site/version.json'), path.join(dir, '.trusted-version.json'));
   return dir;
 }
 
@@ -55,7 +58,8 @@ function verify(dir, base, env = {}) {
   return new Promise((resolve) => {
     const child = spawn(process.execPath, ['scripts/verify-live-runtime.mjs', base], {
       cwd: dir,
-      env: { ...process.env, THINK_TANK_EXPECTED_SHA: SHA, ...env }
+      env: { ...process.env, THINK_TANK_EXPECTED_SHA: SHA,
+        THINK_TANK_TRUSTED_MANIFEST_FILE: path.join(dir, '.trusted-version.json'), ...env }
     });
     let stdout = '';
     let stderr = '';
@@ -71,7 +75,7 @@ test('live verifier passes against an untampered deployment', async () => {
   try {
     const result = await verify(dir, base);
     assert.equal(result.status, 0, `expected pass, got: ${result.stderr}`);
-    assert.match(result.stdout, /Live runtime verified/);
+    assert.match(result.stdout, /Live runtime content VERIFIED against trusted GitHub source/);
     assert.match(result.stdout, /files re-hashed/);
   } finally {
     stop();
@@ -160,6 +164,45 @@ test('live verifier refuses a manifest with no artifactFileHashes', async () => 
     fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
     const result = await verify(dir, base);
     assert.notEqual(result.status, 0, 'a legacy manifest must not be accepted as verified');
+  } finally {
+    stop();
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+
+test('live verifier rejects forged files plus recomputed self-consistent manifest fingerprint', async () => {
+  const dir = buildArtifact();
+  const { stop, base } = await serve(dir);
+  try {
+    const crypto = require('node:crypto');
+    const target = path.join(dir, '_site/app/domain/deterministic-engine.js');
+    fs.appendFileSync(target, '\n// unauthorized modification\n');
+    const manifestPath = path.join(dir, '_site/version.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    manifest.artifactFileHashes['app/domain/deterministic-engine.js'] =
+      'sha256:' + crypto.createHash('sha256').update(fs.readFileSync(target)).digest('hex');
+    // Make both the served file hashes AND manifest fingerprint self-consistent.
+    const { builtAt, manifestFingerprint, ...core } = manifest;
+    manifest.manifestFingerprint = 'sha256:' +
+      crypto.createHash('sha256').update(JSON.stringify(core)).digest('hex');
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest) + '\n');
+    const result = await verify(dir, base);
+    assert.notEqual(result.status, 0, 'a forged, internally consistent manifest must fail against trusted source');
+    assert.match(result.stderr, /hash differs from trusted GitHub source/);
+  } finally {
+    stop();
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('live verifier fails closed without independent trusted manifest', async () => {
+  const dir = buildArtifact();
+  const { stop, base } = await serve(dir);
+  try {
+    const result = await verify(dir, base, { THINK_TANK_TRUSTED_MANIFEST_FILE: '' });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /Trusted locally rebuilt artifact manifest is required/);
   } finally {
     stop();
     fs.rmSync(dir, { recursive: true, force: true });
