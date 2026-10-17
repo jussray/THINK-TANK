@@ -64,3 +64,11 @@ test('no second deploy surface has been reintroduced', () => {
   assert.ok(fs.existsSync('.github/workflows/verify-live.yml'), 'the live proof workflow must exist');
   assert.ok(fs.existsSync('scripts/verify-live-runtime.mjs'), 'the live verifier must exist');
 });
+
+
+test('Cloudflare deployment uses a pinned, project-local Wrangler CLI', () => {
+  const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+  const pin = pkg.devDependencies?.wrangler;
+  assert.equal(pin, '4.149.0', 'production deploy requires the reviewed exact Wrangler version');
+  assert.match(pin, /^\d+\.\d+\.\d+$/, 'do not permit implicit latest, caret, or range');
+});
