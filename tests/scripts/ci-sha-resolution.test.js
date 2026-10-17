@@ -100,3 +100,28 @@ test('with no SHA source at all, both scripts fail with a clear message instead 
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('a Cloudflare build labels its own runtime environment', () => {
+  const dir = gitlessCopy();
+  try {
+    // Workers Builds exports WORKERS_CI_COMMIT_SHA; the artifact must label
+    // itself cloudflare-workers so the live check can require it.
+    assert.equal(run(dir, 'build-static-artifact.mjs', { WORKERS_CI_COMMIT_SHA: CI_SHA }).status, 0);
+    let manifest = JSON.parse(fs.readFileSync(path.join(dir, '_site/version.json'), 'utf8'));
+    assert.equal(manifest.runtime.environment, 'cloudflare-workers');
+
+    // An explicit label still wins, and a local build is still local-static.
+    assert.equal(
+      run(dir, 'build-static-artifact.mjs', { WORKERS_CI_COMMIT_SHA: CI_SHA, THINK_TANK_RUNTIME_ENV: 'staging' }).status,
+      0
+    );
+    manifest = JSON.parse(fs.readFileSync(path.join(dir, '_site/version.json'), 'utf8'));
+    assert.equal(manifest.runtime.environment, 'staging');
+
+    assert.equal(run(dir, 'build-static-artifact.mjs', { THINK_TANK_SOURCE_SHA: CI_SHA }).status, 0);
+    manifest = JSON.parse(fs.readFileSync(path.join(dir, '_site/version.json'), 'utf8'));
+    assert.equal(manifest.runtime.environment, 'local-static');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});

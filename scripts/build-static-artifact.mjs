@@ -45,6 +45,15 @@ function resolveSourceSha() {
   }
 }
 
+function resolveRuntimeEnv() {
+  const explicit = process.env.THINK_TANK_RUNTIME_ENV?.trim();
+  if (explicit) return explicit;
+  if (process.env.WORKERS_CI?.trim() || process.env.WORKERS_CI_COMMIT_SHA?.trim()) {
+    return 'cloudflare-workers';
+  }
+  return 'local-static';
+}
+
 function loadRuntimeGlobals() {
   const context = vm.createContext({ console });
   context.globalThis = context;
@@ -75,7 +84,11 @@ const lockfilePresent = fs.existsSync('package-lock.json');
 const manifestCore = {
   schemaVersion: 'ThinkTankRuntimeManifestV1',
   source: { sha: sourceSha },
-  runtime: { environment: process.env.THINK_TANK_RUNTIME_ENV?.trim() || 'local-static' },
+  // Cloudflare is the single owner of the public hostname. A Workers Builds run
+  // labels itself, so the live check can require `cloudflare-workers` without
+  // depending on a dashboard-set variable that nothing in this repo can verify.
+  // An explicit THINK_TANK_RUNTIME_ENV still wins.
+  runtime: { environment: resolveRuntimeEnv() },
   product: {
     engineVersion: runtime.ThinkTankDomain.ENGINE_VERSION,
     rubricVersion: runtime.ThinkTankDomain.RUBRIC_VERSION,

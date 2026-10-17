@@ -10,7 +10,10 @@ This document defines what a future buyer can verify and transfer without turnin
 - `package.json` — the script entry points those gates are invoked through.
 - `tests/` — the full proof surface: browser specs plus the unit and gate-mutation suites that demonstrate each gate can fail.
 - `.github/workflows/playwright.yml` — continuous browser verification.
-- `.github/workflows/publish-pages.yml` — founder-gated public publication path.
+- `wrangler.jsonc` — Cloudflare Workers deploy configuration; Cloudflare is the single
+  owner of the public hostname.
+- `.github/workflows/verify-live.yml` + `scripts/verify-live-runtime.mjs` — the founder-run
+  proof that the served runtime is the approved source, by re-hashing every served file.
 - `AGENTS.md` — repository operating contract.
 - `docs/PROJECT_SOVEREIGNTY.md` — provider-independence and recovery contract.
 - `PUBLIC_FACE.md` — public positioning and truth boundary.
