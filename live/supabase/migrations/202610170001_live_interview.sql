@@ -243,7 +243,7 @@ declare x record; v_retry boolean;
 begin
  select r.id,r.execution_id,r.attempts into x
  from public.ai_runs r where r.id=p_run and r.lease_token=p_lease
-  and r.status='running' for update;
+  and r.status='running' and r.lease_expires_at>now() for update;
  if not found then return false; end if;
  v_retry:=x.attempts < 3;
  update public.ai_runs set status=case when v_retry then 'queued' else 'failed' end,
