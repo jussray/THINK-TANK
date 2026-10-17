@@ -29,5 +29,6 @@
   "vars": {
     "ACCESS_TEAM_DOMAIN": "jussray.cloudflareaccess.com",
     "ACCESS_AUD": "23a4f44b94fef56ec7562da17b5d77d1e4d5f9467f0624349ce84e69bfdc40cd"
-  }
+  },
+  "preview_urls": false
 }
