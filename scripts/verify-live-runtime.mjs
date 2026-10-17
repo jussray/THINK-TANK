@@ -9,6 +9,7 @@
 // Usage: node scripts/verify-live-runtime.mjs <base-url> [expected-sha]
 //        THINK_TANK_EXPECTED_SHA and THINK_TANK_EXPECTED_ENV are also honored.
 import crypto from 'node:crypto';
+import fs from 'node:fs';
 
 const baseInput = process.argv[2] || process.env.THINK_TANK_LIVE_URL;
 if (!baseInput) {
@@ -18,6 +19,15 @@ if (!baseInput) {
 const base = baseInput.replace(/\/+$/, '');
 const expectedSha = (process.argv[3] || process.env.THINK_TANK_EXPECTED_SHA || '').trim();
 const expectedEnv = (process.env.THINK_TANK_EXPECTED_ENV || '').trim();
+const trustedManifestPath = (process.env.THINK_TANK_TRUSTED_MANIFEST_FILE || '').trim();
+if (!/^[a-f0-9]{40}$/.test(expectedSha)) throw new Error('Exact expected source SHA is required');
+if (!trustedManifestPath) throw new Error('Trusted locally rebuilt artifact manifest is required');
+const trusted = JSON.parse(fs.readFileSync(trustedManifestPath, 'utf8'));
+if (trusted.source?.sha !== expectedSha) throw new Error('Trusted artifact source SHA mismatch');
+if (expectedEnv && trusted.runtime?.environment !== expectedEnv) throw new Error('Trusted artifact environment mismatch');
+if (expectedEnv === 'cloudflare-workers' && new URL(base).origin !== 'https://thinktank.jussco.company') {
+  throw new Error('Production proof must target the canonical Cloudflare hostname');
+}
 
 const sha256 = (value) => crypto.createHash('sha256').update(value).digest('hex');
 
@@ -25,7 +35,7 @@ async function fetchWithRetry(url, { attempts = 8, delayMs = 2000 } = {}) {
   let lastError;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
-      const response = await fetch(url, { redirect: 'follow' });
+      const response = await fetch(url, { redirect: 'manual' });
       if (response.ok) return response;
       lastError = new Error(`${url} -> HTTP ${response.status}`);
       // A 4xx that is not 408/429 will not fix itself; fail fast.
@@ -61,9 +71,31 @@ if (manifestFingerprint !== `sha256:${sha256(JSON.stringify(core))}`) {
   throw new Error('Live runtime manifest fingerprint does not match its own fields.');
 }
 
+// Compare against bytes rebuilt from the APPROVED exact GitHub source, not merely
+// a self-consistent remotely supplied manifest. A forged file + forged hash +
+// recomputed fingerprint otherwise passes the old verifier.
 const hashes = manifest.artifactFileHashes;
 if (!hashes || typeof hashes !== 'object' || Array.isArray(hashes) || !Object.keys(hashes).length) {
   throw new Error('Live runtime manifest is missing artifactFileHashes. Redeploy a current artifact.');
+}
+
+const sourceHashes = trusted.artifactFileHashes;
+if (!sourceHashes || typeof sourceHashes !== 'object' || Array.isArray(sourceHashes) || !Object.keys(sourceHashes).length) {
+  throw new Error('Trusted local artifact lacks content hashes');
+}
+const actualKeys = Object.keys(hashes).sort();
+const trustedKeys = Object.keys(sourceHashes).sort();
+if (JSON.stringify(actualKeys) !== JSON.stringify(trustedKeys)) {
+  throw new Error('Live artifact coverage differs from trusted GitHub source');
+}
+if (JSON.stringify(manifest.artifactFiles) !== JSON.stringify(trusted.artifactFiles) ||
+    JSON.stringify(manifest.product) !== JSON.stringify(trusted.product) ||
+    JSON.stringify(manifest.capabilities) !== JSON.stringify(trusted.capabilities) ||
+    manifest.capabilityProfile !== trusted.capabilityProfile) {
+  throw new Error('Live product or capability contract differs from trusted GitHub source');
+}
+for (const file of trustedKeys) {
+  if (hashes[file] !== sourceHashes[file]) throw new Error('Live artifact hash differs from trusted GitHub source: ' + file);
 }
 
 const mismatches = [];
@@ -77,6 +109,6 @@ if (mismatches.length) {
 }
 
 console.log(
-  `Live runtime verified at ${base}: ${manifest.source?.sha} ${manifestFingerprint} ` +
+  `Live runtime content VERIFIED against trusted GitHub source at ${base}: ${manifest.source?.sha} ${manifestFingerprint} ` +
     `(${Object.keys(hashes).length} files re-hashed, env ${manifest.runtime?.environment})`
 );
