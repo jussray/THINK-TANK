@@ -31,7 +31,7 @@ h1,h2,h3{font-family:Georgia,'Times New Roman',serif;letter-spacing:-.025em;font
   background-color:#090615;
 }
 .hero-scene.scene::before{background:radial-gradient(circle at 67% 14%,#c196ff27,transparent 25%);}
-.hero-scene .ranges{opacity:0;pointer-events:none}
+.hero-scene .ranges{display:none}
 .hero-scene .hero-shell{
   min-height:590px;
   padding:32px clamp(24px,4vw,72px) 52px;
