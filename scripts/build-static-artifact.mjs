@@ -8,6 +8,13 @@ const out = '_site';
 const requiredFiles = [
   'index.html',
   'workspace.html',
+  'landing.html',
+  'assets/hero-scene.jpg',
+  'assets/band.jpg',
+  'assets/c1.jpg',
+  'assets/c2.jpg',
+  'assets/c3.jpg',
+  'assets/c4.jpg',
   'app/contracts/runtime-contracts.js',
   'app/stores/idea-store.js',
   'app/stores/local-idea-store.js',

@@ -21,6 +21,8 @@ A coherent interview record can improve an idea, but it does not convert assumpt
 
 The canonical entry surface is `index.html`.
 
+`landing.html` is a presentation surface only. It introduces the product and routes into `index.html`; it runs no deterministic role, stores nothing, and is covered by `tests/landing.spec.js`, which fails if it claims accounts, billing, team seats or API access. Which surface the public root serves is a founder decision and is **not** settled here.
+
 Canonical source repository:
 
 https://github.com/jussray/THINK-TANK
