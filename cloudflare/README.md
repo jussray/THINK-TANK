@@ -27,7 +27,7 @@ CI: .github/workflows/cloudflare-council.yml.
 
 ## Release gate (CLOSED)
 - The isolated `think-tank-council-preview` Worker is deployed at `https://think-tank-council-preview.mcgill-raylene.workers.dev`; Cloudflare readback showed source fingerprint `86d42196b2789ea4fae459a6ef85099d4e0af00e` and its matching D1 binding. Deployment is separate from the newer branch head. The existing `think-tank` Worker and `thinktank.jussco.company` route are untouched.
-- A specific Access application `Think Tank Council Preview` protects the preview hostname and Worker identity; unauthenticated probes of `/health` and `/api/me` returned `login_required`. However the attached reusable one-time-PIN policy is shared by five other apps and allows any authenticated email. Restrict the pilot through a preview-only policy before enabling model spend or inviting users. Do NOT edit the shared reusable policy.
+- A specific Access application `Think Tank Council Preview` protects the preview hostname and Worker identity. After auditing the original reusable one-time-PIN policy (also attached to four other apps), the preview was switched to a NEW application-specific, owner-email-only allow policy. Cloudflare readback confirmed `reusable:false`, exactly one email rule, unchanged Access audience and Worker/D1 binding. Anonymous `/api/me` still returned `login_required`. Other apps and the original shared policy were not modified.
 - Configure a scoped OPENAI_API_KEY Cloudflare secret and an intentionally selected OPENAI_MODEL only after its price and budget are accepted. No key is committed.
 - Verify real signed token, wrong-owner denial, idempotency, competing leases, expiry, model refusals, reconnect, persisted Court decision and no Bus delivery.
 - Verify deploy SHA, routing, browser behavior and D1 readback before switching production.
@@ -39,5 +39,6 @@ CI: .github/workflows/cloudflare-council.yml.
 - Preview Access app ID: `77aee3c1-9ccb-41d0-b7f5-00ffa928b4a4`.
 - Preview Access audience: `23a4f44b94fef56ec7562da17b5d77d1e4d5f9467f0624349ce84e69bfdc40cd`.
 - `/health` and `/api/me` anonymous read-only probes returned `login_required`; do not imply successful authenticated login.
+- Access policy hardening: preview-only inline policy `ee5a2fa5-6b56-49d1-981e-63ab7c32efa9` accepts the verified Cloudflare account owner; production and four other shared-policy applications remain untouched.
 - No `OPENAI_API_KEY` or `OPENAI_MODEL` is attached to the preview; therefore no real model executions can run.
 - Repo audience and initial status-readback drift corrected on branch after deployed `86d42196` version; redeploy and verify exact SHA before declaring current source live.
