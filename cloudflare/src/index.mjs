@@ -1,5 +1,6 @@
 import {verifyFounderAccess} from './access.mjs';
 import {runCouncilIntelligence} from './council-intelligence.mjs';
+import {embeddedAssetResponse} from './embedded-assets.mjs';
 
 const idPattern=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const keyPattern=/^[a-zA-Z0-9_-]{12,128}$/;
@@ -149,8 +150,10 @@ export default {
     return errorResponse(error);
    }
   }
-  if(env.ASSETS){
-   const response=await env.ASSETS.fetch(request);
+  let response=null;
+  if(env.ASSETS)response=await env.ASSETS.fetch(request);
+  else response=embeddedAssetResponse(request);
+  if(response){
    const headers=new Headers(response.headers);
    headers.set('content-security-policy',
     "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
