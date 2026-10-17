@@ -13,3 +13,113 @@ h1,h2,h3{font-family:Georgia,'Times New Roman',serif;letter-spacing:-.025em;font
 @media(max-width:760px){nav.top{height:66px;padding:0 16px}.toplinks{gap:14px;font-size:11px}.toplinks a:nth-child(3),.toplinks a:nth-child(4){display:none}.hero-shell{min-height:auto;display:block;padding:52px 20px 70px}.hero-copy{max-width:620px}.hero-copy h1{font-size:clamp(50px,14vw,74px)}.hero-art{min-height:420px;margin-top:8px}.portal-large{width:min(76vw,390px);top:6%}.figure{bottom:12%}.hero-promises{display:block}.hero-promises ul{display:block}.section-heading{display:block}.orbs{grid-template-columns:1fr}.workspace-shell{display:block}.side-rail{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--border);padding:14px}.side-logo{display:none}.side-nav{grid-template-columns:repeat(3,1fr)}.side-nav a,.nav-disabled{justify-content:center;padding:9px 7px}.side-nav span span,.nav-disabled span,.nav-disabled small{display:none}.saved-ideas{max-height:180px}.side-note{display:none}.app{padding:18px 14px 38px}.create-stage{padding:20px}.create-copy h1{font-size:42px}.card{padding:18px}.role-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.role-grid .orb-card{min-height:210px;padding:16px 10px}.orb{width:68px;height:68px}.workspace-topline{align-items:flex-start}.starter-labels{display:none}}
 @media(max-width:430px){.role-grid{grid-template-columns:1fr}.hero-promises li{padding:11px 0}.toplinks a:nth-child(2){display:none}.create-copy h1{font-size:38px}.row.between{align-items:flex-start}.primary,.outline{min-height:44px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+
+
+/* VISUAL CANON 2026-10-17: landscape-only crop of the founder-approved
+   1536x1024 Think Tank reference, not the six-screen mockup pasted as UI.
+   Public image path remains a real asset so text/buttons stay interactive. */
+.hero-scene.scene{
+  min-height:665px;
+  background-image:
+    linear-gradient(90deg,#080616f7 0%,#0b0718e8 19%,#0806198a 33%,#08061900 48%,#0b071600 67%,#080615e0 88%,#070612f5 100%),
+    linear-gradient(180deg,#08061660 0%,transparent 22%,transparent 77%,#070615d9 100%),
+    url('/hero-vista.webp'),
+    radial-gradient(ellipse 65% 68% at 52% 52%,#da98ba60 0%,#6e46782d 54%,#0a0717 95%);
+  background-position:center,center,52% 53%,center;
+  background-size:100% 100%,100% 100%,76% auto,cover;
+  background-repeat:no-repeat;
+  background-color:#090615;
+}
+.hero-scene.scene::before{background:radial-gradient(circle at 67% 14%,#c196ff27,transparent 25%);}
+.hero-scene .ranges{opacity:0;pointer-events:none}
+.hero-scene .hero-shell{
+  min-height:590px;
+  padding:32px clamp(24px,4vw,72px) 52px;
+  grid-template-columns:minmax(300px,1.04fr) minmax(320px,1.17fr) minmax(220px,.64fr);
+  gap:18px;
+}
+.hero-scene .hero-art{min-height:515px;pointer-events:none}
+.hero-scene .portal-large,
+.hero-scene .figure,
+.hero-scene .reflection{display:none}
+.hero-scene .hero-copy{z-index:3}
+.hero-scene .hero-copy h1{
+  font-size:clamp(57px,5.05vw,85px);
+  max-width:600px;
+  line-height:.97;
+  text-shadow:0 5px 22px #0a051add;
+}
+.hero-scene .hero-copy .lead{max-width:455px;text-shadow:0 3px 16px #090518d5}
+.hero-scene .hero-promises{
+  background:linear-gradient(90deg,#0807162b,#0807169e);
+  border-left:1px solid #be97e93c;
+  border-radius:0 12px 12px 0;
+  padding:16px 14px 18px 25px;
+  z-index:3;
+}
+.hero-scene .hero-promises blockquote{text-shadow:0 2px 14px #080514}
+.hero-scene .hero-promises li{padding:12px 0}
+.process-section::before{
+  content:"";position:absolute;inset:2% -5% auto;z-index:-1;height:360px;
+  background:radial-gradient(ellipse at 50% 35%,#8561d52c,transparent 70%);
+  pointer-events:none;
+}
+.workspace-page{
+  background:
+    radial-gradient(ellipse at 65% 8%,#b474f729,transparent 36%),
+    linear-gradient(180deg,#070615,#0d081d 70%);
+}
+.create-stage{
+  background-image:
+    linear-gradient(90deg,#0c0823ef 0%,#100924c4 41%,#170c2b56 76%,#070615df 100%),
+    url('/hero-vista.webp');
+  background-size:100% 100%,cover;
+  background-position:center,center 55%;
+  border-color:#b892ff61;
+}
+.create-stage::after{opacity:.08}
+.interview-card{
+  background-image:
+    linear-gradient(180deg,#0e0825eb 0%,#100b28c7 43%,#0b081bdd 100%),
+    url('/hero-vista.webp');
+  background-size:100% 100%,cover;
+  background-position:center,center;
+}
+.council-stage{
+  background-image:
+    linear-gradient(120deg,#110a26f3 0%,#180c38e6 65%,#170c32ca 100%),
+    radial-gradient(circle at 85% 17%,#a77de83d,transparent 40%);
+}
+.role-grid .orb-card{
+  background:
+    radial-gradient(circle at 50% 31%,#a67dea21,transparent 56%),
+    linear-gradient(180deg,#19112fda,#090716ed);
+  border-color:#bba1fa44;
+}
+.role-grid .orb{box-shadow:0 0 28px #b58af5ba,0 0 72px #8651f47d,inset 0 0 26px #ffffff42}
+@media(max-width:1100px){
+  .hero-scene.scene{background-size:100% 100%,100% 100%,100% auto,cover}
+  .hero-scene .hero-shell{grid-template-columns:minmax(310px,1fr) minmax(280px,1fr)}
+  .hero-scene .hero-promises{grid-column:1/-1;max-width:760px;margin:auto;border-left:0;border-top:1px solid #b894ff4f;border-radius:14px;background:#0b081bcf}
+  .hero-scene .hero-art{min-height:390px}
+}
+@media(max-width:760px){
+  .hero-scene.scene{
+    min-height:auto;
+    background-size:100% 100%,100% 100%,auto 390px,cover;
+    background-position:center,center,60% 180px,center;
+  }
+  .hero-scene .hero-shell{display:flex;flex-direction:column;gap:0;padding:46px 22px 46px}
+  .hero-scene .hero-copy{width:100%;max-width:600px}
+  .hero-scene .hero-copy h1{font-size:clamp(55px,14vw,76px);max-width:490px}
+  .hero-scene .hero-art{min-height:330px;width:100%}
+  .hero-scene .hero-promises{width:100%;margin:0;padding:18px;background:#090717d9}
+  .hero-scene .hero-promises ul{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+  .create-stage{background-position:center,62% 45%}
+}
+@media(max-width:430px){
+  .hero-scene.scene{background-size:100% 100%,100% 100%,auto 350px,cover;background-position:center,center,56% 290px,center}
+  .hero-scene .hero-copy h1{font-size:clamp(48px,14vw,62px)}
+  .hero-scene .hero-art{min-height:310px}
+  .hero-scene .hero-promises ul{grid-template-columns:1fr}
+}
