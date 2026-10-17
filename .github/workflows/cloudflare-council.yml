@@ -52,6 +52,32 @@ jobs:
         env:
           CI: 'true'
         run: npm run test:e2e
+      - name: Verify isolated preview is Access-protected
+        env:
+          PREVIEW_URL: https://think-tank-council-preview.mcgill-raylene.workers.dev
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in / /api/me; do
+            headers="$(mktemp)"
+            body="$(mktemp)"
+            status="$(curl -sS --max-time 20 --connect-timeout 10 -D "$headers" -o "$body" -w '%{http_code}' "$PREVIEW_URL$path")"
+            echo "$path -> HTTP $status"
+            if [ "$status" != "302" ]; then
+              echo "Expected Cloudflare Access redirect, got $status"
+              sed -n '1,20p' "$headers"
+              sed -n '1,8p' "$body"
+              exit 1
+            fi
+            location="$(awk 'BEGIN{IGNORECASE=1} /^location:/{sub(/^[^:]+:[[:space:]]*/, ""); sub(/\r$/, ""); print; exit}' "$headers")"
+            case "$location" in
+              https://jussray.cloudflareaccess.com/*) ;;
+              *)
+                echo "Unexpected redirect target: $location"
+                exit 1
+                ;;
+            esac
+          done
       - name: Upload visual review evidence
         if: always()
         uses: actions/upload-artifact@v4
