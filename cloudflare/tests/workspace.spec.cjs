@@ -26,8 +26,15 @@ test('mobile layout has no horizontal scroll; no fake agent completion',async({p
  await page.setViewportSize({width:390,height:844});
  for(const path of ['/','/workspace.html']){
   await page.goto(path);
-  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth);
-  expect(overflow).toBe(false);
+  const layout=await page.evaluate(()=>{
+   const width=document.documentElement.clientWidth;
+   return {viewport:width,scrollWidth:document.documentElement.scrollWidth,
+    offenders:[...document.querySelectorAll('*')].map(x=>({
+      tag:x.tagName,className:typeof x.className==='string'?x.className:'',text:x.textContent?.trim().slice(0,25)||'',
+      left:Math.round(x.getBoundingClientRect().left),right:Math.round(x.getBoundingClientRect().right)
+    })).filter(x=>x.right>width+1||x.left< -1).slice(0,15)};
+  });
+  expect(layout.scrollWidth<=layout.viewport,JSON.stringify({path,layout})).toBe(true);
  }
  await expect(page.getByText('Sign in through Cloudflare Access')).toBeVisible();
  await expect(page.getByText('Court: READY_FOR_EXTERNAL_VERIFICATION')).toHaveCount(0);
