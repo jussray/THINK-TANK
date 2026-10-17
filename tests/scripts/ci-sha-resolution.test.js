@@ -27,11 +27,15 @@ function gitlessCopy() {
   return dir;
 }
 
+// Workers Builds exports WORKERS_CI and WORKERS_CI_COMMIT_SHA into every process
+// it runs. A case that means "local" must not inherit them, or the suite passes
+// on a laptop and fails inside Cloudflare. Each case opts in explicitly instead.
 function run(dir, script, env = {}) {
+  const { WORKERS_CI, WORKERS_CI_COMMIT_SHA, ...ambient } = process.env;
   return spawnSync(process.execPath, [path.join('scripts', script)], {
     cwd: dir,
     encoding: 'utf8',
-    env: { ...process.env, ...env }
+    env: { ...ambient, ...env }
   });
 }
 
