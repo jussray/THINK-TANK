@@ -3,7 +3,9 @@
 // The caller owns JWKS fetch and caching; this module only verifies against the keys it is given.
 // Policy: RS256 only (rejects none and HS256 key confusion), kid required, private key material rejected,
 // exp required, nbf/iss/aud checked, sub required as a non-empty string.
-import { createPublicKey, verify as cryptoVerify, type JsonWebKey } from 'node:crypto'
+import { createPublicKey, verify as cryptoVerify, type webcrypto } from 'node:crypto'
+
+type JsonWebKey = webcrypto.JsonWebKey
 
 export interface VerifyConfig {
   jwks: { keys: Array<JsonWebKey & { kid?: string }> }
