@@ -21,9 +21,10 @@ This is a reviewable candidate, NOT a production fix. The historical June archiv
 ## Required tests
 - Signed valid fixture accepted.
 - Unsigned, tampered, expired, wrong issuer, wrong audience, missing subject, and unsupported algorithm rejected.
-- Cross-user ownership denied for stream and every protected procedure.
+- Cross-user ownership denied for stream and every protected procedure. Helper level DONE: `interview-scope.test.ts` (7 cases; mutant without the owner check fails 2). Route and procedure level OPEN.
 - Supabase RLS integration proven with real test identities.
-- Run `node --test repair-candidate/auth/jwt-rs256.test.ts repair-candidate/auth/verified-identity.test.ts repair-candidate/auth/consumer-import-paths.test.ts` on the exact candidate branch. Typecheck, dependency install and end-to-end tests required before merge.
+- Run `node --test repair-candidate/auth/jwt-rs256.test.ts repair-candidate/auth/verified-identity.test.ts repair-candidate/auth/interview-scope.test.ts repair-candidate/auth/consumer-import-paths.test.ts` on the exact candidate branch. Typecheck, dependency install and end-to-end tests required before merge.
 
-Verified here: `node --test repair-candidate/auth/jwt-rs256.test.ts repair-candidate/auth/verified-identity.test.ts` gives 33/33 pass; strict `tsc` is clean on the two auth files; decode-only mutant of `verified-identity.ts` fails 8 tests.
-Import paths corrected and source-level import resolution checked; new consumer import test has not yet been executed in CI. Not verified: the consumers (`trpc.ts`, `route.ts`) need `@trpc/server`, `@supabase/supabase-js`, Next.js and the app's `@/lib` modules, none installed here. Their wiring is unverified. No production claim.
+Verified here: `node --test repair-candidate/auth/jwt-rs256.test.ts repair-candidate/auth/verified-identity.test.ts repair-candidate/auth/interview-scope.test.ts` gives 40/40 pass; strict `tsc` is clean on the auth files; decode-only mutant of `verified-identity.ts` fails 8 tests; no-owner-check mutant of `interview-scope.ts` fails 2 tests.
+Import paths corrected and source-level import resolution checked. `consumer-import-paths.test.ts` gives 2/2 pass after its regex escapes were fixed (the file did not parse before); a wrong-path route mutant fails it.
+Not verified: the consumers (`trpc.ts`, `route.ts`) need `@trpc/server`, `@supabase/supabase-js`, Next.js and the app's `@/lib` modules, none installed here. Their wiring is unverified. No production claim.
