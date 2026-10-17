@@ -100,3 +100,35 @@ test('MemoryIdeaStore validates and isolates stored state from caller mutation',
   assert.equal(loaded.modules.customer, 'Founder');
   await assert.rejects(() => store.saveCurrent({ idea: 'invalid' }), ContractValidationError);
 });
+
+
+test('LocalIdeaStore keeps prior ideas when the founder starts fresh and can reopen each one', async () => {
+  const data = new Map();
+  const storage = {getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,String(value)),removeItem:key=>data.delete(key)};
+  const { stores: { LocalIdeaStore } } = loadStores({ localStorage:storage });
+  const store = new LocalIdeaStore();
+  const first=validRecord({id:'first-idea',idea:'First concept'});
+  const second=validRecord({id:'second-idea',idea:'Second concept'});
+  await store.saveCurrent(first);
+  await store.clearCurrent();
+  assert.equal(await store.loadCurrent(),null);
+  await store.saveCurrent(second);
+  const library=await store.loadAll();
+  assert.equal(library.length,2);
+  assert.deepEqual(new Set(library.map(i=>i.id)),new Set(['first-idea','second-idea']));
+  const reopened=await store.selectCurrent('first-idea');
+  assert.equal(reopened.idea,'First concept');
+  assert.equal((await store.loadCurrent()).id,'first-idea');
+});
+
+test('LocalIdeaStore imports an existing V0 active record into the readable library without deletion', async () => {
+  const previous=validRecord({id:'pre-library-idea'});
+  const data=new Map([['think-tank.idea-record.v0',JSON.stringify(previous)]]);
+  const storage={getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,String(value)),removeItem:key=>data.delete(key)};
+  const { stores: { LocalIdeaStore } }=loadStores({localStorage:storage});
+  const store=new LocalIdeaStore();
+  const library=await store.loadAll();
+  assert.equal(library.length,1);
+  assert.equal(library[0].id,'pre-library-idea');
+  await assert.rejects(()=>store.selectCurrent('nonexistent'),/not found/i);
+});
