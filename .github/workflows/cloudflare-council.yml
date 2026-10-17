@@ -1,0 +1,41 @@
+name: Cloudflare D1 Council gate
+on:
+  push:
+    branches:
+      - 'build/cloudflare-*'
+    paths:
+      - 'cloudflare/**'
+      - 'live/vendor/ultrathink-council/**'
+      - '.github/workflows/cloudflare-council.yml'
+  pull_request:
+    paths:
+      - 'cloudflare/**'
+      - '.github/workflows/cloudflare-council.yml'
+permissions:
+  contents: read
+concurrency:
+  group: cloudflare-council-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - name: Verify SQLite/D1 transaction and authorization contracts
+        run: python3 cloudflare/tests/test_schema.py -v
+      - name: Install isolated Cloudflare dependencies
+        working-directory: cloudflare
+        run: npm install
+      - name: Verify Council and Access contracts
+        working-directory: cloudflare
+        run: npm test
+      - name: Dry-run bundle, no deployment
+        working-directory: cloudflare
+        run: npm run check:build
+      - name: Production dependency audit
+        working-directory: cloudflare
+        run: npm audit --omit=dev --audit-level=high
