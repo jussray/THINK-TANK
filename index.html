@@ -46,29 +46,30 @@
 </style>
 </head>
 <body>
-<nav class="site-nav"><div class="wrap nav"><a class="brand" href="#home" aria-label="Think Tank home"><span class="brandmark" aria-hidden="true">✧</span> THINK TANK</a><div class="navlinks"><a href="#home">Home</a><a href="#idea-hub">My Ideas</a><a href="#roles">Explore</a><a href="#about">About</a></div><a class="nav-action" href="#interview">Start creating ↗</a></div></nav>
+<nav class="site-nav"><div class="wrap nav"><a class="brand" href="#home" aria-label="Think Tank home"><span class="brandmark" aria-hidden="true">♧</span> THINK TANK</a><div class="navlinks"><a href="#home">Home</a><a href="#idea-hub">My Ideas</a><a href="#roles">Explore</a><a href="#build">Build</a><a href="#about">About</a></div><a class="nav-action" href="#interview">Start creating ↗</a></div></nav>
 <header class="hero" id="home">
 <div class="hero-art" aria-hidden="true"><div class="sky-haze"></div><div class="portal"></div><div class="ridge far"></div><div class="ridge near"></div><div class="lake"></div></div>
 <div class="wrap hero-content">
  <div class="hero-copy"><div class="eyebrow">✦ YOUR NEXT CHAPTER STARTS HERE</div><h1>Where ideas become <em>companies.</em></h1><p class="hero-lede">Your idea deserves more than a quick answer. Explore, challenge, and shape it into a clearer next move.</p><div class="hero-actions"><a class="btn primary" href="#interview">Start Exploring <span aria-hidden="true">→</span></a><a class="btn" href="#roles">See how it works</a></div><div class="truth-note" data-testid="truth-boundary">Think Tank V0 is deterministic and local-first. Its score is a structured heuristic from your answers, not external market validation or proof of demand.</div></div>
- <aside class="hero-perks" aria-label="Why Think Tank"><p>“A place for bold ideas.”</p><ul><li>Explore possibilities</li><li>Get honest feedback</li><li>See real potential</li><li>Take your next step</li></ul></aside>
+ <aside class="hero-perks" aria-label="Why Think Tank"><p>“A safe place for bold ideas.”</p><ul><li>Explore possibilities</li><li>Get honest feedback</li><li>See real potential</li><li>Take your next step</li></ul></aside>
 </div></header>
 <main>
 <section class="workspace" id="interview"><div class="wrap">
-<div class="section-heading"><div><div class="eyebrow">01 · START SOMETHING</div><h2>What's on your mind?</h2></div><p class="muted">You don't have to have it all figured out. Begin with a thought, and we'll ask the difficult questions.</p></div>
+<div class="section-heading"><div><div class="eyebrow">01 · START</div><h2>Your next chapter starts here.</h2></div><p class="muted">You don't have to have it all figured out. Begin with a thought, and we'll ask the difficult questions.</p></div>
 <div class="interview-grid">
 <div class="panel">
  <div class="panel-head"><span>✦ GUIDED IDEA INTERVIEW</span><span id="sessionState">READY</span></div>
  <div class="panel-body">
-  <div id="setup"><span class="interview-tip">From first spark to clearer direction</span><h3>Let's explore your idea.</h3><p>Start with a sentence. We'll take it from there.</p>
+  <div id="setup"><span class="interview-tip">From first spark to clearer direction</span><h3>What's on your mind?</h3><p>You don't have to have it figured out. Start with a sentence.</p>
    <div class="field"><label for="ideaInput">Describe your idea, problem, or opportunity</label><textarea id="ideaInput" maxlength="4000" placeholder="I have an idea for…" data-testid="idea-input"></textarea></div>
    <button class="btn primary" id="startBtn" data-testid="start-interview">Explore my idea <span aria-hidden="true">→</span></button>
    <div class="starter-list" aria-label="Ways to start"><span class="starter-chip">I have an idea</span><span class="starter-chip">I want to solve a problem</span><span class="starter-chip">I'm considering a pivot</span></div>
   </div>
   <div id="conversation" class="hidden">
+   <div class="question-scene" aria-live="polite"><div class="micro-label" id="questionCount">Question 1 of 4</div><div class="progress-rail"><div id="questionProgress"></div></div><h3 id="questionTitle">What problem are you trying to solve?</h3><p class="muted">Be as open and detailed as you like. Your responses stay in this browser.</p></div>
    <div class="transcript" id="transcript" data-testid="transcript" aria-live="polite"></div>
    <div class="field" style="margin-top:18px"><label for="answerInput">Your answer</label><textarea id="answerInput" maxlength="8000" placeholder="Be specific. This is your space to think…" data-testid="answer-input"></textarea></div>
-   <div class="actions"><button class="btn primary" id="answerBtn" data-testid="submit-answer">Answer <span aria-hidden="true">→</span></button><button class="btn" id="resetBtn" data-testid="new-idea">New idea</button></div>
+   <div class="actions"><button class="btn" id="backBtn" data-testid="previous-question" disabled>← Back</button><button class="btn primary" id="answerBtn" data-testid="submit-answer">Next <span aria-hidden="true">→</span></button><button class="btn" id="resetBtn" data-testid="new-idea">New idea</button></div>
   </div>
  </div>
 </div>
@@ -89,21 +90,31 @@
  <div class="section-heading"><div><div class="eyebrow">03 · YOUR THINK TANK RESULTS</div><h2>Here's what we found.</h2></div><p class="muted">A balanced first look, grounded in your answers. Real-world demand remains unverified.</p></div>
  <div class="results-empty" id="resultsEmpty">Your results will appear here after the four-question interview. No fabricated score or market claims.</div>
  <div class="results-live hidden" id="resultsLive" aria-live="polite">
-  <div class="result-overview"><div><span class="micro-label">Overview · Fixed first-pass rubric</span><h3 id="resultIdea"></h3><p>The result reflects your interview answers, not independent customer research or investment advice.</p></div><div class="result-number" id="resultScore" aria-label="Heuristic score"></div></div>
+  <div class="result-tabs" role="tablist" aria-label="Analysis views"><button class="result-tab active" type="button" data-result-tab="overview" aria-selected="true">Overview</button><button class="result-tab" type="button" data-result-tab="analysis" aria-selected="false">Analysis</button><button class="result-tab" type="button" data-result-tab="opportunities" aria-selected="false">Opportunities</button><button class="result-tab" type="button" data-result-tab="risks" aria-selected="false">Risks</button><button class="result-tab" type="button" data-result-tab="next" aria-selected="false">Next Steps</button></div>
+  <div class="result-view" data-result-view="overview"><div class="result-overview"><div><span class="micro-label">Overview · Founder-input heuristic</span><h3 id="resultIdea"></h3><p>The result reflects your interview answers, not independent customer research or investment advice.</p></div><div class="result-number" id="resultScore" aria-label="Heuristic score"></div></div>
   <div class="results-grid">
    <article class="card"><span class="result-card-label">✦ Critic · Risks & assumptions</span><div class="result-text" id="resultCritique"></div></article>
    <article class="card"><span class="result-card-label">✦ Matchmaker · Next strategic test</span><div class="result-text" id="resultPattern"></div></article>
-  </div>
+  </div></div>
+  <section class="result-view card hidden" data-result-view="analysis"><h3>What your answers establish</h3><p class="result-text" id="resultAnalysis"></p></section>
+  <section class="result-view card hidden" data-result-view="opportunities"><h3>Opportunity to test</h3><p class="result-text" id="resultOpportunities"></p></section>
+  <section class="result-view card hidden" data-result-view="risks"><h3>Assumptions at risk</h3><p class="result-text" id="resultRisks"></p></section>
+  <section class="result-view card hidden" data-result-view="next"><h3>Recommended next experiment</h3><p class="result-text" id="resultNext"></p></section>
  </div>
 </div></section>
-<section class="idea-hub" id="idea-hub"><div class="wrap">
-<div class="section-heading"><div><div class="eyebrow">04 · BUILD ON WHAT YOU LEARN</div><h2>Turn insight into action.</h2></div><p class="muted">Save your thinking, keep your versions, and return to your idea with more clarity.</p></div>
+<section class="idea-hub" id="build"><div class="wrap">
+<div class="section-heading"><div><div class="eyebrow">04 · BUILD YOUR IDEA</div><h2>Turn insight into action.</h2></div><p class="muted">Save your thinking, keep your versions, and return to your idea with more clarity.</p></div>
 <div class="hub-grid">
- <div class="card hub-card"><div><div class="micro-label">Your Idea Hub</div><h3 style="margin:10px 0">Your progress stays yours.</h3><p class="muted">Think Tank keeps the current Idea Record and version history locally in your browser.</p></div><div><div class="micro-label">Versions</div><div id="versions" class="muted" data-testid="versions">No versions saved.</div></div></div>
+ <div class="card hub-card build-card"><div class="micro-label">Local-first action plan</div><h3 style="margin:10px 0">Your next four moves.</h3><p class="muted">Draft actions from your answers, not externally researched recommendations.</p><ol id="buildPlan" class="plan-list" data-testid="build-plan"><li>Complete an interview to create your first action plan.</li></ol><div class="micro-label">Saved versions</div><div id="versions" class="muted" data-testid="versions">No versions saved.</div></div>
  <div class="card hub-card"><div><div class="micro-label">Own your work</div><h3 style="margin:10px 0">Your idea, your record.</h3><p class="status">Export a portable JSON copy, or restore one you saved. There is no account or server sync in the verified V0.</p></div>
   <div class="actions"><button class="btn" id="exportBtn" data-testid="export-record">↓ Export JSON</button><label class="btn" for="importInput">↑ Import JSON</label><input class="hidden" id="importInput" data-testid="import-record" type="file" accept="application/json,.json"></div><div class="status" id="portabilityStatus" data-testid="portability-status" role="status" aria-live="polite">Ready.</div>
  </div>
 </div></div></section>
+<section class="ideas-library" id="idea-hub"><div class="wrap">
+<div class="section-heading"><div><div class="eyebrow">05 · YOUR IDEA HUB</div><h2>My Ideas</h2></div><button class="btn primary" id="newIdeaHub" type="button">+ New Idea</button></div>
+<p class="muted">Only your real, locally saved ideas appear here. Open one to continue. There is no cloud sync.</p>
+<div id="libraryRecords" class="library-grid" data-testid="idea-library" aria-live="polite"><p>No ideas saved yet. Start your first interview above.</p></div>
+</div></section>
 </main>
 <footer class="footer" id="about"><div class="wrap">THINK TANK · Where ideas become companies · V0 local-first interview and portable Idea Records</div></footer>
 <script src="./app/contracts/runtime-contracts.js"></script>
