@@ -51,6 +51,13 @@ jobs:
         run: npm run test:e2e:file
       - name: Packaged runtime Playwright
         run: npm run test:e2e:artifact
+      - name: Attach desktop and mobile visual receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: think-tank-visual-proof
+          path: visual-proof/*.png
+          if-no-files-found: warn
       - if: failure()
         uses: actions/upload-artifact@v4
         with:

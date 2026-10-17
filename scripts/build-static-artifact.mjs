@@ -7,6 +7,7 @@ import { execFileSync } from 'node:child_process';
 const out = '_site';
 const requiredFiles = [
   'index.html',
+  'assets/think-tank-hero-scene.webp',
   'workspace.html',
   'landing.html',
   'assets/hero-scene.jpg',
