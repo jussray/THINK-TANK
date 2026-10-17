@@ -31,6 +31,8 @@ The intended public deployment URL is `https://thinktank.jussco.company`, served
 
 Whether that URL is **live** remains **UNVERIFIED** here. It becomes verified when `scripts/verify-live-runtime.mjs` passes against it: that script re-fetches every file named in `artifactFileHashes` and re-hashes the bytes, so a pass attests to the served application rather than merely to a reachable page or a `version.json` that claims a SHA. Until such a run exists, treat the URL as intended, not as evidence of a deployment.
 
+`wrangler.jsonc` binds `thinktank.jussco.company` as a Cloudflare custom domain and sets `preview_urls: false`, so no branch build publishes an unapproved artifact under this product's name at a public `*.workers.dev` URL. Whether Workers Builds runs at all for non-production branches is a dashboard setting this repository cannot express.
+
 Cloudflare is the **only** publication path. The GitHub Pages workflow was removed rather than left as a dormant second owner. A Vercel project also builds this repository; it is not a deployment surface for this product and nothing here treats its output as public truth. Disconnecting it is a provider-side action that this repository cannot perform.
 
 ## Marketplace boundary
