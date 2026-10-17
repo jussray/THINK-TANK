@@ -42,9 +42,26 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify the served runtime matches the approved source
+      - name: Build trusted artifact from the checked-out exact source
+        shell: bash
+        env:
+          THINK_TANK_SOURCE_SHA: ${{ inputs.expected_head_sha }}
+          THINK_TANK_EXPECTED_SHA: ${{ inputs.expected_head_sha }}
+          THINK_TANK_RUNTIME_ENV: cloudflare-workers
+        run: |
+          set -euo pipefail
+          npm install
+          npm run build
+          npm run check:storage-boundary
+          npm run check:domain-purity
+          npm run test:unit
+      - name: Verify live bytes against trusted source artifact
         shell: bash
         env:
           THINK_TANK_EXPECTED_SHA: ${{ inputs.expected_head_sha }}
           THINK_TANK_EXPECTED_ENV: cloudflare-workers
-        run: node scripts/verify-live-runtime.mjs "${{ inputs.live_url }}"
+          THINK_TANK_TRUSTED_MANIFEST_FILE: _site/version.json
+          LIVE_URL: ${{ inputs.live_url }}
+        run: |
+          set -euo pipefail
+          node scripts/verify-live-runtime.mjs "$LIVE_URL"
