@@ -25,9 +25,11 @@ Canonical source repository:
 
 https://github.com/jussray/THINK-TANK
 
-The intended public deployment URL is `https://thinktank.jussco.company`, configured in-repo via `CNAME` and packaged into the inspected artifact.
+The intended public deployment URL is `https://thinktank.jussco.company`, served by **Cloudflare Workers** (`wrangler.jsonc`, assets-only, serving the inspected `_site` artifact). Cloudflare is the single owner of that hostname.
 
-Whether that URL is **live** remains **UNVERIFIED** here. It becomes verified only when the `publish-pages` deploy job's live check passes against it — that job re-fetches every served file and re-hashes it against `artifactFileHashes`, so a passing run attests to the served application, not merely to a reachable page. Until such a run exists, treat the URL as intended, not as evidence of a deployment.
+Whether that URL is **live** remains **UNVERIFIED** here. It becomes verified when `scripts/verify-live-runtime.mjs` passes against it: that script re-fetches every file named in `artifactFileHashes` and re-hashes the bytes, so a pass attests to the served application rather than merely to a reachable page or a `version.json` that claims a SHA. Until such a run exists, treat the URL as intended, not as evidence of a deployment.
+
+The GitHub Pages workflow remains a second publication path at its default `github.io` address and does **not** own this domain. Two publication paths to one hostname would be two owners of one apex; only Cloudflare is wired to it.
 
 ## Marketplace boundary
 

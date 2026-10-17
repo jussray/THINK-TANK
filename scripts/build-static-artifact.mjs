@@ -8,9 +8,6 @@ const out = '_site';
 const requiredFiles = [
   'index.html',
   'workspace.html',
-  // Custom domain for GitHub Pages. Packaged (not just set in repo settings) so
-  // it is covered by artifactFileHashes and cannot be swapped silently.
-  'CNAME',
   'app/contracts/runtime-contracts.js',
   'app/stores/idea-store.js',
   'app/stores/local-idea-store.js',
@@ -30,6 +27,10 @@ function readSha256(file) {
 function resolveSourceSha() {
   const explicit = process.env.THINK_TANK_SOURCE_SHA?.trim();
   if (explicit) return explicit;
+  // Cloudflare Workers Builds checks out without a usable git dir for some
+  // build images but always exports the commit it is building.
+  const workersCi = process.env.WORKERS_CI_COMMIT_SHA?.trim();
+  if (workersCi) return workersCi;
   try {
     return execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
   } catch {
