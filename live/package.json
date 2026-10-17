@@ -6,7 +6,8 @@
     "dev": "next dev -p 4180",
     "build": "next build",
     "start": "next start -p 4180",
-    "test": "node --experimental-strip-types --test tests/*.test.ts"
+    "test": "node --experimental-strip-types --test tests/*.test.ts tests/*.test.mjs",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "next": "16.4.2",
@@ -19,7 +20,8 @@
     "typescript": "5.9.3",
     "@types/node": "24.7.1",
     "@types/react": "19.2.0",
-    "@types/react-dom": "19.2.0"
+    "@types/react-dom": "19.2.0",
+    "@playwright/test": "1.55.0"
   },
   "type": "module"
 }
