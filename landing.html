@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Think Tank — Where ideas become companies</title>
+<meta name="description" content="Think Tank interviews your idea, challenges it, scores a fixed rubric and keeps a portable record you own.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: cinematic hero over a single scenic world, then a 3x2 grid of
+   product panels numbered as the founder's actual path through the app. */
+:root{
+  --void:#0A0710;
+  --deep:#120C1C;
+  --panel:#171026;
+  --panel-2:#1D1430;
+  --edge:rgba(188,160,255,.14);
+  --edge-soft:rgba(188,160,255,.08);
+  --ink:#F3EFFA;
+  --ink-dim:#A99DC2;
+  --ink-faint:#776B91;
+  --violet:#A855F7;
+  --violet-soft:#C4A6FB;
+  --violet-btn:#8B5CF6;
+  --amber:#E0A94B;
+  --sky:#7FA6E8;
+  --mint:#5FC3A6;
+  --rose:#E0708A;
+  --display:'Playfair Display',Georgia,'Times New Roman',serif;
+  --ui:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--void);
+  color:var(--ink);
+  font-family:var(--ui);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{margin:0;text-wrap:balance;}
+p{margin:0;}
+a{color:inherit;text-decoration:none;}
+img{max-width:100%;display:block;}
+
+.gutter{
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.shell{max-width:1460px;margin:0 auto;}
+
+/* ───────────── NAV ───────────── */
+nav{
+  position:sticky;
+  top:env(safe-area-inset-top,0px);
+  z-index:40;
+  background:rgba(10,7,16,.82);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--edge-soft);
+}
+body::before{
+  content:"";position:fixed;inset:0 0 auto;
+  height:env(safe-area-inset-top,0px);z-index:41;background:rgba(10,7,16,.95);
+}
+.nav-in{
+  display:flex;align-items:center;gap:28px;
+  padding-block:13px;
+}
+.brand{display:flex;align-items:center;gap:11px;margin-right:auto;}
+.mark{
+  width:34px;height:34px;border-radius:10px;flex:none;
+  background:linear-gradient(145deg,#B47CF8,#7C4DD6);
+  display:grid;place-items:center;
+  box-shadow:0 0 18px rgba(168,85,247,.45);
+}
+.mark svg{width:19px;height:19px;}
+.brand-name{
+  font-size:15px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+}
+.nav-links{display:flex;gap:26px;font-size:14px;color:var(--ink-dim);}
+.nav-links a.on{color:var(--ink);font-weight:500;}
+.nav-tools{display:flex;align-items:center;gap:16px;color:var(--ink-dim);}
+.nav-tools svg{width:18px;height:18px;display:block;}
+.avatar{
+  width:30px;height:30px;border-radius:50%;flex:none;
+  background:linear-gradient(140deg,#6B4AA0,#3D2C5C);
+  border:1px solid var(--edge);
+  display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--violet-soft);
+}
+
+/* ───────────── HERO ───────────── */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--edge-soft);}
+.hero-bg{position:absolute;inset:0;z-index:0;}
+.hero-bg img{
+  width:100%;height:100%;object-fit:cover;object-position:center 38%;
+}
+.hero-bg::after{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,rgba(10,7,16,.95) 0%,rgba(10,7,16,.72) 26%,rgba(10,7,16,.18) 48%,rgba(10,7,16,.72) 74%,rgba(10,7,16,.95) 100%),
+    linear-gradient(180deg,rgba(10,7,16,.6) 0%,transparent 30%,rgba(10,7,16,.75) 100%);
+}
+.hero-in{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:40px;align-items:center;
+  padding-block:74px 68px;min-height:420px;
+}
+.hero h1{
+  font-family:var(--display);
+  font-weight:700;
+  font-size:clamp(40px,6.4vw,78px);
+  line-height:.98;
+  letter-spacing:-.015em;
+  max-width:11ch;
+}
+.hero h1 em{font-style:normal;color:var(--violet);}
+.hero-sub{
+  margin-top:20px;max-width:42ch;
+  font-size:16px;line-height:1.62;color:var(--ink-dim);
+}
+.start-btn{
+  display:inline-flex;align-items:center;gap:9px;
+  margin-top:30px;padding:14px 26px;border-radius:999px;
+  background:var(--violet-btn);color:#fff;font-weight:600;font-size:15px;
+  box-shadow:0 10px 34px rgba(124,77,214,.5);
+  border:1px solid rgba(255,255,255,.14);
+}
+.hero-rail{max-width:300px;}
+.pull{
+  font-family:var(--display);font-style:italic;font-weight:500;
+  font-size:clamp(19px,2vw,25px);line-height:1.3;color:var(--violet-soft);
+  margin-bottom:26px;
+}
+.pull-line{display:block;padding-left:14px;}
+.rail-item{display:flex;align-items:center;gap:13px;padding:9px 0;font-size:14.5px;}
+.rail-ico{
+  width:27px;height:27px;border-radius:50%;flex:none;
+  border:1px solid rgba(196,166,251,.4);display:grid;place-items:center;
+  color:var(--violet-soft);
+}
+.rail-ico svg{width:13px;height:13px;}
+
+/* ───────────── PANEL GRID ───────────── */
+.grid{
+  display:grid;gap:14px;padding-block:14px 30px;
+  grid-template-columns:1.52fr 1fr 1.02fr;
+}
+.card{
+  position:relative;overflow:hidden;
+  background:var(--panel);
+  border:1px solid var(--edge-soft);
+  border-radius:14px;
+  min-width:0;
+  display:flex;flex-direction:column;
+}
+.card-scene{position:absolute;inset:0;z-index:0;opacity:.3;}
+.card-scene img{width:100%;height:100%;object-fit:cover;}
+.card-scene::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(18,12,28,.72),rgba(18,12,28,.95));
+}
+.card-in{position:relative;z-index:1;display:flex;flex-direction:column;flex:1;}
+.step{
+  font-size:11px;font-weight:600;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--ink-faint);padding:15px 18px 0;
+}
+.step b{color:var(--ink-dim);font-weight:600;}
+
+/* shared app chrome */
+.app{display:flex;flex:1;min-height:0;}
+.side{
+  width:116px;flex:none;border-right:1px solid var(--edge-soft);
+  padding:16px 10px;display:flex;flex-direction:column;gap:3px;
+  background:rgba(10,7,16,.5);
+}
+.side .brand{margin:0 0 16px 4px;gap:8px;}
+.side .mark{width:22px;height:22px;border-radius:7px;box-shadow:none;}
+.side .mark svg{width:13px;height:13px;}
+.side .brand-name{font-size:8.5px;letter-spacing:.13em;}
+.nav-i{
+  display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:7px;
+  font-size:11.5px;color:var(--ink-faint);
+}
+.nav-i.on{background:rgba(168,85,247,.16);color:var(--ink);}
+.nav-i svg{width:12px;height:12px;flex:none;}
+.side-foot{margin-top:auto;}
+.stage{flex:1;min-width:0;padding:22px 20px 24px;display:flex;flex-direction:column;}
+
+/* 1 — START */
+.kicker{
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-faint);text-align:center;margin-bottom:12px;
+}
+.ask{
+  font-family:var(--display);font-weight:500;
+  font-size:clamp(24px,2.5vw,33px);text-align:center;line-height:1.1;
+}
+.ask-sub{text-align:center;color:var(--ink-dim);font-size:13.5px;margin-top:9px;}
+.field{
+  display:flex;align-items:center;gap:10px;margin-top:20px;
+  background:rgba(10,7,16,.72);border:1px solid var(--edge);
+  border-radius:999px;padding:11px 11px 11px 17px;
+}
+.field .ph{flex:1;min-width:0;color:var(--ink-faint);font-size:13.5px;}
+.field svg{width:16px;height:16px;color:var(--ink-faint);flex:none;}
+.go{
+  width:33px;height:33px;border-radius:50%;flex:none;
+  background:var(--violet-btn);display:grid;place-items:center;color:#fff;
+}
+.go svg{width:15px;height:15px;color:#fff;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;}
+.chip{
+  font-size:12px;padding:7px 13px;border-radius:999px;
+  background:rgba(255,255,255,.05);border:1px solid var(--edge-soft);color:var(--ink-dim);
+}
+
+/* 2 — INTERVIEW */
+.bar{height:3px;border-radius:2px;background:rgba(255,255,255,.1);overflow:hidden;flex:1;}
+.bar i{display:block;height:100%;width:25%;background:var(--violet);border-radius:2px;}
+.bar-row{display:flex;align-items:center;gap:14px;}
+.q-count{font-size:11.5px;color:var(--ink-faint);flex:none;}
+.q{
+  font-family:var(--display);font-weight:500;
+  font-size:clamp(21px,2.1vw,27px);text-align:center;line-height:1.16;
+  margin-top:auto;
+}
+.q-hint{text-align:center;color:var(--ink-dim);font-size:12.5px;margin-top:10px;}
+.answer{
+  margin-top:16px;border:1px solid var(--edge);border-radius:11px;
+  background:rgba(10,7,16,.62);padding:13px 14px;
+  display:flex;align-items:flex-start;gap:10px;min-height:76px;
+}
+.answer .ph{flex:1;color:var(--ink-faint);font-size:13px;}
+.answer svg{width:15px;height:15px;color:var(--ink-faint);flex:none;}
+.q-nav{display:flex;justify-content:space-between;gap:12px;margin-top:auto;padding-top:18px;}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 17px;border-radius:999px;font-size:13px;
+  border:1px solid var(--edge);color:var(--ink-dim);
+}
+.btn-next{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 19px;border-radius:999px;font-size:13px;font-weight:600;
+  background:var(--violet-btn);color:#fff;border:1px solid rgba(255,255,255,.14);
+}
+.btn-ghost svg,.btn-next svg{width:13px;height:13px;}
+
+/* 3 — EXPLORATION */
+.analyzing{
+  display:flex;align-items:center;gap:8px;justify-content:flex-end;
+  font-size:11px;color:var(--ink-dim);padding:15px 18px 0;
+}
+.pulse{
+  width:13px;height:13px;border-radius:50%;flex:none;
+  background:radial-gradient(circle at 35% 32%,#D9BBFF,#8B5CF6 62%,#4C2C86);
+  animation:breathe 2.6s ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{opacity:.5}50%{opacity:1}}
+.orbs{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px 10px;
+  padding:16px 16px 22px;flex:1;align-content:center;
+}
+.orb-cell{text-align:center;}
+.orb{
+  width:clamp(66px,7vw,88px);aspect-ratio:1;border-radius:50%;margin:0 auto 11px;
+  position:relative;
+}
+.orb::after{
+  content:"";position:absolute;inset:-30%;border-radius:50%;
+  background:radial-gradient(circle,var(--glow) 0%,transparent 64%);
+  opacity:.5;
+}
+.orb i{
+  position:absolute;inset:0;border-radius:50%;
+  background:
+    radial-gradient(circle at 33% 28%,rgba(255,255,255,.82) 0%,transparent 26%),
+    radial-gradient(circle at 62% 70%,var(--c2) 0%,transparent 56%),
+    radial-gradient(circle at 50% 50%,var(--c1) 22%,var(--c3) 100%);
+  box-shadow:inset 0 0 22px rgba(255,255,255,.22),0 0 26px var(--glow);
+}
+.orb-cell h4{font-size:14px;font-weight:600;margin-bottom:5px;}
+.orb-cell p{font-size:11.5px;line-height:1.45;color:var(--ink-dim);}
+.o-critic{--c1:#9A5CF0;--c2:#E0A6FF;--c3:#3A1C66;--glow:rgba(154,92,240,.5);}
+.o-score{--c1:#D79A3E;--c2:#F6DCA0;--c3:#5A3A12;--glow:rgba(215,154,62,.45);}
+.o-synth{--c1:#4E7FD6;--c2:#A9C8F7;--c3:#1B2F5C;--glow:rgba(78,127,214,.45);}
+.o-match{--c1:#3FA98C;--c2:#9FE6CE;--c3:#14402F;--glow:rgba(63,169,140,.45);}
+
+/* 4 — RESULTS */
+.res-head{font-family:var(--display);font-weight:500;font-size:clamp(21px,2.1vw,27px);}
+.res-sub{color:var(--ink-dim);font-size:13px;margin-top:7px;}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 14px;}
+.tab{
+  font-size:12px;padding:6px 12px;border-radius:7px;color:var(--ink-faint);
+}
+.tab.on{background:rgba(168,85,247,.16);color:var(--ink);font-weight:500;}
+.res-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:stretch;}
+.bottom-line{
+  background:rgba(255,255,255,.035);border:1px solid var(--edge-soft);
+  border-radius:11px;padding:14px 15px;min-width:0;
+}
+.bl-head{display:flex;align-items:center;gap:8px;font-weight:600;font-size:13.5px;margin-bottom:7px;}
+.bl-head svg{width:15px;height:15px;color:var(--amber);flex:none;}
+.bottom-line p{font-size:12.5px;line-height:1.55;color:var(--ink-dim);}
+.gauge{
+  background:rgba(255,255,255,.035);border:1px solid var(--edge-soft);
+  border-radius:11px;padding:12px 16px;text-align:center;flex:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.gauge-cap{font-size:10.5px;color:var(--ink-faint);margin-bottom:6px;letter-spacing:.04em;}
+.gauge svg{width:96px;height:58px;display:block;}
+.gauge .val{
+  font-family:var(--display);font-size:25px;font-weight:700;fill:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+.gauge .den{font-size:9px;fill:var(--ink-faint);font-family:var(--ui);}
+.gauge-note{font-size:10.5px;color:var(--mint);margin-top:3px;font-weight:500;}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;}
+.mini{
+  background:rgba(255,255,255,.035);border:1px solid var(--edge-soft);
+  border-radius:11px;padding:12px 13px;min-width:0;
+}
+.mini h5{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;margin:0 0 9px;}
+.mini h5 svg{width:14px;height:14px;flex:none;}
+.mini ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;}
+.mini li{font-size:11.5px;color:var(--ink-dim);display:flex;gap:7px;line-height:1.35;}
+.dot{width:5px;height:5px;border-radius:50%;flex:none;margin-top:5px;}
+.g .dot{background:var(--mint);} .g h5 svg{color:var(--mint);}
+.r .dot{background:var(--rose);} .r h5 svg{color:var(--rose);}
+.b .dot{background:var(--sky);}  .b h5 svg{color:var(--sky);}
+
+/* 5 — BUILD */
+.build-head{font-family:var(--display);font-weight:500;font-size:clamp(20px,2vw,25px);}
+.proj{
+  display:flex;align-items:center;gap:11px;margin-top:16px;
+  background:rgba(255,255,255,.04);border:1px solid var(--edge-soft);
+  border-radius:11px;padding:12px 13px;
+}
+.proj-ico{
+  width:33px;height:33px;border-radius:9px;flex:none;display:grid;place-items:center;
+  background:linear-gradient(145deg,#3FA98C,#1D6B55);
+}
+.proj-ico svg{width:16px;height:16px;color:#E8FFF7;}
+.proj-name{font-size:13.5px;font-weight:600;}
+.proj-meta{font-size:10.5px;color:var(--ink-faint);margin-top:2px;}
+.saved{
+  margin-left:auto;font-size:10.5px;color:var(--mint);
+  display:flex;align-items:center;gap:5px;flex:none;
+}
+.saved svg{width:11px;height:11px;}
+.steps{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;}
+.steps li{
+  display:flex;align-items:center;gap:11px;
+  background:rgba(255,255,255,.03);border:1px solid var(--edge-soft);
+  border-radius:10px;padding:10px 12px;
+}
+.num{
+  width:21px;height:21px;border-radius:50%;flex:none;display:grid;place-items:center;
+  background:rgba(168,85,247,.2);color:var(--violet-soft);
+  font-size:10.5px;font-weight:600;
+}
+.step-t{font-size:12.5px;font-weight:500;}
+.step-m{font-size:10.5px;color:var(--ink-faint);margin-top:2px;}
+.box{
+  width:14px;height:14px;border-radius:4px;flex:none;margin-left:auto;
+  border:1px solid var(--edge);
+}
+
+/* 6 — HUB */
+.hub-top{display:flex;align-items:flex-start;gap:12px;}
+.hub-top h3{font-family:var(--display);font-weight:500;font-size:clamp(20px,2vw,25px);}
+.new-idea{
+  margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:6px;
+  font-size:11.5px;padding:7px 13px;border-radius:999px;
+  border:1px solid var(--edge);color:var(--ink-dim);
+}
+.new-idea svg{width:11px;height:11px;}
+.ideas{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.idea{
+  border:1px solid var(--edge-soft);border-radius:11px;overflow:hidden;
+  background:rgba(255,255,255,.03);min-width:0;
+}
+.idea-img{aspect-ratio:16/9;overflow:hidden;}
+.idea-img img{width:100%;height:100%;object-fit:cover;}
+.idea-body{padding:9px 10px 11px;}
+.idea h4{font-size:12px;font-weight:600;line-height:1.3;}
+.idea-meta{font-size:9.5px;color:var(--ink-faint);margin-top:3px;}
+.pill{
+  display:inline-block;margin-top:7px;font-size:9.5px;font-weight:500;
+  padding:3px 9px;border-radius:999px;
+}
+.p-exp{background:rgba(168,85,247,.2);color:var(--violet-soft);}
+.p-res{background:rgba(127,166,232,.18);color:var(--sky);}
+.p-pla{background:rgba(224,169,75,.18);color:var(--amber);}
+.p-ear{background:rgba(95,195,166,.18);color:var(--mint);}
+
+/* ───────────── FOOTER ───────────── */
+footer{border-top:1px solid var(--edge-soft);}
+.foot-in{
+  display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+  padding-block:24px;font-size:12.5px;color:var(--ink-faint);
+}
+.truth{
+  max-width:76ch;font-size:11.5px;line-height:1.6;color:var(--ink-faint);
+  padding-block:0 26px;
+}
+.truth b{color:var(--ink-dim);font-weight:600;}
+
+@media (max-width:1180px){
+  .grid{grid-template-columns:1fr 1fr;}
+  .card.span{grid-column:1 / -1;}
+}
+@media (max-width:760px){
+  .grid{grid-template-columns:1fr;}
+  .card.span{grid-column:auto;}
+  .hero-in{grid-template-columns:1fr;padding-block:56px 46px;}
+  .hero-rail{max-width:none;}
+  .nav-links{display:none;}
+  .side{display:none;}
+  .res-row{grid-template-columns:1fr;}
+  .tri{grid-template-columns:1fr;}
+}
+@media (prefers-reduced-motion:reduce){
+  .pulse{animation:none;}
+}
+</style>
+
+</head>
+<body>
+<nav class="gutter">
+  <div class="shell nav-in">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round">
+          <path d="M9 4a2.6 2.6 0 0 0-2.6 2.6A2.4 2.4 0 0 0 4.5 9c0 .9.5 1.7 1.2 2.1A2.5 2.5 0 0 0 5 13.2c0 1.2.8 2.2 1.9 2.5A2.4 2.4 0 0 0 9.3 20 2.7 2.7 0 0 0 12 17.6V5.9A2 2 0 0 0 9 4Z"/>
+          <path d="M15 4a2.6 2.6 0 0 1 2.6 2.6A2.4 2.4 0 0 1 19.5 9c0 .9-.5 1.7-1.2 2.1a2.5 2.5 0 0 1 .7 2.1c0 1.2-.8 2.2-1.9 2.5A2.4 2.4 0 0 1 14.7 20 2.7 2.7 0 0 1 12 17.6"/>
+        </svg>
+      </span>
+      <span class="brand-name">Think Tank</span>
+    </div>
+    <div class="nav-links">
+      <a href="./landing.html" class="on">Home</a>
+      <a href="./workspace.html">Ideas</a>
+      <a href="#" >Resources</a>
+      <a href="#truth">About</a>
+    </div>
+    <div class="nav-tools">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg>
+      <span class="avatar">JR</span>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-bg" aria-hidden="true"><img src="assets/hero-scene.jpg" alt=""></div>
+  <div class="shell hero-in gutter">
+    <div>
+      <h1>Where ideas become <em>companies.</em></h1>
+      <p class="hero-sub">A cinematic thinking partner that helps you explore, challenge, and build your ideas into real opportunities.</p>
+      <a href="./index.html" class="start-btn">
+        Start Exploring
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:15px;height:15px"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <div class="hero-rail">
+      <div class="pull">
+        <span class="pull-line">&ldquo; A safe place</span>
+        <span class="pull-line">for bold ideas. &rdquo;</span>
+      </div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></span>Explore possibilities</div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6Z"/></svg></span>Get honest feedback</div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11v2h6v-2a6 6 0 0 0-3-11Z"/></svg></span>See real potential</div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>Take your next step</div>
+    </div>
+  </div>
+</header>
+
+<main class="shell grid gutter" id="ideas">
+
+  <!-- 1 — START -->
+  <section class="card">
+    <div class="card-scene" aria-hidden="true"><img src="assets/band.jpg" alt=""></div>
+    <div class="card-in">
+      <div class="step"><b>1.</b> Start</div>
+      <div class="app">
+        <aside class="side">
+          <div class="brand">
+            <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M9 4a2.6 2.6 0 0 0-2.6 2.6A2.4 2.4 0 0 0 4.5 9c0 2 1.5 2 1.5 4s-1 2.5 1 3.5S9 20 12 20V4Z"/></svg></span>
+            <span class="brand-name">Think Tank</span>
+          </div>
+          <span class="nav-i on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m4 11 8-7 8 7v8a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1Z"/></svg>Home</span>
+          <span class="nav-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M12 3a6 6 0 0 0-3 11v2h6v-2a6 6 0 0 0-3-11Z"/></svg>My Ideas</span>
+          <span class="nav-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Create</span>
+          <span class="nav-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Explore</span>
+          <span class="nav-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h11l3 3v13H5Z"/></svg>Resources</span>
+          <span class="nav-i side-foot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 3v2m0 14v2M3 12h2m14 0h2"/></svg>Settings</span>
+        </aside>
+        <div class="stage">
+          <div class="kicker">Your next chapter starts here</div>
+          <h3 class="ask">What&rsquo;s on your mind?</h3>
+          <p class="ask-sub">You don&rsquo;t have to have it figured out.</p>
+          <div class="field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--violet-soft)" stroke-width="1.8"><path d="m12 4 1.6 4.4L18 10l-4.4 1.6L12 16l-1.6-4.4L6 10l4.4-1.6Z"/></svg>
+            <span class="ph">Describe an idea, a problem, or a dream&hellip;</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m4 17 5-4 4 3 3-2 4 3"/></svg>
+            <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h12M12 6l6 6-6 6"/></svg></span>
+          </div>
+          <div class="chips">
+            <span class="chip">I have an idea</span>
+            <span class="chip">I want to solve a problem</span>
+            <span class="chip">I&rsquo;m exploring a market</span>
+            <span class="chip">I want feedback</span>
+            <span class="chip">Help me find opportunities</span>
+            <span class="chip">Something else&hellip;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 — GUIDED INTERVIEW -->
+  <section class="card">
+    <div class="card-scene" aria-hidden="true"><img src="assets/band.jpg" alt="" style="object-position:70% 50%"></div>
+    <div class="card-in">
+      <div class="step"><b>2.</b> Guided interview</div>
+      <div class="stage">
+        <div class="bar-row">
+          <span class="bar"><i></i></span>
+          <span class="q-count">Question 1 of 4</span>
+        </div>
+        <h3 class="q">What problem are you trying to solve?</h3>
+        <p class="q-hint">Be as open and detailed as you like. There are no wrong answers.</p>
+        <div class="answer">
+          <span class="ph">Type your answer or speak&hellip;</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+        </div>
+        <div class="q-nav">
+          <span class="btn-ghost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H6m5-6-6 6 6 6"/></svg>Back</span>
+          <span class="btn-next">Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h13m-5-6 6 6-6 6"/></svg></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 — EXPLORATION -->
+  <section class="card">
+    <div class="card-in">
+      <div class="step"><b>3.</b> Exploration</div>
+      <div class="analyzing"><span class="pulse"></span>Reviewing your idea&hellip;</div>
+      <div class="orbs">
+        <div class="orb-cell">
+          <span class="orb o-critic"><i></i></span>
+          <h4>The Critic</h4>
+          <p>Challenges assumptions and finds blind spots</p>
+        </div>
+        <div class="orb-cell">
+          <span class="orb o-score"><i></i></span>
+          <h4>The Scorecard</h4>
+          <p>Evaluates potential and viability</p>
+        </div>
+        <div class="orb-cell">
+          <span class="orb o-synth"><i></i></span>
+          <h4>The Synthesizer</h4>
+          <p>Connects insights and uncovers opportunities</p>
+        </div>
+        <div class="orb-cell">
+          <span class="orb o-match"><i></i></span>
+          <h4>The Matchmaker</h4>
+          <p>Finds patterns and real-world possibilities</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 — RESULTS -->
+  <section class="card">
+    <div class="card-scene" aria-hidden="true"><img src="assets/band.jpg" alt="" style="object-position:20% 60%"></div>
+    <div class="card-in">
+      <div class="step"><b>4.</b> Results</div>
+      <div class="app">
+        <aside class="side">
+          <div class="brand">
+            <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M9 4a2.6 2.6 0 0 0-2.6 2.6A2.4 2.4 0 0 0 4.5 9c0 2 1.5 2 1.5 4s-1 2.5 1 3.5S9 20 12 20V4Z"/></svg></span>
+            <span class="brand-name">Think Tank</span>
+          </div>
+          <span class="nav-i on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m4 11 8-7 8 7v8a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1Z"/></svg>Home</span>
+          <span class="nav-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M12 3a6 6 0 0 0-3 11v2h6v-2a6 6 0 0 0-3-11Z"/></svg>My Ideas</span>
+          <span class="nav-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Create</span>
+          <span class="nav-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Explore</span>
+          <span class="nav-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h11l3 3v13H5Z"/></svg>Resources</span>
+          <span class="nav-i side-foot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 3v2m0 14v2M3 12h2m14 0h2"/></svg>Settings</span>
+        </aside>
+        <div class="stage">
+          <h3 class="res-head">Here&rsquo;s what we found.</h3>
+          <p class="res-sub">A balanced view of your idea, with real insights and next steps.</p>
+          <div class="tabs">
+            <span class="tab on">Overview</span><span class="tab">Analysis</span>
+            <span class="tab">Opportunities</span><span class="tab">Risks</span><span class="tab">Next Steps</span>
+          </div>
+          <div class="res-row">
+            <div class="bottom-line">
+              <div class="bl-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11v2h6v-2a6 6 0 0 0-3-11Z"/></svg>Bottom Line</div>
+              <p>Your idea has strong potential, particularly in the growing demand for sustainable solutions. There are some key risks to consider, but overall this looks like a promising opportunity.</p>
+            </div>
+            <div class="gauge">
+              <div class="gauge-cap">Potential Score</div>
+              <svg viewBox="0 0 100 60" role="img" aria-label="Potential score 8 out of 10">
+                <path d="M10 52a40 40 0 0 1 80 0" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="7" stroke-linecap="round"/>
+                <path d="M10 52a40 40 0 0 1 80 0" fill="none" stroke="#5FC3A6" stroke-width="7" stroke-linecap="round"
+                      stroke-dasharray="126" stroke-dashoffset="25"/>
+                <text class="val" x="50" y="48" text-anchor="middle">8</text>
+                <text class="den" x="73" y="48" text-anchor="start">/10</text>
+              </svg>
+              <div class="gauge-note">Strong Potential</div>
+            </div>
+          </div>
+          <div class="tri">
+            <div class="mini g">
+              <h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>Key Strengths</h5>
+              <ul>
+                <li><span class="dot"></span>Solves a real problem</li>
+                <li><span class="dot"></span>Growing market demand</li>
+                <li><span class="dot"></span>Aligned with future trends</li>
+              </ul>
+            </div>
+            <div class="mini r">
+              <h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>Key Risks</h5>
+              <ul>
+                <li><span class="dot"></span>Competitive landscape</li>
+                <li><span class="dot"></span>Regulatory considerations</li>
+                <li><span class="dot"></span>Execution complexity</li>
+              </ul>
+            </div>
+            <div class="mini b">
+              <h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 4 1.8 5.2L19 11l-5.2 1.8L12 18l-1.8-5.2L5 11l5.2-1.8Z"/></svg>Top Opportunities</h5>
+              <ul>
+                <li><span class="dot"></span>Untapped market segment</li>
+                <li><span class="dot"></span>Strategic partnerships</li>
+                <li><span class="dot"></span>Scalable business model</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 — BUILD -->
+  <section class="card">
+    <div class="card-scene" aria-hidden="true"><img src="assets/band.jpg" alt="" style="object-position:85% 40%"></div>
+    <div class="card-in">
+      <div class="step"><b>5.</b> Build your idea</div>
+      <div class="stage">
+        <h3 class="build-head">Turn insight into action.</h3>
+        <p class="res-sub">Your idea is saved and ready to grow.</p>
+        <div class="proj">
+          <span class="proj-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21c4-2 7-5 7-9V6l-7-3-7 3v6c0 4 3 7 7 9Z"/><path d="M12 8v7"/></svg></span>
+          <div>
+            <div class="proj-name">Sustainable Packaging Platform</div>
+            <div class="proj-meta">Saved just now</div>
+          </div>
+          <span class="saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>Saved just now</span>
+        </div>
+        <div class="tabs">
+          <span class="tab on">Plan</span><span class="tab">Milestones</span>
+          <span class="tab">Research</span><span class="tab">People</span><span class="tab">Versions</span>
+        </div>
+        <ul class="steps">
+          <li><span class="num">1</span><div><div class="step-t">Validate the market opportunity</div><div class="step-m">Market research &middot; 1&ndash;2 weeks</div></div><span class="box"></span></li>
+          <li><span class="num">2</span><div><div class="step-t">Define your MVP</div><div class="step-m">Core features &middot; 2&ndash;3 weeks</div></div><span class="box"></span></li>
+          <li><span class="num">3</span><div><div class="step-t">Find potential partners</div><div class="step-m">Industry contacts &middot; 2&ndash;4 weeks</div></div><span class="box"></span></li>
+          <li><span class="num">4</span><div><div class="step-t">Build and test</div><div class="step-m">Prototype &middot; 4&ndash;8 weeks</div></div><span class="box"></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 — IDEA HUB -->
+  <section class="card">
+    <div class="card-in">
+      <div class="step"><b>6.</b> Your idea hub</div>
+      <div class="stage">
+        <div class="hub-top">
+          <div>
+            <h3>My Ideas</h3>
+            <p class="res-sub">Continue your journey or explore a new direction.</p>
+          </div>
+          <span class="new-idea"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>New Idea</span>
+        </div>
+        <div class="ideas">
+          <article class="idea">
+            <div class="idea-img"><img src="assets/c1.jpg" alt=""></div>
+            <div class="idea-body">
+              <h4>Sustainable Packaging Platform</h4>
+              <div class="idea-meta">Updated 2 hours ago</div>
+              <span class="pill p-exp">Exploring</span>
+            </div>
+          </article>
+          <article class="idea">
+            <div class="idea-img"><img src="assets/c2.jpg" alt=""></div>
+            <div class="idea-body">
+              <h4>Learning Companion</h4>
+              <div class="idea-meta">Updated 3 days ago</div>
+              <span class="pill p-res">Researching</span>
+            </div>
+          </article>
+          <article class="idea">
+            <div class="idea-img"><img src="assets/c3.jpg" alt=""></div>
+            <div class="idea-body">
+              <h4>Local Maker Marketplace</h4>
+              <div class="idea-meta">Updated 1 week ago</div>
+              <span class="pill p-pla">Planning</span>
+            </div>
+          </article>
+          <article class="idea">
+            <div class="idea-img"><img src="assets/c4.jpg" alt=""></div>
+            <div class="idea-body">
+              <h4>Mental Wellness App</h4>
+              <div class="idea-meta">Updated 1 week ago</div>
+              <span class="pill p-ear">Early Stage</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<section class="shell gutter truth" id="truth">
+  <b>What this page shows.</b> Every screen above is the V0 founder path: enter an idea, answer four questions,
+  run the Critic, Scorecard, Synthesizer and Matchmaker over one Idea Record, save a version receipt, and
+  continue the same record through later pivots. Your Idea Record stays in your browser and exports as a
+  portable file you own. The four roles are deterministic passes over your own answers &mdash; a structured
+  heuristic, not external market validation or proof of demand. Accounts, billing, team seats and API access
+  are not part of this version.
+</section>
+
+<footer class="gutter">
+  <div class="shell foot-in">
+    <span>Think Tank</span>
+    <span>&copy; 2026 &mdash; Built by Juss &amp; Co for founders</span>
+  </div>
+</footer>
+</body>
+</html>

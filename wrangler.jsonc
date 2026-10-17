@@ -1,0 +1,25 @@
+{
+  "name": "think-tank",
+  "compatibility_date": "2026-10-16",
+  "assets": {
+    "directory": "./_site"
+  },
+  "previews": {},
+
+  // Cloudflare is the single owner of this hostname. Declared here rather than
+  // only in the dashboard so the binding is reviewable, diffable, and travels
+  // with a buyer transfer. `custom_domain` makes the Worker the origin:
+  // Cloudflare creates the DNS record and certificate.
+  "routes": [
+    {
+      "pattern": "thinktank.jussco.company",
+      "custom_domain": true
+    }
+  ],
+
+  // Version/Preview URLs off. A preview build of any branch would otherwise get
+  // a public *.workers.dev URL that serves an unapproved artifact under the
+  // product's name, with nothing stating which commit it came from.
+  // (Wrangler still calls this field `preview_urls`.)
+  "preview_urls": false
+}

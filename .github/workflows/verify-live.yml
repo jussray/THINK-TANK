@@ -1,0 +1,67 @@
+name: verify-live
+
+# Cloudflare is the single owner of thinktank.jussco.company. Workers Builds
+# performs the deploy; this workflow is the proof step that deploy cannot
+# perform on itself: it re-fetches every file named in the live manifest's
+# artifactFileHashes and re-hashes the bytes.
+#
+# Manual by design. A deploy is not evidence of a correct public runtime, and
+# this workflow is what turns "intended" into verified in PUBLIC_FACE.md.
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_head_sha:
+        description: Exact commit SHA the live site must report
+        required: true
+        type: string
+      live_url:
+        description: Base URL to verify
+        required: true
+        default: https://thinktank.jussco.company
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refuse a malformed SHA
+        shell: bash
+        env:
+          EXPECTED: ${{ inputs.expected_head_sha }}
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED" =~ ^[0-9a-f]{40}$ ]] || { echo "expected_head_sha must be a full 40-character SHA"; exit 1; }
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.expected_head_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build trusted artifact from the checked-out exact source
+        shell: bash
+        env:
+          THINK_TANK_SOURCE_SHA: ${{ inputs.expected_head_sha }}
+          THINK_TANK_EXPECTED_SHA: ${{ inputs.expected_head_sha }}
+          THINK_TANK_RUNTIME_ENV: cloudflare-workers
+        run: |
+          set -euo pipefail
+          npm install
+          npm run build
+          npm run check:storage-boundary
+          npm run check:domain-purity
+          npm run test:unit
+      - name: Verify live bytes against trusted source artifact
+        shell: bash
+        env:
+          THINK_TANK_EXPECTED_SHA: ${{ inputs.expected_head_sha }}
+          THINK_TANK_EXPECTED_ENV: cloudflare-workers
+          THINK_TANK_TRUSTED_MANIFEST_FILE: _site/version.json
+          LIVE_URL: ${{ inputs.live_url }}
+        run: |
+          set -euo pipefail
+          node scripts/verify-live-runtime.mjs "$LIVE_URL"

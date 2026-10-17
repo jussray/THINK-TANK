@@ -8,6 +8,14 @@ const out = '_site';
 const requiredFiles = [
   'index.html',
   'assets/think-tank-hero-scene.webp',
+  'workspace.html',
+  'landing.html',
+  'assets/hero-scene.jpg',
+  'assets/band.jpg',
+  'assets/c1.jpg',
+  'assets/c2.jpg',
+  'assets/c3.jpg',
+  'assets/c4.jpg',
   'app/contracts/runtime-contracts.js',
   'app/stores/idea-store.js',
   'app/stores/local-idea-store.js',
@@ -27,11 +35,24 @@ function readSha256(file) {
 function resolveSourceSha() {
   const explicit = process.env.THINK_TANK_SOURCE_SHA?.trim();
   if (explicit) return explicit;
+  // Cloudflare Workers Builds checks out without a usable git dir for some
+  // build images but always exports the commit it is building.
+  const workersCi = process.env.WORKERS_CI_COMMIT_SHA?.trim();
+  if (workersCi) return workersCi;
   try {
     return execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
   } catch {
     throw new Error('Cannot bind runtime artifact to a source SHA. Set THINK_TANK_SOURCE_SHA when building outside a Git checkout.');
   }
+}
+
+function resolveRuntimeEnv() {
+  const explicit = process.env.THINK_TANK_RUNTIME_ENV?.trim();
+  if (explicit) return explicit;
+  if (process.env.WORKERS_CI?.trim() || process.env.WORKERS_CI_COMMIT_SHA?.trim()) {
+    return 'cloudflare-workers';
+  }
+  return 'local-static';
 }
 
 function loadRuntimeGlobals() {
@@ -64,7 +85,11 @@ const lockfilePresent = fs.existsSync('package-lock.json');
 const manifestCore = {
   schemaVersion: 'ThinkTankRuntimeManifestV1',
   source: { sha: sourceSha },
-  runtime: { environment: process.env.THINK_TANK_RUNTIME_ENV?.trim() || 'local-static' },
+  // Cloudflare is the single owner of the public hostname. A Workers Builds run
+  // labels itself, so the live check can require `cloudflare-workers` without
+  // depending on a dashboard-set variable that nothing in this repo can verify.
+  // An explicit THINK_TANK_RUNTIME_ENV still wins.
+  runtime: { environment: resolveRuntimeEnv() },
   product: {
     engineVersion: runtime.ThinkTankDomain.ENGINE_VERSION,
     rubricVersion: runtime.ThinkTankDomain.RUBRIC_VERSION,
@@ -77,7 +102,15 @@ const manifestCore = {
     present: lockfilePresent,
     sha256: lockfilePresent ? readSha256('package-lock.json') : null
   },
-  artifactFiles: [...requiredFiles, 'version.json'].sort()
+  artifactFiles: [...requiredFiles, 'version.json'].sort(),
+  // Bind the packaged BYTES, not just the file names. Without this the manifest
+  // attested only to its own metadata: the packaged JS/HTML could be rewritten
+  // after build (injected fetch, injected <script>) and the checker still passed
+  // with an identical fingerprint. version.json cannot hash itself, so it is the
+  // one excluded entry and is covered by manifestFingerprint instead.
+  artifactFileHashes: Object.fromEntries(
+    [...requiredFiles].sort().map((file) => [file, `sha256:${readSha256(path.join(out, file))}`])
+  )
 };
 const manifest = {
   ...manifestCore,

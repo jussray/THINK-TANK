@@ -69,7 +69,11 @@ Every inspected static build produces `_site/version.json` as `ThinkTankRuntimeM
 - the exact packaged file list;
 - a non-secret manifest fingerprint.
 
-`npm run check:runtime-manifest` independently recomputes those values and fails if the packaged artifact does not match the expected source subject.
+- a `sha256` of every packaged file's contents.
+
+`npm run check:runtime-manifest` independently recomputes those values — including re-hashing the packaged bytes of each served file — and fails if the packaged artifact does not match the expected source subject.
+
+This content binding is what makes the manifest an attestation of the *served application* rather than of its own metadata. `tests/scripts/gate-mutation.test.js` proves the check fails on a tampered artifact; a gate that has never been shown to fail is not evidence.
 
 Direct dev dependency versions are pinned, but this repository does **not** currently commit a `package-lock.json`. The manifest exposes that fact instead of hiding it. Transitive fresh-install reproducibility therefore remains unproved until a trustworthy lockfile is generated and verified.
 
@@ -119,16 +123,22 @@ The proof chain covers:
 
 ## Public deployment gate
 
-`.github/workflows/publish-pages.yml` is a **manual** publication path. It requires:
+Cloudflare is the single owner of `thinktank.jussco.company`. Cloudflare Workers
+Builds performs the deploy from `wrangler.jsonc`, serving the inspected `_site`
+artifact; `npm run build` runs `build:static` then `check:runtime-manifest`, so a
+build whose artifact the manifest does not describe fails instead of deploying.
 
-- the exact current `main` SHA;
-- an auditable founder publication approval reference;
-- successful exact-subject tests and packaged-runtime proof;
-- GitHub Pages provider configuration.
+Deploying is not evidence of a correct public runtime. `.github/workflows/verify-live.yml`
+is the proof step, run manually against an exact 40-character SHA. It calls
+`scripts/verify-live-runtime.mjs`, which recomputes the live manifest's fingerprint
+from the manifest's own fields and then re-fetches and re-hashes **every** file named
+in `artifactFileHashes`. Reading fields out of `version.json` would only prove that a
+JSON file claims a SHA; it cannot detect tampered JavaScript or HTML, which is the
+actual risk on a custom domain, a mirror, or a CDN copy.
 
-Verification rejects a stale approval if `main` has already moved. After verification, the package job checks out the immutable approved SHA rather than moving `main`. After deploy, the workflow fetches the live `/version.json` and refuses success unless it identifies that same approved SHA and the `github-pages` runtime environment.
-
-The workflow is intentionally not triggered by normal pushes. Source readiness and offline artifact readiness are not public-runtime truth. No successful public publication receipt has been observed yet.
+The GitHub Pages publication workflow was removed: two publication paths to one
+product is two owners of one apex. No successful public publication receipt has been
+observed yet.
 
 ## Acquire readiness
 
