@@ -21,10 +21,11 @@ This is a reviewable candidate, NOT a production fix. The historical June archiv
 ## Required tests
 - Signed valid fixture accepted.
 - Unsigned, tampered, expired, wrong issuer, wrong audience, missing subject, and unsupported algorithm rejected.
-- Cross-user ownership denied for stream and every protected procedure. Helper level DONE: `interview-scope.test.ts` (7 cases; mutant without the owner check fails 2). Route and procedure level OPEN.
+- Cross-user ownership denied for stream and every protected procedure. Helper level DONE: `interview-scope.test.ts` (7 cases; mutant without the owner check fails 2). Route ordering guard DONE, structural only: `route-order.test.ts` (2 cases; three route mutants each fail it). Runtime route-level denial OPEN. Procedure level OPEN: the candidate has no tRPC procedures yet, so `flagInsight`, `getHistory` and `listSessions` cannot be checked here.
 - Supabase RLS integration proven with real test identities.
-- Run `node --test repair-candidate/auth/jwt-rs256.test.ts repair-candidate/auth/verified-identity.test.ts repair-candidate/auth/interview-scope.test.ts repair-candidate/auth/consumer-import-paths.test.ts` on the exact candidate branch. Typecheck, dependency install and end-to-end tests required before merge.
+- Run `npm run test:candidate-auth` (five suites, 44 cases) on the exact candidate branch. It is NOT in CI yet: CI runs only `test:unit`, and no PR exists for this branch. Typecheck, dependency install and end-to-end tests required before merge.
 
 Verified here: `node --test repair-candidate/auth/jwt-rs256.test.ts repair-candidate/auth/verified-identity.test.ts repair-candidate/auth/interview-scope.test.ts` gives 40/40 pass; strict `tsc` is clean on the auth files; decode-only mutant of `verified-identity.ts` fails 8 tests; no-owner-check mutant of `interview-scope.ts` fails 2 tests.
 Import paths corrected and source-level import resolution checked. `consumer-import-paths.test.ts` gives 2/2 pass after its regex escapes were fixed (the file did not parse before); a wrong-path route mutant fails it.
+Verified at e798c56: `npm run test:candidate-auth` 44/44 on Node 22.22 (CI uses Node 24; not run there). `route-order.test.ts` 2/2 on HEAD; each of three route mutants fails it. Structural only.
 Not verified: the consumers (`trpc.ts`, `route.ts`) need `@trpc/server`, `@supabase/supabase-js`, Next.js and the app's `@/lib` modules, none installed here. Their wiring is unverified. No production claim.
