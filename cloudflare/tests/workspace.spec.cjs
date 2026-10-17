@@ -6,6 +6,8 @@ test('Cloudflare-served landing matches cinematic direction and links to workspa
  await page.getByRole('link',{name:/Begin with an idea/}).click();
  await expect(page).toHaveURL(/\/workspace\.html$/);
  await expect(page.getByRole('heading',{name:'A universe for your next idea.'})).toBeVisible();
+ await expect(page.locator('.orb-card')).toHaveCount(4);
+ await expect(page.getByText('01 · Live Interviewer')).toBeVisible();
  await expect(page.getByRole('status')).toContainText(/Authentication required|Secure identity setup pending/);
  expect(errors).toEqual([]);
 });
