@@ -143,7 +143,7 @@ test('live verifier fails on a source SHA mismatch and on an environment mismatc
   try {
     const wrongSha = await verify(dir, base, { THINK_TANK_EXPECTED_SHA: 'a'.repeat(40) });
     assert.notEqual(wrongSha.status, 0);
-    assert.match(wrongSha.stderr, /source mismatch/);
+    assert.match(wrongSha.stderr, /source SHA mismatch/i);
 
     const wrongEnv = await verify(dir, base, { THINK_TANK_EXPECTED_ENV: 'cloudflare-workers' });
     assert.notEqual(wrongEnv.status, 0);
