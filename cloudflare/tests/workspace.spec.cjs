@@ -47,3 +47,38 @@ test('capture desktop and mobile browser evidence for founder visual review',asy
  await page.goto('/workspace.html');
  await page.screenshot({path:'test-results/visual-workspace-gate-390x844.png',fullPage:true});
 });
+
+
+test('offline model does not block saved ideas and never queues unserviceable answers',async({page})=>{
+ const idea={id:'12345678-1234-4234-8234-123456789113',title:'Proof-backed founder idea',revision:0,created_at:'2026-10-16T00:00:00Z'};
+ let stored=false,queuePosts=0;
+ await page.route('**/api/me',route=>route.fulfill({
+  status:200,contentType:'application/json',
+  body:JSON.stringify({authenticated:true,provider:'cloudflare-access',
+   capabilities:{interviewer:'unavailable',council:'evidence-review',court:'evidence-review',councilBus:'not-connected'}})
+ }));
+ await page.route('**/api/ideas',async route=>{
+  const method=route.request().method();
+  if(method==='POST'){stored=true;return route.fulfill({
+   status:201,contentType:'application/json',body:JSON.stringify({idea})});}
+  return route.fulfill({status:200,contentType:'application/json',
+   body:JSON.stringify({ideas:stored?[idea]:[]})});
+ });
+ await page.route('**/api/ideas/'+idea.id,route=>route.fulfill({
+  status:200,contentType:'application/json',
+  body:JSON.stringify({idea,messages:[],executions:[]})
+ }));
+ await page.route('**/api/ideas/'+idea.id+'/answer',route=>{
+  queuePosts++;return route.fulfill({status:503,contentType:'application/json',
+   body:'{"error":"INTERVIEWER_UNAVAILABLE"}'});
+ });
+ await page.goto('/workspace.html');
+ await expect(page.getByText('Interviewer is paused until the model service is configured.',{exact:false})).toBeVisible();
+ await page.locator('#title').fill(idea.title);
+ await page.locator('#create').getByRole('button',{name:/Save idea/}).click();
+ await expect(page.locator('#active-title')).toHaveText(idea.title);
+ await expect(page.locator('#submit')).toBeDisabled();
+ await page.locator('#answer').fill('An assumption to test.');
+ await expect(page.locator('#submit')).toBeDisabled();
+ expect(queuePosts).toBe(0);
+});
