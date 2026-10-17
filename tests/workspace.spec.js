@@ -34,7 +34,7 @@ test('workspace opens from the original V0 interview and preserves approved modu
   await expect(page).toHaveURL(/workspace\.html$/);
   await expect(page.getByTestId('idea-list')).toContainText(original);
   await expect(page.getByTestId('workspace-boundary')).toContainText('not external market evidence');
-  await page.getByRole('textarea', {name:'Revenue content'}).fill('Founder price hypothesis: $5 per session; untested.');
+  await page.getByRole('textbox', {name:'Revenue content'}).fill('Founder price hypothesis: $5 per session; untested.');
   await page.getByRole('button', {name:'Save Revenue'}).click();
   await expect(page.getByTestId('workspace-status')).toContainText('Revenue saved');
   await page.getByRole('button', {name:/03 · Proposals/}).click();
@@ -43,7 +43,7 @@ test('workspace opens from the original V0 interview and preserves approved modu
   page.once('dialog', dialog => dialog.accept());
   await page.getByTestId('accept-proposal').click();
   // Accept only after explicitly reviewing and confirming; the dialog may fire before .click resolves.
-  await expect(page.getByRole('textarea', {name:'Summary content'})).toHaveValue(original);
+  await expect(page.getByRole('textbox', {name:'Summary content'})).toHaveValue(original);
   const exported = await readDownload(page, () => page.getByTestId('workspace-export-selected').click());
   expect(exported.format).toBe('think-tank-export-v1');
   expect(exported.record.workspace.modules.Revenue.content).toContain('$5 per session');
@@ -51,7 +51,7 @@ test('workspace opens from the original V0 interview and preserves approved modu
   expect(exported.record.workspace.proposals[0].status).toBe('accepted');
   expect(exported.record.workspace.history.some(e => e.kind === 'proposal.accepted')).toBe(true);
   await page.reload();
-  await expect(page.getByRole('textarea', {name:'Revenue content'})).toHaveValue(/Founder price hypothesis/);
+  await expect(page.getByRole('textbox', {name:'Revenue content'})).toHaveValue(/Founder price hypothesis/);
   await page.getByRole('link', {name:/01 · Interview/}).click();
   await expect(page.getByTestId('scorecard')).toContainText('Overall');
   await expect(page.getByTestId('versions')).toContainText('v1');
