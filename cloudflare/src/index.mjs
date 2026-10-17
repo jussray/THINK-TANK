@@ -66,10 +66,10 @@ export async function route(request,env,owner){
    if(!answer||answer.length>8000||typeof key!=='string'||!keyPattern.test(key))
     return json({error:'INVALID_ANSWER'},400);
    const hash=await digest(JSON.stringify({v:1,ideaId,answer}));
-   const previous=await env.DB.prepare('SELECT id,request_hash FROM agent_executions WHERE idea_id=? AND owner_id=? AND idempotency_key=?')
+   const previous=await env.DB.prepare('SELECT id,request_hash,status FROM agent_executions WHERE idea_id=? AND owner_id=? AND idempotency_key=?')
      .bind(ideaId,owner,key).first();
    if(previous)return previous.request_hash===hash
-     ?json({executionId:previous.id,status:'queued',idempotent:true},202)
+     ?json({executionId:previous.id,status:previous.status,idempotent:true},202)
      :json({error:'IDEMPOTENCY_CONFLICT'},409);
    const executionId=crypto.randomUUID(),runId=crypto.randomUUID();
    // A single statement + its D1 triggers atomically commits answer, revision,
@@ -81,7 +81,7 @@ export async function route(request,env,owner){
     .bind(ideaId,owner,key).first();
    if(!stored)return json({error:'SUBMISSION_FAILED'},503);
    if(stored.request_hash!==hash)return json({error:'IDEMPOTENCY_CONFLICT'},409);
-   return json({executionId:stored.id,status:'queued',idempotent:stored.id!==executionId},202);
+   return json({executionId:stored.id,status:stored.status,idempotent:stored.id!==executionId},202);
   }
  }
  const exec=pathname.match(/^\/api\/executions\/([0-9a-f-]{36})$/i);
@@ -149,7 +149,16 @@ export default {
     return errorResponse(error);
    }
   }
-  if(env.ASSETS)return env.ASSETS.fetch(request);
+  if(env.ASSETS){
+   const response=await env.ASSETS.fetch(request);
+   const headers=new Headers(response.headers);
+   headers.set('content-security-policy',
+    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
+   headers.set('referrer-policy','no-referrer');
+   headers.set('x-content-type-options','nosniff');
+   headers.set('x-frame-options','DENY');
+   return new Response(response.body,{status:response.status,statusText:response.statusText,headers});
+  }
   return json({error:'ASSETS_NOT_CONFIGURED'},503);
  },
  async scheduled(_event,env,ctx){ctx.waitUntil(tick(env));}
