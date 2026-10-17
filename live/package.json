@@ -1,0 +1,24 @@
+{
+  "name": "think-tank-live",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev -p 4180",
+    "build": "next build",
+    "start": "next start -p 4180",
+    "test": "node --experimental-strip-types --test tests/*.test.ts"
+  },
+  "dependencies": {
+    "next": "16.4.2",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "@supabase/supabase-js": "2.118.0",
+    "zod": "3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/node": "24.7.1",
+    "@types/react": "19.2.0",
+    "@types/react-dom": "19.2.0"
+  }
+}
