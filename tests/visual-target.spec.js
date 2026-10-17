@@ -40,6 +40,8 @@ test('completed interview reveals source-grounded results and survives reload', 
     await page.getByTestId('submit-answer').click();
   }
   await expect(page.locator('#resultsLive')).toBeVisible();
+  await expect(page.locator('#questionTitle')).toHaveText('Your first-pass assessment is ready.');
+  await expect(page.locator('#questionCount')).toHaveText('Interview complete');
   await expect(page.locator('#resultScore')).toContainText('/10');
   await expect(page.locator('#resultCritique')).not.toBeEmpty();
   await expect(page.locator('#resultPattern')).not.toBeEmpty();
