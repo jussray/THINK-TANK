@@ -42,6 +42,7 @@ jobs:
           name: think-tank-cloudflare-bundle-${{ github.sha }}
           path: cloudflare/.dry-run/
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 7
       - name: Install Chromium
         working-directory: cloudflare
