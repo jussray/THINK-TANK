@@ -10,6 +10,7 @@
     "check:storage-boundary": "node scripts/check-storage-boundary.mjs",
     "check:domain-purity": "node scripts/check-domain-purity.mjs",
     "test:unit": "node --test tests/stores/*.test.js tests/domain/*.test.js tests/policy/*.test.js",
+    "test:candidate-auth": "node --test repair-candidate/auth/jwt-rs256.test.ts repair-candidate/auth/verified-identity.test.ts repair-candidate/auth/interview-scope.test.ts repair-candidate/auth/consumer-import-paths.test.ts repair-candidate/auth/route-order.test.ts",
     "test:e2e": "playwright test",
     "test:e2e:artifact": "playwright test -c playwright.artifact.config.js",
     "test:e2e:file": "playwright test -c playwright.file.config.js"
