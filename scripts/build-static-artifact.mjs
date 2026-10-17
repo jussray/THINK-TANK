@@ -76,7 +76,15 @@ const manifestCore = {
     present: lockfilePresent,
     sha256: lockfilePresent ? readSha256('package-lock.json') : null
   },
-  artifactFiles: [...requiredFiles, 'version.json'].sort()
+  artifactFiles: [...requiredFiles, 'version.json'].sort(),
+  // Bind the packaged BYTES, not just the file names. Without this the manifest
+  // attested only to its own metadata: the packaged JS/HTML could be rewritten
+  // after build (injected fetch, injected <script>) and the checker still passed
+  // with an identical fingerprint. version.json cannot hash itself, so it is the
+  // one excluded entry and is covered by manifestFingerprint instead.
+  artifactFileHashes: Object.fromEntries(
+    [...requiredFiles].sort().map((file) => [file, `sha256:${readSha256(path.join(out, file))}`])
+  )
 };
 const manifest = {
   ...manifestCore,

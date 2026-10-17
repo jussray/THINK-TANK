@@ -131,8 +131,29 @@
     return candidate;
   }
 
+  // The Idea Record is the one object an importer fully controls, so the
+  // normalizer copies an explicit allowlist of known fields instead of cloning
+  // the candidate whole. Cloning passed unknown attacker-authored keys straight
+  // through into persisted and re-exported state -- including a `capabilities`
+  // table that `can()` would then honor -- and also carried `__proto__` through
+  // as an own data property. Copying by field also means unknown deep subtrees
+  // are never serialized, so a hostile deeply-nested payload cannot throw
+  // RangeError out of the clone.
+  const IDEA_RECORD_FIELDS = Object.freeze([
+    'schemaVersion', 'id', 'idea', 'status', 'createdAt', 'updatedAt',
+    'answers', 'modules', 'scorecard', 'critique', 'pattern', 'versions'
+  ]);
+
+  function pickKnown(candidate, fields) {
+    const picked = Object.create(null);
+    for (const field of fields) {
+      if (Object.prototype.hasOwnProperty.call(candidate, field)) picked[field] = candidate[field];
+    }
+    return Object.assign({}, picked);
+  }
+
   function normalizeIdeaRecordV1(candidate) {
-    const normalized = clone(requireObject(candidate, 'IdeaRecord'));
+    const normalized = clone(pickKnown(requireObject(candidate, 'IdeaRecord'), IDEA_RECORD_FIELDS));
     if (normalized.schemaVersion === undefined) normalized.schemaVersion = SCHEMA.IDEA_RECORD;
     normalized.createdAt ??= null;
     normalized.updatedAt ??= null;

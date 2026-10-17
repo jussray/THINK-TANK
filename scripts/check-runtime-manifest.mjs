@@ -65,6 +65,25 @@ if (JSON.stringify(actualFiles) !== JSON.stringify(manifest.artifactFiles)) {
   throw new Error(`Runtime manifest artifact file list mismatch: ${actualFiles.join(', ')}`);
 }
 
+// Recompute the packaged bytes. The file-name walk above cannot see content
+// tampering; this is what makes the manifest an attestation of the served app
+// rather than an attestation of its own metadata.
+const expectedHashes = manifest.artifactFileHashes;
+if (!expectedHashes || typeof expectedHashes !== 'object' || Array.isArray(expectedHashes)) {
+  throw new Error('Runtime manifest is missing artifactFileHashes. Rebuild the static artifact.');
+}
+const hashedNames = Object.keys(expectedHashes).sort();
+const expectedHashedNames = actualFiles.filter((file) => file !== 'version.json');
+if (JSON.stringify(hashedNames) !== JSON.stringify(expectedHashedNames)) {
+  throw new Error(`Runtime manifest file-hash coverage mismatch: hashed ${hashedNames.join(', ')}`);
+}
+for (const file of hashedNames) {
+  const actual = `sha256:${readSha256(path.join('_site', file))}`;
+  if (actual !== expectedHashes[file]) {
+    throw new Error(`Runtime manifest artifact content mismatch for ${file}: expected ${expectedHashes[file]}, got ${actual}`);
+  }
+}
+
 const { builtAt, manifestFingerprint, ...core } = manifest;
 if (typeof builtAt !== 'string' || Number.isNaN(Date.parse(builtAt))) throw new Error('Runtime manifest builtAt is invalid.');
 const expectedFingerprint = `sha256:${sha256(JSON.stringify(core))}`;

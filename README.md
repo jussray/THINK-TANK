@@ -69,7 +69,11 @@ Every inspected static build produces `_site/version.json` as `ThinkTankRuntimeM
 - the exact packaged file list;
 - a non-secret manifest fingerprint.
 
-`npm run check:runtime-manifest` independently recomputes those values and fails if the packaged artifact does not match the expected source subject.
+- a `sha256` of every packaged file's contents.
+
+`npm run check:runtime-manifest` independently recomputes those values — including re-hashing the packaged bytes of each served file — and fails if the packaged artifact does not match the expected source subject.
+
+This content binding is what makes the manifest an attestation of the *served application* rather than of its own metadata. `tests/scripts/gate-mutation.test.js` proves the check fails on a tampered artifact; a gate that has never been shown to fail is not evidence.
 
 Direct dev dependency versions are pinned, but this repository does **not** currently commit a `package-lock.json`. The manifest exposes that fact instead of hiding it. Transitive fresh-install reproducibility therefore remains unproved until a trustworthy lockfile is generated and verified.
 
