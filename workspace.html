@@ -368,7 +368,7 @@ async function importAll(file) {
        (collisions.length ? '\n' + collisions.length + ' existing record(s) with matching IDs will be REPLACED. Export a backup first.' : '') +
        '\nExisting nonmatching ideas will be preserved. Continue?')) return;
   // All records are validated and conflicts disclosed before any writes.
-  // localStorage does not provide a multi-write transaction. If it fills up,
+  // Browser storage does not provide a multi-write transaction. If it fills up,
   // the UI reports the failure; a full backup should be kept externally.
   for (const item of incoming) await store.saveCurrent(item);
   const selected = payload.activeId && incoming.find(item => item.id === payload.activeId);
