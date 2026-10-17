@@ -213,3 +213,42 @@ test('import refuses oversized files before parsing them', async ({ page }) => {
   await expect(page.getByTestId('portability-status')).toContainText('File is too large');
   await expect(page.getByTestId('idea-record')).toContainText('No active record');
 });
+
+
+test('cinematic interview permits revising a prior answer without creating an extra answer', async ({page})=>{
+  await startInterview(page);
+  await page.getByTestId('answer-input').fill('Original buyer hypothesis.');
+  await page.getByTestId('submit-answer').click();
+  await expect(page.locator('#questionCount')).toHaveText('Question 2 of 4');
+  await page.getByTestId('previous-question').click();
+  await expect(page.locator('#questionCount')).toHaveText('Question 1 of 4');
+  await expect(page.getByTestId('answer-input')).toHaveValue('Original buyer hypothesis.');
+  await page.getByTestId('answer-input').fill('Revised buyer hypothesis with a more specific customer.');
+  await page.getByTestId('submit-answer').click();
+  await expect(page.locator('#sessionState')).toHaveText('QUESTION 2/4');
+  await page.reload();
+  await expect(page.getByTestId('transcript')).toContainText('Revised buyer hypothesis');
+  await expect(page.getByTestId('idea-record')).toContainText('1/4 answers');
+});
+
+test('founder can keep two real ideas, reopen one and view source-grounded plan and results tabs', async ({page})=>{
+  await completeInterview(page);
+  await expect(page.getByTestId('idea-library').locator('.idea-tile')).toHaveCount(1);
+  await expect(page.getByTestId('build-plan').locator('li')).toHaveCount(4);
+  await page.locator('[data-result-tab="analysis"]').click();
+  await expect(page.locator('#resultAnalysis')).toBeVisible();
+  await expect(page.locator('#resultAnalysis')).toContainText('Solo founders');
+  await page.locator('[data-result-tab="risks"]').click();
+  await expect(page.locator('#resultRisks')).toBeVisible();
+  await page.locator('#newIdeaHub').click();
+  await expect(page.getByTestId('idea-record')).toContainText('No active record');
+  await expect(page.getByTestId('idea-library').locator('.idea-tile')).toHaveCount(1);
+  await startInterview(page,'A community workshop for practical home-repair learning.');
+  await expect(page.getByTestId('idea-library').locator('.idea-tile')).toHaveCount(2);
+  const oldCard=page.getByTestId('idea-library').locator('.idea-tile').filter({hasText:'subscription service'});
+  await oldCard.getByRole('button',{name:'Open idea →'}).click();
+  await expect(page.getByTestId('idea-record')).toContainText('subscription service');
+  await expect(page.locator('#resultsLive')).toBeVisible();
+  await page.reload();
+  await expect(page.getByTestId('idea-library').locator('.idea-tile')).toHaveCount(2);
+});
