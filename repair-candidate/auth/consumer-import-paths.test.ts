@@ -9,7 +9,7 @@ const trpcUrl = new URL('../server/trpc.ts', import.meta.url)
 
 test('stream route resolves both verified auth dependencies from its own location', () => {
   const source = readFileSync(routeUrl, 'utf8')
-  const authImports = [...source.matchAll(/from\\s+['\"](\\.{1,2}\\/[^'\"]*\\/auth\\/[^'\"]+)['\"]/g)]
+  const authImports = [...source.matchAll(/from\s+['"](\.{1,2}\/[^'"]*\/auth\/[^'"]+)['"]/g)]
     .map(match => match[1])
   const expected = ['../../../auth/interview-scope', '../../../auth/verified-identity']
   assert.deepEqual(authImports.sort(), expected.sort())
@@ -21,7 +21,7 @@ test('stream route resolves both verified auth dependencies from its own locatio
 test('active candidate consumers do not decode identity using atob', () => {
   for (const url of [routeUrl, trpcUrl]) {
     const source = readFileSync(url, 'utf8')
-    assert.doesNotMatch(source, /\\batob\\s*\\(/, url.pathname)
-    assert.match(source, /verifyBearerIdentity\\s*\\(/, url.pathname)
+    assert.doesNotMatch(source, /\batob\s*\(/, url.pathname)
+    assert.match(source, /verifyBearerIdentity\s*\(/, url.pathname)
   }
 })
