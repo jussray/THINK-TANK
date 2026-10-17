@@ -5,12 +5,13 @@
 **Authoritative repository:** `jussray/THINK-TANK` on `main`.  
 **Canonical entry:** `index.html`.  
 **Full-resolution original:** `Think Tank/assets/think-tank-approved-ui-2026-10-16.png` in founder's ChatGPT Library.  
+**Git repository image:** `assets/think-tank-approved-ui-2026-10-16.png` (exact original).  
 **Original image SHA-256:** `b7aa5bf526180ead1e371e192790a1f323a15f84e70eddafa6d880e146bf40f3`.  
 **Original dimensions:** 1536 × 1024 PNG.
 
 ## Asset installation gate
 
-The exact approved PNG **has not yet been uploaded to this GitHub repository**. Library storage does not sync into GitHub. First add the *unaltered* original to `assets/think-tank-approved-ui-2026-10-16.png` and verify its SHA-256 equals the value above. Until that happens, other building agents must treat the written description here as provisional and **must not claim pixel-fidelity or design completion**. Do not replace it with an AI regeneration or a newly designed concept. Do not delete or rewrite this approved target without a new explicit founder design decision.
+**INSTALLED AND CHECKED:** The exact approved original is stored at `assets/think-tank-approved-ui-2026-10-16.png` as Git blob `9ec62735e7a91f271843d0ccadc02c88c953e254`, with the SHA-256 value above. The canonical PNG is a screenshot/composite of the target interface, not a production image to use as a CSS background. Match the *visual and interaction design* using real UI components. Do not quietly regenerate or replace this reference. Keep the visual QA gate open until browser proof and founder signoff.
 
 ## Intent
 
@@ -45,6 +46,6 @@ This image combines a landing hero plus six product-state views; it is **not** e
 
 ## Completion gate
 
-**NOT DONE** while any of these remain: original approved PNG missing from repo; major visual differences unaddressed; mobile controls clipped; interview or recovery broken; mock controls misleading; no Playwright screenshots; missing founder approval. Green CI alone does not close the design request. Existing validated runtime behavior takes precedence over decorative additions.
+**NOT DONE** while any of these remain: major visual differences unaddressed; mobile controls clipped; interview or recovery broken; mock controls misleading; no Playwright screenshots; missing founder approval. Green CI alone does not close the design request. Existing validated runtime behavior takes precedence over decorative additions.
 
 **This file is a design contract, not a statement of deployment, capability, or pixel-fidelity proof.**
