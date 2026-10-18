@@ -30,6 +30,15 @@ function run(dir, script, env = {}) {
 }
 
 function gitCommitAll(dir) {
+  // A gitless checkout (for example a git-archive export) has no repository, and
+  // check-storage-boundary reads tracked files with `git grep`, so it would fail the
+  // baseline before any mutation runs. Give such a throwaway copy its own repository so
+  // the mutation is visible to the gate as it is in a clone. A clone's copy already has
+  // .git, so it takes the unchanged path.
+  if (!fs.existsSync(path.join(dir, '.git'))) {
+    const init = spawnSync('git', ['init', '-q'], { cwd: dir, encoding: 'utf8' });
+    assert.equal(init.status, 0, 'git init failed in throwaway copy: ' + init.stderr);
+  }
   for (const args of [
     ['config', 'user.email', 'gate@test.local'],
     ['config', 'user.name', 'gate-test'],
