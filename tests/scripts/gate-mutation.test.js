@@ -16,7 +16,12 @@ function freshCopy() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tt-gate-'));
   fs.cpSync(repoRoot, dir, {
     recursive: true,
-    filter: (src) => !src.includes(`${path.sep}node_modules`) && !src.includes(`${path.sep}_site`)
+    // Never copy .git. In a linked worktree .git is a file that points at the real
+    // repository, so a copied .git lets gitCommitAll commit mutations into the real branch.
+    filter: (src) =>
+      path.basename(src) !== '.git' &&
+      !src.includes(`${path.sep}node_modules`) &&
+      !src.includes(`${path.sep}_site`)
   });
   return dir;
 }
@@ -30,6 +35,10 @@ function run(dir, script, env = {}) {
 }
 
 function gitCommitAll(dir) {
+  // The copy is always gitless, so give it its own repository. check-storage-boundary reads
+  // tracked files with git grep and would otherwise fail its baseline before any mutation runs.
+  const init = spawnSync('git', ['init', '-q'], { cwd: dir, encoding: 'utf8' });
+  assert.equal(init.status, 0, 'git init failed in throwaway copy: ' + init.stderr);
   for (const args of [
     ['config', 'user.email', 'gate@test.local'],
     ['config', 'user.name', 'gate-test'],
