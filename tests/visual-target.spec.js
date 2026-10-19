@@ -16,6 +16,10 @@ test('approved cinematic journey has responsive desktop and mobile browser recei
     await expect(page.getByTestId('export-record')).toBeVisible();
     const heroImage = await page.locator('.hero-art').evaluate(el => getComputedStyle(el).backgroundImage);
     expect(heroImage).toContain('think-tank-hero-scene.webp');
+    // Detect a missing runtime asset rather than passing on a CSS filename alone.
+    const heroAsset = await page.request.get('/assets/think-tank-hero-scene.webp');
+    expect(heroAsset.status(), 'approved hero asset must actually be served').toBe(200);
+    expect(heroAsset.headers()['content-type']).toMatch(/^image\/webp\b/);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     expect(overflow, viewport.name + ' horizontal overflow').toBe(false);
     await page.screenshot({path:path.join(output, 'think-tank-'+viewport.name+'.png'),fullPage:true,animations:'disabled'});
