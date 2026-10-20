@@ -78,3 +78,20 @@ test('inert V1 receipt contracts validate shape without creating product behavio
     hypothesis: 'People will value this.', question: 'What would prove or disprove it?', openMethod: 'Customer interviews'
   }));
 });
+
+test('timestamp contracts refuse values Date.parse accepts but a record cannot mean', () => {
+  const { validateAgentResultV1, ContractValidationError } = loadContracts();
+  const base = {
+    schemaVersion: 'AgentResultV1',
+    id: 'agent-1', recordId: 'idea-1', recordVersionId: 'version-1',
+    status: 'complete', providerCapability: 'structured-analysis',
+    inputFingerprint: 'input:abc', outputFingerprint: 'output:def',
+    startedAt: '2026-09-20T12:00:00.000Z', completedAt: '2026-09-20T12:00:01.000Z'
+  };
+  for (const bad of ['5', '2026', '2026-02-30T12:00:00.000Z', '2026-09-20', '2026-09-20T12:00:00', '2026-13-01T00:00:00Z', 'Feb 30 2026']) {
+    assert.throws(() => validateAgentResultV1({ ...base, startedAt: bad }), ContractValidationError, `startedAt ${bad}`);
+  }
+  for (const good of ['2026-09-20T12:00:00.000Z', '2026-09-20T12:00:00Z', '2026-09-20T08:00:00-04:00']) {
+    assert.doesNotThrow(() => validateAgentResultV1({ ...base, startedAt: good }), `startedAt ${good}`);
+  }
+});

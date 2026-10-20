@@ -58,13 +58,30 @@
     return value;
   }
 
+  // Strict ISO 8601 date-time with an explicit zone. Date.parse alone accepts
+  // "5", "2026", and rolled-over dates such as 2026-02-30, so it is not a validator.
+  const ISO_TIMESTAMP = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.\d{1,9})?)?(Z|[+-](\d{2}):(\d{2}))$/;
+  function isIsoTimestamp(value) {
+    if (typeof value !== 'string') return false;
+    const m = ISO_TIMESTAMP.exec(value);
+    if (!m) return false;
+    const year = Number(m[1]);
+    const month = Number(m[2]);
+    const day = Number(m[3]);
+    if (month < 1 || month > 12 || Number(m[4]) > 23 || Number(m[5]) > 59 || Number(m[6] ?? 0) > 59) return false;
+    const calendar = new Date(Date.UTC(year, month - 1, day));
+    if (calendar.getUTCFullYear() !== year || calendar.getUTCMonth() !== month - 1 || calendar.getUTCDate() !== day) return false;
+    if (m[8] !== undefined && (Number(m[8]) > 23 || Number(m[9]) > 59)) return false;
+    return !Number.isNaN(Date.parse(value));
+  }
+
   function requireTimestamp(value, label, { nullable = true } = {}) {
     if (value === null || value === undefined) {
       if (nullable) return null;
       fail('VALIDATION_ERROR', `${label} is required.`);
     }
     requireString(value, label, { min: 1, max: 100 });
-    if (Number.isNaN(Date.parse(value))) fail('VALIDATION_ERROR', `${label} is invalid.`);
+    if (!isIsoTimestamp(value)) fail('VALIDATION_ERROR', `${label} is invalid.`);
     return value;
   }
 
