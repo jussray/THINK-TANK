@@ -35,12 +35,14 @@ a{color:var(--violet-soft);}
   padding-right:max(16px,env(safe-area-inset-right,0px));
 }
 
-/* Ground: the approved hero scene, dimmed so the card stays readable. */
+/* Ground: the approved hero scene, dimmed so the card stays readable. The top
+   band of the source image carries ghosted nav labels from the mockup, so the
+   gradient holds near-solid there; the landing page hides them behind its nav. */
 .bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
 .bg img{width:100%;height:100%;object-fit:cover;object-position:center 38%;opacity:.55;}
 .bg::after{
   content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(10,7,16,.85) 0%,rgba(10,7,16,.55) 40%,rgba(10,7,16,.95) 100%);
+  background:linear-gradient(180deg,rgba(10,7,16,.98) 0%,rgba(10,7,16,.95) 16%,rgba(10,7,16,.55) 42%,rgba(10,7,16,.95) 100%);
 }
 
 /* Top bar */
