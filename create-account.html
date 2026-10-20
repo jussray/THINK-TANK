@@ -2,139 +2,67 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Create account · Think Tank</title>
-<meta name="description" content="Account creation is not part of this version. This is a disabled preview of the layout; nothing you enter is sent or saved.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/auth.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create account — Think Tank</title>
+<meta name="description" content="Account creation preview. Think Tank V0 has no accounts; this page is a disabled layout preview and collects nothing.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/auth.css">
 </head>
 <body>
-<div class="bg" aria-hidden="true"><img src="assets/hero-scene.jpg" alt=""></div>
-
-<header class="top gutter">
-  <div class="top-in">
-    <a class="brand" href="./landing.html" aria-label="Think Tank home">
-      <span class="mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round"><path d="M9 4a2.6 2.6 0 0 0-2.6 2.6A2.4 2.4 0 0 0 4.5 9c0 .9.5 1.7 1.2 2.1A2.5 2.5 0 0 0 5 13.2c0 1.2.8 2.2 1.9 2.5A2.4 2.4 0 0 0 9.3 20 2.7 2.7 0 0 0 12 17.6V5.9A2 2 0 0 0 9 4Z"/><path d="M15 4a2.6 2.6 0 0 1 2.6 2.6A2.4 2.4 0 0 1 19.5 9c0 .9-.5 1.7-1.2 2.1a2.5 2.5 0 0 1 .7 2.1c0 1.2-.8 2.2-1.9 2.5A2.4 2.4 0 0 1 14.7 20 2.7 2.7 0 0 1 12 17.6"/></svg>
-      </span>
-      <span class="brand-name">Think Tank</span>
-    </a>
-    <nav class="nav-links" aria-label="Main">
-      <a href="./landing.html">Home</a>
-      <a href="./index.html">Ideas</a>
-      <span class="nav-off" aria-disabled="true">Resources <i>not in V0</i></span>
-      <a href="./landing.html#truth">About</a>
-    </nav>
-    <div class="nav-tools">
-      <button type="button" class="icon-off" disabled aria-label="Search, not in V0" title="Search: not in V0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
-      <button type="button" class="icon-off" disabled aria-label="Notifications, not in V0" title="Notifications: not in V0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg></button>
-    </div>
+<nav class="site-nav" aria-label="Primary">
+  <a class="brand" href="./landing.html" aria-label="Think Tank home"><span class="brandmark" aria-hidden="true">✧</span>THINK TANK</a>
+  <div class="navlinks">
+    <a href="./landing.html">Home</a>
+    <a href="./index.html#idea-hub">Ideas</a>
+    <span class="not-v0">Resources<small>not in V0</small></span>
+    <a href="./landing.html#about">About</a>
   </div>
-</header>
+  <div class="nav-tools"><a class="sign-in" href="./signin.html">Sign in</a></div>
+</nav>
 
-<main class="main gutter">
-  <section class="hero-copy" aria-labelledby="hero-title">
-    <p class="kicker-line">Ideas today. A brighter tomorrow.</p>
-    <h1 id="hero-title">Turn your ideas into <em>opportunities.</em></h1>
-    <p class="lede">Join Think Tank, a thinking partner that helps you explore, challenge, and build your ideas into real opportunities.</p>
-
-    <div class="rail">
-      <div class="rail-item">
-        <span class="rail-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></span>
-        <div><b>Explore possibilities</b><small>Turn your ideas into new angles and opportunities.</small></div>
+<main class="hero" style="min-height:0">
+  <div class="hero-art" aria-hidden="true" style="background-position:40% 22%"></div>
+  <div class="account">
+    <div class="account-copy">
+      <p class="eyebrow">Ideas today. A brighter tomorrow.</p>
+      <h1>Turn your ideas into <em>opportunities.</em></h1>
+      <p class="lede">Join Think Tank, a thinking partner that helps you explore, challenge, and build your ideas into real opportunities.</p>
+      <div class="perks" style="padding-top:44px;gap:20px">
+        <div class="perk"><span class="perk-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg></span><div><h3>Explore possibilities</h3><p>Turn your ideas into new angles and opportunities.</p></div></div>
+        <div class="perk"><span class="perk-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><div><h3>Get honest feedback</h3><p>Challenge assumptions and find blind spots.</p></div></div>
+        <div class="perk"><span class="perk-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M13 8l4 4-4 4"/></svg></span><div><h3>Take your next step</h3><p>Go from insight to action with a clear path forward.</p></div></div>
       </div>
-      <div class="rail-item">
-        <span class="rail-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6Z"/></svg></span>
-        <div><b>Get honest feedback</b><small>Challenge assumptions and find blind spots.</small></div>
-      </div>
-      <div class="rail-item">
-        <span class="rail-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-        <div><b>Take your next step</b><small>Go from insight to action with a clear path forward.</small></div>
-      </div>
+      <blockquote style="margin:44px 0 0;font-family:var(--display);font-style:italic;font-size:26px;color:#c9a8ff">“A safe place for bold ideas.”</blockquote>
     </div>
 
-    <p class="quote">&ldquo;A safe place for bold ideas.&rdquo;</p>
-  </section>
-
-  <section class="card" aria-labelledby="create-title">
-    <p class="kicker">Join Think Tank</p>
-    <h2 id="create-title">Create your account.</h2>
-
-    <div class="notice" role="note">
-      <strong>Not in V0.</strong> Account creation is not part of this version. This page previews the layout; nothing you enter is sent or saved.
-    </div>
-
-    <fieldset class="roles" disabled>
-      <legend class="sub">Choose how you&rsquo;ll use Think Tank to get started. <span class="tag">Not in V0</span></legend>
-      <div class="role-grid">
-        <label class="role">
-          <input type="radio" name="role" value="founder" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M14 4c3 0 5 2 6 6-3 3-6 4-9 4l-4-4c0-3 2-6 7-6Z"/><path d="m8 12-3 3m0 0 2 2 2 0 0-2 0-2M5 18l-2 2"/><circle cx="15" cy="9" r="1.2"/></svg>
-          <b>Founder</b><small>Build and launch opportunities</small>
-        </label>
-        <label class="role">
-          <input type="radio" name="role" value="creator" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>
-          <b>Creator</b><small>Turn ideas into content</small>
-        </label>
-        <label class="role">
-          <input type="radio" name="role" value="learner" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5Z"/><path d="M6 11v5c2 2 10 2 12 0v-5"/></svg>
-          <b>Learner</b><small>Explore and grow</small>
-        </label>
-        <label class="role">
-          <input type="radio" name="role" value="partner" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M3 20c.6-3.4 3-5 6-5s5.4 1.6 6 5M15 15c2.6 0 4.6 1.4 5 4"/></svg>
-          <b>Partner</b><small>Collaborate and invest</small>
-        </label>
-      </div>
-    </fieldset>
-
-    <label class="field" for="name">
-      <span class="lbl">Full name</span>
-      <span class="input">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>
-        <input id="name" type="text" autocomplete="name" placeholder="Full name" disabled>
-      </span>
-    </label>
-
-    <label class="field" for="email">
-      <span class="lbl">Email</span>
-      <span class="input">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-        <input id="email" type="email" autocomplete="email" placeholder="Email address" disabled>
-      </span>
-    </label>
-
-    <label class="field" for="password">
-      <span class="lbl">Password</span>
-      <span class="input">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-        <input id="password" type="password" autocomplete="new-password" placeholder="Password" disabled>
-      </span>
-    </label>
-
-    <label class="field" for="confirm">
-      <span class="lbl">Confirm password</span>
-      <span class="input">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-        <input id="confirm" type="password" autocomplete="new-password" placeholder="Confirm password" disabled>
-      </span>
-    </label>
-
-    <div class="row">
-      <label class="check"><input type="checkbox" disabled><span>I agree to the Terms of Service and Privacy Policy.</span></label>
-    </div>
-    <p class="off" style="margin-top:6px;font-size:12px">Terms and Privacy documents are not part of V0. <small>Not in V0</small></p>
-
-    <button type="button" class="btn-primary" disabled>Create Account &rarr; <small>Not in V0</small></button>
-
-    <div class="or">or</div>
-    <button type="button" class="btn-social" disabled><span class="g" aria-hidden="true">G</span>Continue with Google <small>Not in V0</small></button>
-
-    <p class="foot">Already have an account? <a href="./signin.html">Sign In &rarr;</a></p>
-    <a class="open" href="./index.html">Open the workspace without an account</a>
-  </section>
+    <section class="card" aria-labelledby="create-title">
+      <p class="eyebrow">Join Think Tank</p>
+      <h2 id="create-title">Create your account.</h2>
+      <p class="sub">Choose how you'll use Think Tank to get started.</p>
+      <p class="notice"><strong>Not in V0.</strong> Account creation is not part of this version. This page previews the layout; nothing you enter is sent or saved.</p>
+      <form onsubmit="return false">
+        <fieldset class="roles" disabled>
+          <legend>Choose how you'll use Think Tank</legend>
+          <label class="role" data-selected="true"><input type="radio" name="role" value="founder" checked disabled><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M5 19c2-1 3-3 3-6l3-5 4-4c1-1 4-1 5-1 0 1 0 4-1 5l-4 4-5 3c-3 0-5 1-5 4z"/><circle cx="15" cy="9" r="1.4"/></svg><span class="role-name">Founder</span><span class="role-desc">Build and launch opportunities</span></label>
+          <label class="role"><input type="radio" name="role" value="creator" disabled><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg><span class="role-name">Creator</span><span class="role-desc">Turn ideas into content</span></label>
+          <label class="role"><input type="radio" name="role" value="learner" disabled><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c2 2 10 2 12 0v-5"/></svg><span class="role-name">Learner</span><span class="role-desc">Explore and grow</span></label>
+          <label class="role"><input type="radio" name="role" value="partner" disabled><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20c1-3.5 3.5-5 7-5s6 1.5 7 5M16 15c2.5 0 5 1.2 5.5 4"/></svg><span class="role-name">Partner</span><span class="role-desc">Collaborate and invest</span></label>
+        </fieldset>
+        <label class="field"><span class="label">Full name</span><span class="input"><svg class="lead" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg><input type="text" name="name" placeholder="Full name" disabled></span></label>
+        <label class="field"><span class="label">Email</span><span class="input"><svg class="lead" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg><input type="email" name="email" placeholder="Email address" disabled></span></label>
+        <label class="field"><span class="label">Password</span><span class="input"><svg class="lead" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><input type="password" name="password" placeholder="Password" disabled></span></label>
+        <label class="field"><span class="label">Confirm password</span><span class="input"><svg class="lead" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><input type="password" name="confirm" placeholder="Confirm password" disabled></span></label>
+        <label class="check-row"><input type="checkbox" name="terms" disabled><span>I agree to the <span class="link">Terms of Service</span> and <span class="link">Privacy Policy</span>.<small>Terms and Privacy documents are not part of V0.</small></span></label>
+        <button type="submit" class="primary-btn" disabled>Create Account <span aria-hidden="true">→</span></button>
+      </form>
+      <div class="divider">OR</div>
+      <button type="button" class="social-btn" disabled><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg> Continue with Google</button>
+      <p class="foot-line">Already have an account? <a href="./signin.html">Sign in <span aria-hidden="true">→</span></a></p>
+    </section>
+  </div>
 </main>
 </body>
 </html>
