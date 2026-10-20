@@ -7,12 +7,13 @@ test('sign-in preview disables every account control and routes to the workspace
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Welcome back to Think Tank');
   await expect(page.locator('.notice')).toContainText('Not in V0');
 
+  // Email, password and "Remember me" are all disabled.
   const inputs = page.locator('input');
-  await expect(inputs).toHaveCount(2);
+  await expect(inputs).toHaveCount(3);
   for (const input of await inputs.all()) {
     await expect(input).toBeDisabled();
   }
-  await expect(page.getByRole('button', { name: /Sign in/ })).toBeDisabled();
+  await expect(page.getByRole('button', { name: /Sign In/ })).toBeDisabled();
 
   const open = page.locator('a.open');
   await expect(open).toHaveAttribute('href', './index.html');
@@ -23,7 +24,8 @@ test('sign-in preview disables every account control and routes to the workspace
 
 test('create-account preview disables roles and submission', async ({ page }) => {
   await page.goto('/create-account.html');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Create your account');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Turn your ideas into');
+  await expect(page.getByRole('heading', { level: 2 })).toContainText('Create your account');
   await expect(page.locator('fieldset.roles')).toHaveAttribute('disabled', '');
 
   const radios = page.locator('input[type="radio"]');
@@ -34,7 +36,7 @@ test('create-account preview disables roles and submission', async ({ page }) =>
   for (const label of ['Founder', 'Creator', 'Learner', 'Partner']) {
     await expect(page.getByText(label, { exact: true })).toBeVisible();
   }
-  await expect(page.getByRole('button', { name: /Create account/ })).toBeDisabled();
+  await expect(page.getByRole('button', { name: /Create Account/ })).toBeDisabled();
 });
 
 test('auth previews have no horizontal overflow on a phone', async ({ page }) => {
@@ -57,4 +59,11 @@ test('landing hides the fake account chrome and labels sample results', async ({
   }
   await expect(page.locator('.sample-tag').first()).toContainText('Illustrative');
   await expect(page.locator('a.sign-in')).toHaveAttribute('href', './signin.html');
+});
+
+test('landing shows the four-guide band with no model claim', async ({ page }) => {
+  await page.goto('/landing.html');
+  await expect(page.locator('.guide')).toHaveCount(4);
+  await expect(page.locator('.guides')).toContainText('Nothing here calls an AI model.');
+  await expect(page.locator('a.ghost-btn')).toHaveAttribute('href', './signin.html');
 });

@@ -99,7 +99,39 @@ body::before{
   font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
   color:var(--violet-soft);margin-bottom:16px;
 }
-.hero-note{margin-top:18px;font-size:12.5px;line-height:1.5;color:var(--ink-faint);max-width:34ch;}
+.ghost-btn{
+  display:inline-flex;align-items:center;margin-top:30px;margin-left:12px;padding:14px 26px;
+  border-radius:999px;border:1px solid var(--edge);font-size:15px;font-weight:500;
+  color:var(--ink);background:rgba(10,7,16,.35);
+}
+.rail-item .rt{display:block;min-width:0;}
+.rail-item .rt b{display:block;font-family:var(--display);font-weight:500;font-size:17px;}
+.rail-item .rt small{display:block;font-size:13px;line-height:1.5;color:var(--ink-dim);margin-top:2px;}
+/* Four-guide band: hero, then the guides, then the six-panel walkthrough */
+.guides{padding-block:22px 6px;}
+.guides-in{
+  display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,3.1fr);gap:26px;align-items:center;
+  background:rgba(18,12,28,.72);border:1px solid var(--edge-soft);border-radius:18px;padding:26px;
+}
+.guides-copy h2{font-family:var(--display);font-weight:500;font-size:clamp(26px,2.8vw,38px);line-height:1.1;}
+.guides-copy p:last-child{margin-top:14px;font-size:14px;line-height:1.6;color:var(--ink-dim);max-width:36ch;}
+.guide-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+.guide{
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;min-width:0;
+  padding:16px 12px 14px;border-radius:14px;border:1px solid var(--edge-soft);
+  background:linear-gradient(180deg,rgba(23,16,38,.9),rgba(12,8,20,.96));
+}
+.guide .orb{width:clamp(70px,6.4vw,92px);margin:2px auto 8px;}
+.guide h3{font-family:var(--display);font-weight:500;font-size:19px;}
+.guide p{font-size:12.5px;line-height:1.5;color:var(--ink-dim);}
+.guide-foot{margin-top:auto;padding-top:8px;font-size:11px;color:var(--ink-faint);}
+@media (max-width:1180px){
+  .guides-in{grid-template-columns:minmax(0,1fr);}
+}
+@media (max-width:760px){
+  .guides-in{padding:18px;}
+  .guide-list{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
 .sample-tag{
   display:inline-block;align-self:flex-start;font-size:10.5px;letter-spacing:.04em;
   color:var(--amber);background:rgba(224,169,75,.1);border:1px solid rgba(224,169,75,.28);
@@ -122,7 +154,7 @@ body::before{
   content:"";position:absolute;inset:0;
   background:
     linear-gradient(90deg,rgba(10,7,16,.95) 0%,rgba(10,7,16,.72) 26%,rgba(10,7,16,.18) 48%,rgba(10,7,16,.72) 74%,rgba(10,7,16,.95) 100%),
-    linear-gradient(180deg,rgba(10,7,16,.6) 0%,transparent 30%,rgba(10,7,16,.75) 100%);
+    linear-gradient(180deg,rgba(10,7,16,.97) 0%,rgba(10,7,16,.94) 19%,rgba(10,7,16,0) 34%,rgba(10,7,16,0) 66%,rgba(10,7,16,.75) 100%);
 }
 .hero-in{
   position:relative;z-index:1;
@@ -479,27 +511,62 @@ footer{border-top:1px solid var(--edge-soft);}
   <div class="hero-bg" aria-hidden="true"><img src="assets/hero-scene.jpg" alt=""></div>
   <div class="shell hero-in gutter">
     <div>
-      <p class="eyebrow">Meet your four guides</p>
       <h1>Where ideas become <em>companies.</em></h1>
       <p class="hero-sub">A cinematic thinking partner that helps you explore, challenge, and build your ideas into real opportunities.</p>
       <a href="./index.html" class="start-btn">
         Start Exploring
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:15px;height:15px"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
       </a>
+      <a href="./signin.html" class="ghost-btn">Sign In</a>
     </div>
     <div class="hero-rail">
       <div class="pull">
         <span class="pull-line">&ldquo; A safe place</span>
         <span class="pull-line">for bold ideas. &rdquo;</span>
       </div>
-      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></span>Explore possibilities</div>
-      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6Z"/></svg></span>Get honest feedback</div>
-      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11v2h6v-2a6 6 0 0 0-3-11Z"/></svg></span>See real potential, on a fixed rubric</div>
-      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>Take your next step</div>
-      <p class="hero-note">Four fixed, rule-based guides. Nothing here calls an AI model.</p>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></span><span class="rt"><b>Explore possibilities</b><small>Turn your ideas into new angles and opportunities.</small></span></div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6Z"/></svg></span><span class="rt"><b>Get honest feedback</b><small>Challenge assumptions and find blind spots.</small></span></div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11v2h6v-2a6 6 0 0 0-3-11Z"/></svg></span><span class="rt"><b>See real potential</b><small>Scored on a fixed rubric. Not market data.</small></span></div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span><span class="rt"><b>Take your next step</b><small>Go from insight to action with a clear path forward.</small></span></div>
     </div>
   </div>
 </header>
+
+<section class="shell gutter guides" aria-labelledby="guides-title">
+  <div class="guides-in">
+    <div class="guides-copy">
+      <p class="eyebrow">Meet your four guides</p>
+      <h2 id="guides-title">Four perspectives.<br>A stronger you.</h2>
+      <p>Deeper insights, sharper feedback, and a clearer path forward, from four fixed, rule-based guides. Nothing here calls an AI model.</p>
+    </div>
+    <ul class="guide-list">
+      <li class="guide">
+        <span class="orb o-critic" aria-hidden="true"><i></i></span>
+        <h3>The Critic</h3>
+        <p>Challenges assumptions and finds blind spots.</p>
+        <span class="guide-foot">Runs inside the workspace</span>
+      </li>
+      <li class="guide">
+        <span class="orb o-score" aria-hidden="true"><i></i></span>
+        <h3>The Scorecard</h3>
+        <p>Scores your four answers on a fixed rubric.</p>
+        <span class="guide-foot">Runs inside the workspace</span>
+      </li>
+      <li class="guide">
+        <span class="orb o-synth" aria-hidden="true"><i></i></span>
+        <h3>The Synthesizer</h3>
+        <p>Joins your answers into one bottom line.</p>
+        <span class="guide-foot">Runs inside the workspace</span>
+      </li>
+      <li class="guide">
+        <span class="orb o-match" aria-hidden="true"><i></i></span>
+        <h3>The Matchmaker</h3>
+        <p>Names one strategic pattern. No people matching in V0.</p>
+        <span class="guide-foot">Runs inside the workspace</span>
+      </li>
+    </ul>
+  </div>
+</section>
 
 <main class="shell grid gutter" id="ideas">
 
