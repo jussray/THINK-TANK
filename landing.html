@@ -83,6 +83,28 @@ body::before{
 .nav-links a.on{color:var(--ink);font-weight:500;}
 .nav-tools{display:flex;align-items:center;gap:16px;color:var(--ink-dim);}
 .nav-tools svg{width:18px;height:18px;display:block;}
+/* Honest disabled states: visible, labeled, never clickable as if live */
+.nav-off{color:var(--ink-faint);cursor:not-allowed;}
+.nav-off i{font-style:normal;font-size:10.5px;margin-left:4px;color:var(--ink-faint);}
+.icon-off{
+  width:40px;height:40px;display:grid;place-items:center;border-radius:50%;
+  background:none;border:1px solid transparent;color:var(--ink-faint);cursor:not-allowed;padding:0;
+}
+.icon-off svg{width:18px;height:18px;display:block;}
+.sign-in{
+  display:inline-flex;align-items:center;min-height:40px;padding:0 14px;
+  border-radius:999px;border:1px solid var(--edge);font-size:14px;color:var(--violet-soft);
+}
+.eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--violet-soft);margin-bottom:16px;
+}
+.hero-note{margin-top:18px;font-size:12.5px;line-height:1.5;color:var(--ink-faint);max-width:34ch;}
+.sample-tag{
+  display:inline-block;align-self:flex-start;font-size:10.5px;letter-spacing:.04em;
+  color:var(--amber);background:rgba(224,169,75,.1);border:1px solid rgba(224,169,75,.28);
+  border-radius:999px;padding:3px 10px;margin-top:8px;
+}
 .avatar{
   width:30px;height:30px;border-radius:50%;flex:none;
   background:linear-gradient(140deg,#6B4AA0,#3D2C5C);
@@ -442,13 +464,13 @@ footer{border-top:1px solid var(--edge-soft);}
     <div class="nav-links">
       <a href="./landing.html" class="on">Home</a>
       <a href="./workspace.html">Ideas</a>
-      <a href="#" >Resources</a>
+      <span class="nav-off" aria-disabled="true">Resources <i>not in V0</i></span>
       <a href="#truth">About</a>
     </div>
     <div class="nav-tools">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg>
-      <span class="avatar">JR</span>
+      <button type="button" class="icon-off" disabled aria-label="Search, not in V0" title="Search: not in V0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+      <button type="button" class="icon-off" disabled aria-label="Notifications, not in V0" title="Notifications: not in V0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg></button>
+      <a class="sign-in" href="./signin.html">Sign in</a>
     </div>
   </div>
 </nav>
@@ -457,6 +479,7 @@ footer{border-top:1px solid var(--edge-soft);}
   <div class="hero-bg" aria-hidden="true"><img src="assets/hero-scene.jpg" alt=""></div>
   <div class="shell hero-in gutter">
     <div>
+      <p class="eyebrow">Meet your four guides</p>
       <h1>Where ideas become <em>companies.</em></h1>
       <p class="hero-sub">A cinematic thinking partner that helps you explore, challenge, and build your ideas into real opportunities.</p>
       <a href="./index.html" class="start-btn">
@@ -471,8 +494,9 @@ footer{border-top:1px solid var(--edge-soft);}
       </div>
       <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></span>Explore possibilities</div>
       <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6Z"/></svg></span>Get honest feedback</div>
-      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11v2h6v-2a6 6 0 0 0-3-11Z"/></svg></span>See real potential</div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11v2h6v-2a6 6 0 0 0-3-11Z"/></svg></span>See real potential, on a fixed rubric</div>
       <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>Take your next step</div>
+      <p class="hero-note">Four fixed, rule-based guides. Nothing here calls an AI model.</p>
     </div>
   </div>
 </header>
@@ -549,7 +573,7 @@ footer{border-top:1px solid var(--edge-soft);}
   <section class="card">
     <div class="card-in">
       <div class="step"><b>3.</b> Exploration</div>
-      <div class="analyzing"><span class="pulse"></span>Reviewing your idea&hellip;</div>
+      <div class="analyzing"><span class="pulse"></span>Four rule-based passes, no model call</div>
       <div class="orbs">
         <div class="orb-cell">
           <span class="orb o-critic"><i></i></span>
@@ -559,17 +583,17 @@ footer{border-top:1px solid var(--edge-soft);}
         <div class="orb-cell">
           <span class="orb o-score"><i></i></span>
           <h4>The Scorecard</h4>
-          <p>Evaluates potential and viability</p>
+          <p>Scores your four answers on a fixed rubric</p>
         </div>
         <div class="orb-cell">
           <span class="orb o-synth"><i></i></span>
           <h4>The Synthesizer</h4>
-          <p>Connects insights and uncovers opportunities</p>
+          <p>Joins your answers into one bottom line</p>
         </div>
         <div class="orb-cell">
           <span class="orb o-match"><i></i></span>
           <h4>The Matchmaker</h4>
-          <p>Finds patterns and real-world possibilities</p>
+          <p>Names one strategic pattern. No people matching in V0</p>
         </div>
       </div>
     </div>
@@ -595,6 +619,7 @@ footer{border-top:1px solid var(--edge-soft);}
         </aside>
         <div class="stage">
           <h3 class="res-head">Here&rsquo;s what we found.</h3>
+          <p class="sample-tag">Illustrative example, not a real result</p>
           <p class="res-sub">A balanced view of your idea, with real insights and next steps.</p>
           <div class="tabs">
             <span class="tab on">Overview</span><span class="tab">Analysis</span>
@@ -686,7 +711,8 @@ footer{border-top:1px solid var(--edge-soft);}
         <div class="hub-top">
           <div>
             <h3>My Ideas</h3>
-            <p class="res-sub">Continue your journey or explore a new direction.</p>
+            <p class="res-sub">Illustrative examples. Your saved ideas appear here.</p>
+            <p class="sample-tag">Examples, not your records</p>
           </div>
           <span class="new-idea"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>New Idea</span>
         </div>
@@ -736,7 +762,9 @@ footer{border-top:1px solid var(--edge-soft);}
   continue the same record through later pivots. Your Idea Record stays in your browser and exports as a
   portable file you own. The four roles are deterministic passes over your own answers &mdash; a structured
   heuristic, not external market validation or proof of demand. Accounts, billing, team seats and API access
-  are not part of this version.
+  are not part of this version. The sample idea, scores and hub entries above are illustrations, not records.
+  The <a href="./signin.html">sign-in</a> and <a href="./create-account.html">create-account</a> pages are disabled
+  previews of accounts this version does not have.
 </section>
 
 <footer class="gutter">

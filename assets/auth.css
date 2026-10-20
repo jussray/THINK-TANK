@@ -1,0 +1,136 @@
+/* Shared surface for the sign-in and create-account previews.
+   V0 has no accounts, so every account control on these pages is disabled and
+   labeled "Not in V0". Nothing here collects, sends or stores anything. */
+:root{
+  --void:#0A0710;
+  --panel:#171026;
+  --edge:rgba(188,160,255,.16);
+  --edge-soft:rgba(188,160,255,.08);
+  --ink:#F3EFFA;
+  --ink-dim:#A99DC2;
+  --ink-faint:#8D82A8;
+  --violet:#A855F7;
+  --violet-soft:#C4A6FB;
+  --violet-btn:#8B5CF6;
+  --amber:#E0A94B;
+  --display:'Playfair Display',Georgia,'Times New Roman',serif;
+  --ui:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;}
+body{
+  min-height:100vh;display:flex;flex-direction:column;
+  background:var(--void);color:var(--ink);
+  font-family:var(--ui);-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+p{margin:0;}
+a{color:var(--violet-soft);}
+:focus-visible{outline:2px solid var(--violet-soft);outline-offset:3px;border-radius:8px;}
+
+.gutter{
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+
+/* Ground: the approved hero scene, dimmed so the card stays readable. */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.bg img{width:100%;height:100%;object-fit:cover;object-position:center 38%;opacity:.55;}
+.bg::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(10,7,16,.85) 0%,rgba(10,7,16,.55) 40%,rgba(10,7,16,.95) 100%);
+}
+
+/* Top bar */
+.top{position:relative;z-index:2;padding-block:16px;}
+.top-in{display:flex;align-items:center;gap:16px;max-width:1100px;margin:0 auto;}
+.brand{display:flex;align-items:center;gap:11px;color:var(--ink);text-decoration:none;min-height:44px;}
+.mark{
+  width:34px;height:34px;border-radius:10px;flex:none;
+  background:linear-gradient(145deg,#B47CF8,#7C4DD6);
+  display:grid;place-items:center;box-shadow:0 0 18px rgba(168,85,247,.45);
+}
+.mark svg{width:19px;height:19px;}
+.brand-name{font-size:15px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;}
+.top-nav{margin-left:auto;display:flex;gap:12px;font-size:14px;}
+.top-nav a{
+  display:inline-flex;align-items:center;min-height:44px;padding:0 12px;
+  border:1px solid var(--edge);border-radius:999px;text-decoration:none;color:var(--ink-dim);
+}
+.top-nav a:hover{color:var(--ink);}
+
+/* Card */
+.main{position:relative;z-index:1;flex:1;display:grid;place-items:center;padding-block:24px 48px;}
+.card{
+  width:100%;max-width:440px;min-width:0;
+  background:rgba(23,16,38,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--edge);border-radius:18px;padding:32px 30px;
+  box-shadow:0 30px 80px rgba(0,0,0,.45);
+}
+.kicker{font-size:11px;font-weight:600;letter-spacing:.17em;text-transform:uppercase;color:var(--violet-soft);}
+.card h1{
+  font-family:var(--display);font-weight:700;
+  font-size:clamp(28px,6vw,34px);line-height:1.12;margin-top:10px;text-wrap:balance;
+}
+.lede{margin-top:12px;color:var(--ink-dim);font-size:14.5px;line-height:1.6;}
+.notice{
+  margin-top:20px;padding:12px 14px;border-radius:11px;
+  background:rgba(224,169,75,.08);border:1px solid rgba(224,169,75,.28);
+  font-size:13px;line-height:1.55;color:var(--ink-dim);
+}
+.notice strong{color:var(--amber);font-weight:600;}
+
+/* Form (disabled preview) */
+.field-label{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:18px;font-size:13px;font-weight:500;color:var(--ink-dim);
+}
+.tag{font-size:11px;font-weight:500;color:var(--ink-faint);}
+.field-label input,
+input.field{
+  width:100%;margin-top:7px;min-height:48px;padding:12px 14px;
+  border-radius:11px;border:1px solid var(--edge);
+  background:rgba(10,7,16,.72);color:var(--ink);font:inherit;font-size:15px;
+}
+input:disabled{opacity:.6;cursor:not-allowed;}
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+  width:100%;min-height:48px;margin-top:22px;padding:12px 18px;border-radius:999px;
+  font:inherit;font-size:15px;font-weight:600;cursor:not-allowed;
+  border:1px solid rgba(255,255,255,.14);
+}
+.btn small{font-size:11px;font-weight:500;opacity:.85;}
+.btn-primary{background:var(--violet-btn);color:#fff;opacity:.5;}
+.fine{margin-top:12px;font-size:12px;line-height:1.5;color:var(--ink-faint);text-align:center;}
+
+.roles{border:0;margin:18px 0 0;padding:0;min-width:0;}
+.roles legend{
+  font-size:13px;font-weight:500;color:var(--ink-dim);
+  padding:0;margin-bottom:9px;
+}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.role{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  min-height:44px;border-radius:11px;border:1px solid var(--edge-soft);
+  background:rgba(255,255,255,.03);font-size:14px;color:var(--ink-dim);cursor:not-allowed;
+}
+.role input{position:absolute;opacity:0;pointer-events:none;}
+
+.links{margin-top:20px;font-size:13.5px;line-height:1.7;color:var(--ink-dim);text-align:center;}
+.off{color:var(--ink-faint);}
+.off small{font-size:11px;}
+.open{
+  display:flex;align-items:center;justify-content:center;min-height:48px;margin-top:18px;
+  border-radius:999px;border:1px solid var(--edge);color:var(--ink);
+  text-decoration:none;font-size:14px;font-weight:500;padding:12px 16px;text-align:center;
+}
+
+@media (max-width:480px){
+  .card{padding:24px 20px;}
+  .top-nav{gap:8px;font-size:13px;}
+  .top-nav a{padding:0 10px;}
+  .brand-name{font-size:13px;}
+  .role-grid{grid-template-columns:1fr;}
+}
