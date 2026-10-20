@@ -19,93 +19,161 @@
   "description": "A local-first founder idea interview system that turns answers into a durable Idea Record and fixed heuristic scorecard while keeping external validation separate."
 }
 </script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:dark;--ink:#080712;--panel:#131122;--panel2:#1e1830;--paper:#f8f3ff;--paper-dim:#bcb3ce;--brass:#f6c9a0;--violet:#b997ff;--teal:#70d3bf;--rust:#f19599;--line:#39304b;--glow:#c7a3ff}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--paper);background:radial-gradient(circle at 78% 33%,#24183d 0,transparent 34%),#090813;font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;overflow-x:hidden}button,input,textarea{font:inherit}button,a{touch-action:manipulation}a{color:inherit}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #dfcaff;outline-offset:3px}.wrap{width:min(100% - 52px,1450px);margin-inline:auto}.eyebrow,.mono,.panel-head{font:600 11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.13em;text-transform:uppercase}.eyebrow{color:#dfbbff}h1,h2,h3,p{margin-top:0}h1,h2,h3{font-family:Georgia,'Times New Roman',serif;font-weight:500;letter-spacing:-.025em}h2{font-size:clamp(28px,3.3vw,44px);line-height:1.12}h3{font-size:23px}.muted{color:var(--paper-dim)}.hidden{display:none!important}
-.site-nav{position:relative;z-index:20;border-bottom:1px solid #ffffff22;background:#0a0715b8;backdrop-filter:blur(18px)}.nav{display:flex;justify-content:space-between;align-items:center;gap:22px;padding:17px 0}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;text-transform:uppercase;font-size:15px;font-weight:800;letter-spacing:.23em;white-space:nowrap}.brandmark{display:grid;place-items:center;width:34px;height:34px;color:#d6b5ff;border:1px solid #bb8dff88;border-radius:11px;background:#54347e38;box-shadow:0 0 20px #a66cfd33;font-size:20px}.navlinks{display:flex;gap:30px;align-items:center}.navlinks a{text-decoration:none;color:#e6dff0;font-size:13px}.navlinks a:hover{color:#d0acff}.nav-action{font-size:12px;color:#e5cfff;text-decoration:none;border:1px solid #b894e366;padding:10px 16px;border-radius:40px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;border:1px solid #5b4c74;border-radius:12px;padding:11px 19px;background:#ffffff0b;color:var(--paper);text-decoration:none;cursor:pointer;font-weight:600;transition:transform .15s,border-color .2s,background .2s}.btn:hover{transform:translateY(-1px);border-color:var(--violet);background:#bc92ff25}.btn.primary{border-color:#c39bff;background:linear-gradient(110deg,#bd99ff,#dfbaff);color:#22102e;box-shadow:0 6px 24px #a36cff44}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}.hero{position:relative;isolation:isolate;min-height:430px;overflow:hidden;display:flex;align-items:center;border-bottom:1px solid #a384ca50;background:radial-gradient(ellipse at 53% 23%,#664d86 0,#352542 28%,#1b1531 60%,#090b18 95%)}.hero::after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#080714ef 0%,#0807148a 27%,transparent 60%,#080714c4 100%),linear-gradient(0deg,#080912 0%,transparent 27%)}.hero-art{position:absolute;inset:0;z-index:-2;overflow:hidden}.sky-haze{position:absolute;inset:0;background:radial-gradient(ellipse at 58% 52%,#ffd1b1aa,transparent 26%),radial-gradient(ellipse at 69% 30%,#b6a6f077,transparent 34%),linear-gradient(180deg,#1f1933,#4a3454 55%,#19142d)}.portal{position:absolute;left:55%;top:-80px;width:min(38vw,520px);height:min(38vw,520px);border-radius:50%;border:7px solid #fce3c8;box-shadow:0 0 5px #fff,0 0 24px #ffcfa9,0 0 70px #ffc09a99,inset 0 0 48px #df94ff9c;transform:rotate(-12deg)}.portal:after{content:'';position:absolute;inset:-18px;border:2px solid #deb1ff9c;border-radius:50%;box-shadow:0 0 25px #e2afff70}.ridge{position:absolute;inset:0;background:#171628}.ridge.far{background:#26203b;clip-path:polygon(0 66%,9% 54%,15% 61%,23% 39%,33% 66%,42% 50%,47% 69%,57% 44%,63% 57%,75% 37%,83% 62%,91% 41%,100% 65%,100% 100%,0 100%)}.ridge.near{background:#0b0b1d;clip-path:polygon(0 76%,10% 58%,16% 79%,26% 65%,32% 79%,41% 56%,51% 83%,62% 70%,71% 82%,82% 55%,89% 73%,100% 50%,100% 100%,0 100%);opacity:.8}.lake{position:absolute;bottom:0;width:100%;height:22%;background:repeating-linear-gradient(177deg,transparent 0px,transparent 10px,#e3b6b622 11px,transparent 13px),linear-gradient(180deg,#dbacb824,#161324 80%);opacity:.7}.hero-content{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.52fr);gap:45px;align-items:center;padding-top:58px;padding-bottom:66px}.hero-copy{max-width:570px}.hero h1{font-size:clamp(48px,6vw,84px);line-height:.96;margin:14px 0 20px;text-wrap:balance;text-shadow:0 3px 30px #0b0718}.hero h1 em{font-style:normal;color:#c7a1ff;display:block}.hero-lede{max-width:430px;font-size:16px;line-height:1.6;color:#ede8ef;text-shadow:0 2px 18px #060510}.hero-actions{display:flex;gap:13px;flex-wrap:wrap;margin-top:21px}.hero-perks{max-width:240px;margin-left:auto;padding:23px;border:1px solid #cbb5e344;border-radius:20px;background:#110e27ae;backdrop-filter:blur(20px);box-shadow:0 10px 40px #07061288}.hero-perks p{color:#e0bbff;font:italic 24px/1.18 Georgia,serif}.hero-perks ul{padding:0;margin:0;list-style:none}.hero-perks li{border-top:1px solid #bea5e129;padding:12px 0;color:#e1dae9;font-size:13px}.hero-perks li:before{content:'✦';color:#c39aff;margin-right:12px}.truth-note{color:#bfb6cc;font-size:12px;line-height:1.6;max-width:630px;margin-top:19px;padding:11px 13px;border:1px solid #b98ce63d;border-radius:10px;background:#110e20b8}
-
-/* Six-panel board (approved target, anatomy items 1–6) */
-.board{padding:46px 0 60px;background:radial-gradient(circle at 60% 40%,#281b3d55,transparent 52%);border-top:1px solid #382944}
-.board-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
-.board-row+.board-row{margin-top:18px}
-.panel,.card,.rolecard{border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#1b142b,#111021);overflow:hidden;box-shadow:0 15px 45px #03030a38}
-.panel{display:flex;flex-direction:column;min-width:0}
-.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 19px;color:#d7c5e8;border-bottom:1px solid var(--line)}
-#sessionState,#resultsStatus,#buildStatus{color:#c6a3fc}
-.panel-body{flex:1;min-width:0;padding:clamp(20px,2.6vw,30px)}
-.panel h2{font-size:clamp(26px,2.4vw,36px);line-height:1.12;margin:12px 0 10px}
-.panel h3{font-size:clamp(22px,2vw,28px);margin:8px 0 10px}
-.panel-art{background:linear-gradient(180deg,#0a0716c7,#090714f5),url("./assets/band.jpg") center/cover no-repeat}
-.field{display:grid;gap:10px;margin-bottom:16px}.field label{color:#e7d9fa;font-weight:600;font-size:13px}.field textarea,.field input{width:100%;min-width:0;background:#100d20;border:1px solid #675083;border-radius:12px;color:#fff;padding:15px 17px;resize:vertical}.field textarea{min-height:145px}.field textarea::placeholder{color:#9386a7}
-#setup{text-align:center;padding:4px 0 0}#setup .field{text-align:left}#setup .field textarea{border-color:#b98cff;background:#110d24e6;box-shadow:0 0 0 1px #b98cff66,0 0 34px #a36cff44}#setup p{color:var(--paper-dim);margin-bottom:22px}
-.interview-tip{color:#e8ceff;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
-.starter-list{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:20px}.starter-chip{padding:8px 12px;border-radius:25px;border:1px solid #5a4772;color:#d6cbe5;font-size:12px;background:#ffffff08;cursor:pointer}.starter-chip:hover{border-color:var(--violet)}
-.interview-idle{min-height:240px;display:grid;place-items:center;text-align:center}
-.card{padding:20px;overflow-wrap:anywhere}.card h3{font-size:24px;margin-bottom:12px}.card p{margin-bottom:10px}.build-card{margin-bottom:14px}
-.score{font:500 13px/2 ui-monospace,monospace;white-space:pre-line}.version{font-size:12px;padding:8px 0;border-bottom:1px solid #433853}.version:last-child{border:0}.status{color:var(--paper-dim);font-size:12px;line-height:1.6}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
-.build-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 16px}.build-tab{padding:7px 12px;border-radius:20px;border:1px solid #5a4772;background:none;color:#bcb1ce;font-size:12px}.build-tab:disabled{opacity:.45;cursor:not-allowed}.build-tab.is-active{border-color:#c39bff;color:#f1e6ff;background:#bc92ff25}
-.hub-list{display:grid;gap:12px;margin-bottom:16px}.hub-item{border:1px solid #433853;border-radius:14px;padding:16px;background:#150f25;display:grid;gap:6px;justify-items:start}.hub-item-title{font:500 20px/1.25 Georgia,serif;overflow-wrap:anywhere}.hub-item-meta{font-size:12px;color:var(--paper-dim)}.hub-item .btn{margin-top:6px}
-.transcript{display:grid;gap:12px;max-height:360px;overflow:auto;padding-right:5px}.msg{padding:13px 15px;background:#0d0b19;border:1px solid #433553;border-left:3px solid #8d72aa;border-radius:11px;overflow-wrap:anywhere}.msg .role{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#c6a5f7;margin-bottom:6px;font-weight:700}.msg.interviewer{border-left-color:var(--teal)}.msg.founder{border-left-color:var(--violet)}.msg.critic{border-left-color:var(--rust)}.msg.scorecard{border-left-color:var(--brass)}.msg.synthesizer{border-left-color:#7fbcf0}.msg.matchmaker{border-left-color:var(--teal)}
-.roster{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}.rolecard{padding:26px 16px;text-align:center;min-height:250px;background:radial-gradient(circle at 50% 12%,#413363,#151121 70%)}.orb{display:grid;place-items:center;width:120px;height:120px;margin:0 auto 16px;border-radius:50%;border:2px solid #ca9fff;box-shadow:inset 0 0 20px #9b68f3,0 0 28px #ac70fa55;background:radial-gradient(circle at 34% 31%,#ffffffb0,#bb93ff 5%,#342554 25%,#080e24 60%,#aa6eff);font-size:28px}.rolecard:nth-child(2) .orb{border-color:#ffcc9c;box-shadow:inset 0 0 20px #c78b64,0 0 28px #e9a57255}.rolecard:nth-child(3) .orb{border-color:#9cbdff}.rolecard:nth-child(4) .orb{border-color:#78dfca;box-shadow:inset 0 0 20px #70c8b6,0 0 28px #6cdabc55}.rolecard b{display:block;font:500 20px Georgia,serif}.rolecard span{display:block;font-size:12px;line-height:1.5;margin-top:8px}.rolecard small{font-size:11px;color:#a98fc0}
-.micro-label{font-size:11px;letter-spacing:.15em;color:#ad95cf;text-transform:uppercase;font-weight:700}.footer{padding:27px 0;border-top:1px solid #352947;color:#a99eb7;font-size:12px}
-
-/* Hero art (approved hero crop) */
-.hero-art{background:linear-gradient(90deg,#090714 0%,#090714d9 12%,#0907141c 43%,transparent 80%),url("./assets/think-tank-hero-scene.webp") center right/auto 100% no-repeat}
-.hero-art .sky-haze,.hero-art .portal,.hero-art .ridge,.hero-art .lake{display:none}
-
-/* Results */
-.results-live{display:grid;gap:16px}.result-overview{border:1px solid #493958;border-radius:18px;padding:26px;background:linear-gradient(110deg,#191329,#211831);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:25px}
-.result-overview h3{font-size:clamp(22px,3vw,33px);margin:8px 0}.result-overview p{max-width:650px;color:var(--paper-dim);margin:0}
-.result-number{display:grid;place-items:center;width:112px;height:112px;border-radius:50%;border:7px solid #aee8c9;box-shadow:0 0 25px #7bc7ad33;background:#121829;font:500 26px Georgia,serif;color:#dcffe9}
-.result-number small{font:12px ui-monospace,monospace}.result-card-label{display:block;color:#cab1f9;font-weight:700;letter-spacing:.11em;font-size:11px;text-transform:uppercase;margin-bottom:12px}.results-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.results-grid .card{min-height:200px;padding:25px}
-.result-text{font-size:15px;line-height:1.75;color:#f1e9fb;white-space:pre-wrap;overflow-wrap:anywhere}
-.results-empty{border:1px solid #47375f;border-radius:18px;padding:35px;background:#1b1530;color:#d2c6e0}
-#answerBtn:disabled,#answerInput:disabled{display:none}
-#conversation .field:has(#answerInput:disabled){display:none}
-/* Increment 2: guided interview panel */
-.interview-progress{display:grid;gap:10px;margin-bottom:26px}
-.interview-progress-meta{font:600 11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:#cdb6ef}
-.progress-track{height:4px;border-radius:4px;background:#ffffff1a;overflow:hidden}
-.progress-fill{height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,#9d7bf0,#dfbaff);box-shadow:0 0 14px #b38cff88;transition:width .35s ease}
-.question-title{font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.18;text-align:center;letter-spacing:-.02em;margin:0 0 10px;text-wrap:balance}
-.question-hint{text-align:center;color:var(--paper-dim);font-size:13px;margin:0 0 22px}
+:root{--bg:#07060f;--ink:#ede9f5;--ink2:#d6d5de;--muted:#aaaabf;--lilac:#c19ef6;--accent:#c084f6;--line:rgba(190,160,255,.18);--line2:rgba(190,160,255,.34);--card:rgba(14,10,28,.84);--field:#121224;--display:"DM Serif Display","Liberation Serif",Georgia,serif;--sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button,input,textarea{font:inherit}
+img{max-width:100%;display:block}
+.hidden{display:none!important}
+.wrap{max-width:1440px;margin:0 auto;padding:0 clamp(16px,2.9vw,44px)}
+.muted{color:var(--muted)}
+.micro-label{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#b9a6e0;margin-bottom:8px}
+.site-nav{height:66px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(7,6,15,.6);position:sticky;top:0;z-index:5;backdrop-filter:blur(6px)}
+.nav{height:66px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none;font-weight:600;font-size:17px;letter-spacing:.16em;white-space:nowrap}
+.brandmark{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#d2a3ff,#7d4bdc);box-shadow:0 0 24px rgba(190,130,255,.5);color:#fff;font-size:16px}
+.navlinks{display:flex;align-items:center;gap:clamp(16px,2.4vw,40px);font-size:15px;color:#d8d5e6}
+.navlinks a{text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.navlinks a[aria-current="page"],.navlinks a.is-active{border-bottom-color:var(--accent);color:#fff}
+.navlinks .not-v0{color:#7f7b93}
+.navlinks .not-v0 small{font-size:10px;margin-left:4px;color:#7f7b93}
+.nav-tools{display:flex;align-items:center;gap:14px}
+.icon-off{width:36px;height:36px;border:0;border-radius:50%;background:none;color:#cfc9e0;display:grid;place-items:center;cursor:not-allowed;opacity:.85}
+.nav-action{display:none}
+.hero{position:relative;overflow:hidden;min-height:440px}
+.hero-art{position:absolute;inset:0;background:url("./assets/think-tank-hero-scene.webp") 52% 30%/cover no-repeat}
+.hero-art::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#07060f 0%,rgba(7,6,15,.84) 24%,rgba(7,6,15,.06) 52%,rgba(7,6,15,.06) 72%,rgba(7,6,15,.78) 100%),linear-gradient(180deg,rgba(7,6,15,.2),rgba(7,6,15,0) 40%,rgba(7,6,15,.92) 100%)}
+.hero-content{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:32px;padding-top:50px;padding-bottom:40px;min-height:440px}
+.eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#a69bd4;display:flex;align-items:center;gap:12px;margin:0 0 18px}
+.eyebrow::before{content:"";width:34px;height:2px;background:#cc96f6;border-radius:2px}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(42px,4.2vw,64px);line-height:1.02;letter-spacing:-.01em;margin:0;color:#f3f0fa}
+h1 em{font-style:normal;background:linear-gradient(90deg,#d5b6ff,#b48cf4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-lede{font-size:19px;line-height:1.4;color:var(--ink2);margin:18px 0 0;max-width:540px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.btn{height:46px;padding:0 22px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:rgba(8,6,16,.4);color:#f1edf9;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:15px;font-weight:600;cursor:pointer}
+.btn.primary{background:linear-gradient(180deg,#cc9cff,#a86cf0);color:#140c25;border-color:transparent;box-shadow:0 10px 30px rgba(170,110,255,.4)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.truth-note{margin-top:22px;max-width:560px;font-size:13px;line-height:1.55;color:#9c97b3;border-left:2px solid rgba(190,150,255,.4);padding-left:14px}
+.hero-perks{padding-top:70px}
+.hero-perks p{margin:0 0 18px;font-family:var(--display);font-style:italic;font-size:24px;line-height:1.25;color:#c9a8ff}
+.hero-perks ul{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.hero-perks li{font-family:var(--display);font-size:19px;color:#f1edf9;padding-left:34px;position:relative}
+.hero-perks li::before{content:"✦";position:absolute;left:0;top:1px;color:#c9a8ff;font-family:var(--sans);font-size:14px}
+.board{padding:6px 0 40px}
+.board-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:18px;margin-top:18px}
+.board-row + .board-row{margin-top:18px}
+.board-row:last-child{grid-template-columns:minmax(0,1.42fr) minmax(0,1fr) minmax(0,1fr)}
+.panel{border:1px solid var(--line);border-radius:16px;background:rgba(12,9,24,.86);overflow:hidden;min-width:0;display:flex;flex-direction:column}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid rgba(190,160,255,.14);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#c7b5ec}
+.panel-head span:first-child b{color:var(--lilac)}
+.panel-body{padding:22px;flex:1;min-width:0}
+.panel-start .panel-body,.panel-results .panel-body{display:grid;grid-template-columns:116px minmax(0,1fr);gap:18px}
+.panel-start .panel-body > div,.panel-results .panel-body > div{grid-column:2;min-width:0}
+.rail{border-right:1px solid rgba(190,160,255,.12);padding:6px 10px 6px 0;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.rail-brand{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.14em;color:#e9e4f7;margin-bottom:14px}
+.rail-brand .brandmark{width:26px;height:26px;border-radius:8px;font-size:11px}
+.rail-item{color:#bdb6d6;text-decoration:none;padding:8px 10px;border-radius:10px}
+.rail-item.is-active{background:rgba(192,132,246,.14);color:#fff}
+.rail-item.is-off{color:#6f6a85;cursor:not-allowed}
+.rail-foot{margin-top:auto;color:#6f6a85;padding:8px 10px}
+.panel-art h2,.panel h2{font-family:var(--display);font-weight:400;font-size:30px;line-height:1.1;margin:8px 0 10px;color:#f3f0fa}
+.panel h3{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;margin:4px 0 8px;color:#f3f0fa}
+.panel p{margin:0 0 12px;font-size:14px;line-height:1.5}
+.interview-tip{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#bdaee0;text-align:center}
+.field{display:block;margin:14px 0 14px}
+.field label,.field > label{display:block;font-size:13px;color:#d8d5e6;margin-bottom:8px}
 .textarea-wrap{position:relative}
-.textarea-wrap textarea{padding-right:60px}
-.mic-btn{position:absolute;right:12px;bottom:12px;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;border:1px solid #5b4c74;background:#ffffff0b;color:#8f83a6;cursor:not-allowed}
-.voice-note{font-size:12px;color:#a99eb7;margin:8px 0 0}
-.interview-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px}
-.interview-actions #answerBtn{margin-left:auto}
-.history-label{margin:30px 0 12px}
-/* Increment 3: results, engine-backed only */
-.result-number-wrap{display:grid;justify-items:center;gap:8px}
-.result-caption{font:11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:#bfb3d1}
-.score-row{display:grid;grid-template-columns:110px minmax(0,1fr) 44px;align-items:center;gap:12px;margin-bottom:14px;font-size:14px;color:#e9e1f5}
-.score-row b{text-align:right;font-weight:600}
-.score-track{height:6px;border-radius:6px;background:#ffffff1a;overflow:hidden}
-.score-fill{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,#70d3bf,#b997ff);transition:width .35s ease}
-.analysis-list{margin:0;display:grid;gap:12px}
-.analysis-list>div{border-top:1px solid #bea5e129;padding-top:10px}
-.analysis-list>div:first-child{border-top:0;padding-top:0}
-.analysis-list dt{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#cab1f9;font-weight:700}
-.analysis-list dd{margin:4px 0 0;color:#f1e9fb;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
-.result-gap{margin-top:15px;border:1px dashed #6a5785;border-radius:18px;padding:22px 25px;background:#14102a}
-.result-gap p{margin:8px 0 0;color:var(--paper-dim);font-size:14px}
-
-@media(min-width:1101px){.panel-results .results-grid{grid-template-columns:minmax(0,1fr)}.panel-results .result-overview{grid-template-columns:minmax(0,1fr)}.panel-results .results-grid .card{min-height:0}}
-@media(max-width:1100px){.board-row{grid-template-columns:minmax(0,1fr)}}
-@media(max-width:950px){.hero-content{grid-template-columns:1fr}.hero-perks{display:none}.hero{min-height:410px}.hub-list{grid-template-columns:1fr}}
-@media(max-width:650px){.wrap{width:min(100% - 32px,1450px)}.nav{padding:12px 0}.brand{font-size:12px;letter-spacing:.13em}.navlinks{gap:13px}.navlinks a:nth-child(n+3){display:none}.navlinks a{font-size:12px}.nav-action{display:none}.hero{min-height:425px}.hero-content{padding:52px 0}.hero h1{font-size:clamp(45px,11.3vw,62px)}.hero-lede{font-size:14px;max-width:300px}.portal{left:44%;width:340px;height:340px;top:22px;opacity:.6}.board{padding:28px 0 40px}.board-row+.board-row{margin-top:14px}.roster{gap:10px}.rolecard{padding:20px 12px;min-height:185px}.rolecard b{font-size:17px}.orb{width:64px;height:64px}#setup{padding:0}.panel-body{padding:17px}.btn{padding:10px 13px}.results-grid{grid-template-columns:1fr}.result-overview{grid-template-columns:1fr}.result-number{width:88px;height:88px;font-size:22px}.score-row{grid-template-columns:104px minmax(0,1fr) 40px;font-size:13px}.interview-actions #answerBtn{flex:1 1 100%;margin-left:0}.interview-actions .btn{flex:1 1 auto}.mic-btn{width:44px;height:44px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
-.result-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 16px}.result-tab{min-height:40px;padding:9px 14px;border-radius:999px;border:1px solid #5b4c74;background:#ffffff0b;color:#d7c5e8;font:600 13px/1.2 Inter,ui-sans-serif,system-ui,sans-serif;cursor:pointer}.result-tab[aria-selected="true"]{border-color:#b98cff;background:#2a1d4a;color:#fff;box-shadow:0 0 18px #a36cff55}.result-panel:not(.hidden){display:grid;gap:15px}</style>
+textarea{width:100%;min-height:118px;resize:vertical;border-radius:14px;border:1px solid rgba(190,160,255,.2);background:var(--field);color:#efeaf9;padding:14px 46px 14px 16px;font-size:15px;line-height:1.5}
+textarea::placeholder{color:#7f7b99}
+.mic-btn{position:absolute;right:12px;bottom:12px;width:30px;height:30px;border:0;background:none;color:#8e89a6;cursor:not-allowed;display:grid;place-items:center}
+.voice-note{font-size:12px;color:#7f7b99;margin:6px 0 0}
+.starter-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.starter-chip{height:32px;padding:0 14px;border-radius:999px;border:1px solid rgba(190,160,255,.22);background:rgba(12,9,24,.6);color:#d8d0ef;font-size:13px;cursor:pointer}
+.starter-chip:hover{border-color:#b98cff}
+#setup .btn.primary{margin-top:6px}
+.interview-progress{margin-top:6px}
+.interview-progress-meta{font-size:12px;color:#bdb6d6;text-align:right;margin-bottom:8px}
+.progress-track{height:4px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#c58cff,#9d6cf0);width:0}
+.question-title{font-family:var(--display);font-weight:400;font-size:30px;line-height:1.15;text-align:center;margin:26px 0 10px}
+.question-hint{text-align:center;color:var(--muted);font-size:13px;margin:0 0 6px}
+.interview-actions{display:flex;justify-content:space-between;gap:10px;margin-top:14px;flex-wrap:wrap}
+.history-label{margin-top:18px}
+.transcript{display:grid;gap:8px;max-height:220px;overflow:auto}
+.msg{border:1px solid rgba(190,160,255,.14);border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.5;background:rgba(255,255,255,.03)}
+.msg.founder{background:#1d1534}
+.msg.critic{border-color:rgba(190,120,255,.4)}
+.msg.scorecard{border-color:rgba(231,184,90,.4)}
+.msg.synthesizer{border-color:rgba(110,170,255,.4)}
+.msg.matchmaker{border-color:rgba(120,220,170,.4)}
+.interview-idle{display:grid;place-items:center;min-height:240px;text-align:center}
+.roster{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.rolecard{display:grid;justify-items:center;text-align:center;gap:6px;padding:14px 10px;border:1px solid rgba(190,160,255,.14);border-radius:14px;background:linear-gradient(180deg,#17102e,#0c0a1a)}
+.rolecard .orb{width:104px;height:104px;border-radius:50%;object-fit:cover;margin-bottom:4px}
+.rolecard b{font-family:var(--display);font-weight:400;font-size:19px;color:#f2eefb}
+.rolecard span{font-size:12px;line-height:1.4}
+.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#c58cff;box-shadow:0 0 12px #c58cff;margin-right:8px;vertical-align:middle}
+.results-empty{border:1px dashed rgba(190,160,255,.28);border-radius:14px;padding:18px;color:var(--muted);font-size:14px;line-height:1.5}
+.results-live{display:grid;gap:12px}
+.result-overview{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.result-overview p{margin:0}
+.result-number{font-family:var(--display);font-size:48px;line-height:1;color:#e8d6ff}
+.result-number-wrap{text-align:center;min-width:110px;border:1px solid var(--line);border-radius:14px;padding:12px}
+.result-caption{display:block;font-size:11px;color:#b9a6e0;letter-spacing:.08em;margin-top:6px}
+.result-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 4px}
+.result-tab{min-height:36px;padding:8px 14px;border-radius:999px;border:1px solid rgba(190,160,255,.22);background:rgba(255,255,255,.03);color:#d7c5e8;font-size:13px;font-weight:600;cursor:pointer}
+.result-tab[aria-selected="true"]{border-color:#b98cff;background:#2a1d4a;color:#fff;box-shadow:0 0 18px rgba(163,108,255,.35)}
+.result-panel:not(.hidden){display:grid;gap:12px}
+.card{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:16px;margin:0}
+.result-card-label{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#b9a6e0;margin-bottom:8px}
+.result-text{font-size:14px;line-height:1.55;color:#e6e2f0}
+.score-row{display:grid;grid-template-columns:110px minmax(0,1fr) 36px;gap:10px;align-items:center;font-size:13px;margin:8px 0}
+.score-track{height:6px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden}
+.score-fill{display:block;height:100%;background:linear-gradient(90deg,#c58cff,#9d6cf0);width:0}
+.analysis-list{margin:0;display:grid;gap:10px}
+.analysis-list dt{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#b9a6e0}
+.analysis-list dd{margin:2px 0 0;font-size:14px;line-height:1.5}
+.analysis-list > div{border-bottom:1px solid rgba(190,160,255,.12);padding-bottom:8px}
+.result-gap{border:1px dashed rgba(190,160,255,.3);border-radius:14px;padding:16px;font-size:14px;line-height:1.5}
+.build-card{margin-bottom:12px}
+.score{font-size:14px;line-height:1.5;color:#e6e2f0}
+.build-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.build-tab{height:34px;padding:0 14px;border-radius:999px;border:1px solid rgba(190,160,255,.18);background:transparent;color:#8f8aa6;font-size:13px}
+.build-tab.is-active{border-color:#b98cff;color:#fff;background:#2a1d4a}
+.hub-list{display:grid;gap:12px}
+.hub-item{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--card)}
+.hub-item-title{font-family:var(--display);font-size:20px;color:#f2eefb;margin-bottom:6px}
+.hub-item-meta{font-size:13px;color:var(--muted);margin-bottom:12px}
+.hub-examples{margin-top:14px}
+.hub-list:has(.hub-item) ~ .hub-examples{display:none}
+.ex-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ex-card{position:relative;min-height:124px;border-radius:14px;border:1px solid var(--line);background-size:cover;background-position:center;overflow:hidden;padding:12px;display:flex;flex-direction:column;justify-content:flex-end}
+.ex-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,6,15,.1),rgba(7,6,15,.92))}
+.ex-card > *{position:relative;z-index:1}
+.ex-card b{font-family:var(--display);font-weight:400;font-size:16px;color:#f3f0fa;line-height:1.2}
+.ex-card span.state{font-size:11px;color:#cdbdf0;margin-top:4px}
+.sample-tag{display:inline-block;align-self:flex-start;padding:3px 9px;border-radius:999px;border:1px solid var(--line2);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#cdbdf0;margin-bottom:6px;background:rgba(7,6,15,.5)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.actions label.btn{cursor:pointer}
+.status{font-size:13px;color:var(--muted);line-height:1.5;margin:8px 0 0}
+.footer{padding:26px 0 34px;border-top:1px solid rgba(255,255,255,.06);color:#7f7b93;font-size:12px;letter-spacing:.04em;text-align:center}
+@media (max-width:1180px){.board-row,.board-row:last-child{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.board-row .panel:last-child{grid-column:1 / -1}}
+@media (max-width:900px){.hero-content{grid-template-columns:1fr}.hero-perks{padding-top:0}.navlinks{display:none}.board-row,.board-row:last-child{grid-template-columns:1fr}.board-row .panel:last-child{grid-column:auto}.panel-start .panel-body,.panel-results .panel-body{grid-template-columns:1fr}.panel-start .panel-body > div,.panel-results .panel-body > div{grid-column:auto}.rail{display:none}}
+@media (max-width:560px){.wrap{padding:0 16px}.roster,.ex-grid{grid-template-columns:1fr}.result-overview{flex-direction:column}.hero-art{background-position:62% 30%}}
+</style>
 </head>
 <body>
-<nav class="site-nav"><div class="wrap nav"><a class="brand" href="#home" aria-label="Think Tank home"><span class="brandmark" aria-hidden="true">✧</span> THINK TANK</a><div class="navlinks"><a href="#home">Home</a><a href="#idea-hub">My Ideas</a><a href="./workspace.html" data-testid="open-workspace">Idea Workspace</a><a href="#roles">Explore</a><a href="#about">About</a></div><a class="nav-action" href="#interview">Start creating ↗</a></div></nav>
+<nav class="site-nav" aria-label="Primary"><div class="wrap nav"><a class="brand" href="#home" aria-label="Think Tank home"><span class="brandmark" aria-hidden="true">✧</span>THINK TANK</a><div class="navlinks"><a href="#home" aria-current="page">Home</a><a href="#idea-hub">Ideas</a><a href="./workspace.html" data-testid="open-workspace">Idea Workspace</a><span class="not-v0">Resources<small>not in V0</small></span><a href="#about">About</a></div><div class="nav-tools"><button type="button" class="icon-off" disabled aria-label="Search is not in V0" title="Search is not in V0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button></div></div></nav>
 <header class="hero" id="home">
-<div class="hero-art" aria-hidden="true"><div class="sky-haze"></div><div class="portal"></div><div class="ridge far"></div><div class="ridge near"></div><div class="lake"></div></div>
+<div class="hero-art" aria-hidden="true"></div>
 <div class="wrap hero-content">
- <div class="hero-copy"><div class="eyebrow">✦ YOUR NEXT CHAPTER STARTS HERE</div><h1>Where ideas become <em>companies.</em></h1><p class="hero-lede">Your idea deserves more than a quick answer. Explore, challenge, and shape it into a clearer next move.</p><div class="hero-actions"><a class="btn primary" href="#start">Start Exploring <span aria-hidden="true">→</span></a><a class="btn" href="#roles">See how it works</a></div><div class="truth-note" data-testid="truth-boundary">Think Tank V0 is deterministic and local-first. Its score is a structured heuristic from your answers, not external market validation or proof of demand.</div></div>
- <aside class="hero-perks" aria-label="Why Think Tank"><p>“A place for bold ideas.”</p><ul><li>Explore possibilities</li><li>Get honest feedback</li><li>See real potential</li><li>Take your next step</li></ul></aside>
+ <div class="hero-copy"><div class="eyebrow">IDEAS TODAY. A BRIGHTER TOMORROW.</div><h1>Where ideas become <em>companies.</em></h1><p class="hero-lede">A cinematic thinking partner that helps you explore, challenge, and build your ideas into real opportunities.</p><div class="hero-actions"><a class="btn primary" href="#start">Start Exploring <span aria-hidden="true">→</span></a><a class="btn" href="./signin.html">Sign In</a></div><div class="truth-note" data-testid="truth-boundary">Think Tank V0 is deterministic and local-first. Its score is a structured heuristic from your answers, not external market validation or proof of demand.</div></div>
+ <aside class="hero-perks" aria-label="Why Think Tank"><p>“A safe place for bold ideas.”</p><ul><li>Explore possibilities</li><li>Get honest feedback</li><li>See real potential</li><li>Take your next step</li></ul></aside>
 </div></header>
 <main>
 <section class="board" aria-label="Think Tank workspace"><div class="wrap">
@@ -114,13 +182,14 @@
  <article class="panel panel-start" id="start" aria-labelledby="startTitle">
   <div class="panel-head"><span>1 · START</span><span>Local · V0</span></div>
   <div class="panel-body panel-art">
+   <aside class="rail" aria-label="App sections"><div class="rail-brand"><span class="brandmark" aria-hidden="true">✧</span>THINK TANK</div><a class="rail-item is-active" href="#home">Home</a><a class="rail-item" href="#idea-hub">My Ideas</a><a class="rail-item" href="#start">Create</a><span class="rail-item is-off" aria-disabled="true">Explore · not in V0</span><span class="rail-item is-off" aria-disabled="true">Resources · not in V0</span><span class="rail-foot" aria-disabled="true">Settings · not in V0</span></aside>
    <div id="setup">
-    <div class="interview-tip">From first spark to clearer direction</div>
+    <div class="interview-tip">Your next chapter starts here</div>
     <h2 id="startTitle">What's on your mind?</h2>
-    <p>You don't have to have it all figured out. Begin with a thought, and we'll ask the difficult questions.</p>
+    <p>You don't have to have it figured out.</p>
     <div class="field"><label for="ideaInput">Describe your idea, problem, or opportunity</label><div class="textarea-wrap"><textarea id="ideaInput" maxlength="4000" placeholder="Describe an idea, a problem, or a dream…" data-testid="idea-input"></textarea><button type="button" class="mic-btn" disabled aria-label="Voice input is not available in V0" title="Voice input is not available in V0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></div><p class="voice-note">Voice input is not available in V0. Type your idea.</p></div>
     <button class="btn primary" id="startBtn" data-testid="start-interview">Explore my idea <span aria-hidden="true">→</span></button>
-    <div class="starter-list" aria-label="Ways to start"><button type="button" class="starter-chip" data-starter="I have an idea for ">I have an idea</button><button type="button" class="starter-chip" data-starter="I want to solve a problem: ">I want to solve a problem</button><button type="button" class="starter-chip" data-starter="I'm considering a pivot from ">I'm considering a pivot</button></div>
+    <div class="starter-list" aria-label="Ways to start"><button type="button" class="starter-chip" data-starter="I have an idea for ">I have an idea</button><button type="button" class="starter-chip" data-starter="I want to solve a problem: ">I want to solve a problem</button><button type="button" class="starter-chip" data-starter="I'm exploring a market: ">I'm exploring a market</button><button type="button" class="starter-chip" data-starter="I want feedback on my idea: ">I want feedback</button><button type="button" class="starter-chip" data-starter="Help me find opportunities in ">Help me find opportunities</button><button type="button" class="starter-chip" data-starter="">Something else…</button></div>
    </div>
    <div id="startSummary" class="hidden">
     <div class="micro-label">Working on</div>
@@ -151,15 +220,15 @@
  </article>
 
  <article class="panel panel-roles" id="roles">
-  <div class="panel-head"><span>3 · AI EXPLORATION</span><span>Deterministic · V0</span></div>
+  <div class="panel-head"><span>3 · AI EXPLORATION</span><span><i class="status-dot" aria-hidden="true"></i>Reviewing your idea</span></div>
   <div class="panel-body">
    <h2>Four perspectives. One stronger idea.</h2>
    <p class="muted">These are transparent, deterministic Think Tank roles in V0, not independently running AI agents.</p>
    <div class="roster">
-    <div class="rolecard"><div class="orb" aria-hidden="true">✧</div><b>The Critic</b><span class="muted">Challenges assumptions and blind spots.</span></div>
-    <div class="rolecard"><div class="orb" aria-hidden="true">◈</div><b>The Scorecard</b><span class="muted">Evaluates a fixed first-pass rubric.</span></div>
-    <div class="rolecard"><div class="orb" aria-hidden="true">✺</div><b>The Synthesizer</b><span class="muted">Connects answers into a durable record.</span></div>
-    <div class="rolecard"><div class="orb" aria-hidden="true">✦</div><b>The Matchmaker</b><span class="muted">Identifies a strategic pattern to test.</span></div>
+    <div class="rolecard"><img class="orb" src="./assets/orb-critic.jpg" alt="" width="104" height="104"><b>The Critic</b><span class="muted">Challenges assumptions and blind spots.</span></div>
+    <div class="rolecard"><img class="orb" src="./assets/orb-score.jpg" alt="" width="104" height="104"><b>The Scorecard</b><span class="muted">Evaluates a fixed first-pass rubric.</span></div>
+    <div class="rolecard"><img class="orb" src="./assets/orb-synth.jpg" alt="" width="104" height="104"><b>The Synthesizer</b><span class="muted">Connects answers into a durable record.</span></div>
+    <div class="rolecard"><img class="orb" src="./assets/orb-match.jpg" alt="" width="104" height="104"><b>The Matchmaker</b><span class="muted">Identifies a strategic pattern to test.</span></div>
    </div>
   </div>
  </article>
@@ -169,6 +238,8 @@
  <article class="panel panel-results" id="results" aria-labelledby="resultsTitle">
   <div class="panel-head"><span id="resultsTitle">4 · RESULTS</span><span id="resultsStatus">Awaiting interview</span></div>
   <div class="panel-body">
+   <aside class="rail" aria-label="App sections"><a class="rail-item is-active" href="#home">Home</a><a class="rail-item" href="#idea-hub">My Ideas</a><a class="rail-item" href="#interview">Create</a><span class="rail-item is-off" aria-disabled="true">Explore · not in V0</span><span class="rail-item is-off" aria-disabled="true">Resources · not in V0</span><span class="rail-foot" aria-disabled="true">Settings · not in V0</span></aside>
+   <div>
    <h3>Here's what we found.</h3>
    <p class="muted">A balanced first look, grounded in your answers. Real-world demand remains unverified.</p>
    <div class="results-empty" id="resultsEmpty">Your results will appear here after the four-question interview. No fabricated score or market claims.</div>
@@ -207,6 +278,7 @@
      <article class="card"><span class="result-card-label">✦ Matchmaker · Next strategic test</span><div class="result-text" id="resultPattern"></div></article>
     </section>
    </div>
+   </div>
   </div>
  </article>
 
@@ -236,6 +308,15 @@
    <h3>My Ideas</h3>
    <p class="muted">V0 keeps one current Idea Record in this browser. Accounts and cloud sync are not available.</p>
    <div id="hubList" class="hub-list"></div>
+   <div class="hub-examples" aria-label="Example ideas, not saved">
+    <div class="micro-label">Example · not saved</div>
+    <div class="ex-grid">
+     <div class="ex-card" style="background-image:url('./assets/c1.jpg')"><span class="sample-tag">Example</span><b>Sustainable Packaging Platform</b><span class="state">Exploring</span></div>
+     <div class="ex-card" style="background-image:url('./assets/c2.jpg')"><span class="sample-tag">Example</span><b>AI Learning Companion</b><span class="state">Researching</span></div>
+     <div class="ex-card" style="background-image:url('./assets/c3.jpg')"><span class="sample-tag">Example</span><b>Local Maker Marketplace</b><span class="state">Planning</span></div>
+     <div class="ex-card" style="background-image:url('./assets/c4.jpg')"><span class="sample-tag">Example</span><b>Mental Wellness App</b><span class="state">Early stage</span></div>
+    </div>
+   </div>
    <div class="card">
     <div class="micro-label">Own your work</div>
     <h3 style="margin:10px 0 8px">Your idea, your record.</h3>
