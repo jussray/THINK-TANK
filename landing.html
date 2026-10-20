@@ -121,7 +121,7 @@ body::before{
   padding:16px 12px 14px;border-radius:14px;border:1px solid var(--edge-soft);
   background:linear-gradient(180deg,rgba(23,16,38,.9),rgba(12,8,20,.96));
 }
-.guide .orb{width:clamp(70px,6.4vw,92px);margin:2px auto 8px;}
+.guide .orb-img{width:clamp(96px,7.4vw,120px);margin:0 auto 6px;}
 .guide h3{font-family:var(--display);font-weight:500;font-size:19px;}
 .guide p{font-size:12.5px;line-height:1.5;color:var(--ink-dim);}
 .guide-foot{margin-top:auto;padding-top:8px;font-size:11px;color:var(--ink-faint);}
@@ -340,6 +340,16 @@ body::before{
 .o-score{--c1:#D79A3E;--c2:#F6DCA0;--c3:#5A3A12;--glow:rgba(215,154,62,.45);}
 .o-synth{--c1:#4E7FD6;--c2:#A9C8F7;--c3:#1B2F5C;--glow:rgba(78,127,214,.45);}
 .o-match{--c1:#3FA98C;--c2:#9FE6CE;--c3:#14402F;--glow:rgba(63,169,140,.45);}
+/* Guide orbs: the approved mockup art, feathered to a circle, with a slow glow (off under reduced motion). */
+.orb-img{
+  display:block;aspect-ratio:1;height:auto;max-width:100%;object-fit:cover;border-radius:50%;
+  -webkit-mask-image:radial-gradient(closest-side,#000 62%,transparent 100%);
+  mask-image:radial-gradient(closest-side,#000 62%,transparent 100%);
+  animation:orb-glow 6s ease-in-out infinite;
+}
+.orbs .orb-img{width:clamp(66px,7vw,88px);margin:0 auto 11px;}
+@keyframes orb-glow{0%,100%{filter:brightness(.9)}50%{filter:brightness(1.12)}}
+@media (prefers-reduced-motion:reduce){.orb-img{animation:none;}}
 
 /* 4 — RESULTS */
 .res-head{font-family:var(--display);font-weight:500;font-size:clamp(21px,2.1vw,27px);}
@@ -541,25 +551,25 @@ footer{border-top:1px solid var(--edge-soft);}
     </div>
     <ul class="guide-list">
       <li class="guide">
-        <span class="orb o-critic" aria-hidden="true"><i></i></span>
+        <img class="orb-img" src="assets/orb-critic.jpg" width="240" height="240" alt="">
         <h3>The Critic</h3>
         <p>Challenges assumptions and finds blind spots.</p>
         <span class="guide-foot">Runs inside the workspace</span>
       </li>
       <li class="guide">
-        <span class="orb o-score" aria-hidden="true"><i></i></span>
+        <img class="orb-img" src="assets/orb-score.jpg" width="240" height="240" alt="">
         <h3>The Scorecard</h3>
         <p>Scores your four answers on a fixed rubric.</p>
         <span class="guide-foot">Runs inside the workspace</span>
       </li>
       <li class="guide">
-        <span class="orb o-synth" aria-hidden="true"><i></i></span>
+        <img class="orb-img" src="assets/orb-synth.jpg" width="240" height="240" alt="">
         <h3>The Synthesizer</h3>
         <p>Joins your answers into one bottom line.</p>
         <span class="guide-foot">Runs inside the workspace</span>
       </li>
       <li class="guide">
-        <span class="orb o-match" aria-hidden="true"><i></i></span>
+        <img class="orb-img" src="assets/orb-match.jpg" width="240" height="240" alt="">
         <h3>The Matchmaker</h3>
         <p>Names one strategic pattern. No people matching in V0.</p>
         <span class="guide-foot">Runs inside the workspace</span>
@@ -643,22 +653,22 @@ footer{border-top:1px solid var(--edge-soft);}
       <div class="analyzing"><span class="pulse"></span>Four rule-based passes, no model call</div>
       <div class="orbs">
         <div class="orb-cell">
-          <span class="orb o-critic"><i></i></span>
+          <img class="orb-img" src="assets/orb-critic.jpg" width="240" height="240" alt="">
           <h4>The Critic</h4>
           <p>Challenges assumptions and finds blind spots</p>
         </div>
         <div class="orb-cell">
-          <span class="orb o-score"><i></i></span>
+          <img class="orb-img" src="assets/orb-score.jpg" width="240" height="240" alt="">
           <h4>The Scorecard</h4>
           <p>Scores your four answers on a fixed rubric</p>
         </div>
         <div class="orb-cell">
-          <span class="orb o-synth"><i></i></span>
+          <img class="orb-img" src="assets/orb-synth.jpg" width="240" height="240" alt="">
           <h4>The Synthesizer</h4>
           <p>Joins your answers into one bottom line</p>
         </div>
         <div class="orb-cell">
-          <span class="orb o-match"><i></i></span>
+          <img class="orb-img" src="assets/orb-match.jpg" width="240" height="240" alt="">
           <h4>The Matchmaker</h4>
           <p>Names one strategic pattern. No people matching in V0</p>
         </div>
