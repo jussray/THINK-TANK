@@ -77,12 +77,66 @@ body::before{
 }
 .mark svg{width:19px;height:19px;}
 .brand-name{
-  font-size:15px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  font-size:15px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;
 }
 .nav-links{display:flex;gap:26px;font-size:14px;color:var(--ink-dim);}
 .nav-links a.on{color:var(--ink);font-weight:500;}
 .nav-tools{display:flex;align-items:center;gap:16px;color:var(--ink-dim);}
 .nav-tools svg{width:18px;height:18px;display:block;}
+/* Honest disabled states: visible, labeled, never clickable as if live */
+.nav-off{color:var(--ink-faint);cursor:not-allowed;}
+.nav-off i{font-style:normal;font-size:10.5px;margin-left:4px;color:var(--ink-faint);}
+.icon-off{
+  width:40px;height:40px;display:grid;place-items:center;border-radius:50%;
+  background:none;border:1px solid transparent;color:var(--ink-faint);cursor:not-allowed;padding:0;
+}
+.icon-off svg{width:18px;height:18px;display:block;}
+.sign-in{
+  display:inline-flex;align-items:center;min-height:40px;padding:0 14px;white-space:nowrap;flex:none;
+  border-radius:999px;border:1px solid var(--edge);font-size:14px;color:var(--violet-soft);
+}
+.eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--violet-soft);margin-bottom:16px;
+}
+.ghost-btn{
+  display:inline-flex;align-items:center;margin-top:30px;margin-left:12px;padding:14px 26px;
+  border-radius:999px;border:1px solid var(--edge);font-size:15px;font-weight:500;
+  color:var(--ink);background:rgba(10,7,16,.35);
+}
+.rail-item .rt{display:block;min-width:0;}
+.rail-item .rt b{display:block;font-family:var(--display);font-weight:500;font-size:17px;}
+.rail-item .rt small{display:block;font-size:13px;line-height:1.5;color:var(--ink-dim);margin-top:2px;}
+/* Four-guide band: hero, then the guides, then the six-panel walkthrough */
+.guides{padding-block:22px 6px;}
+.guides-in{
+  display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,3.1fr);gap:26px;align-items:center;
+  background:rgba(18,12,28,.72);border:1px solid var(--edge-soft);border-radius:18px;padding:26px;
+}
+.guides-copy h2{font-family:var(--display);font-weight:500;font-size:clamp(26px,2.8vw,38px);line-height:1.1;}
+.guides-copy p:last-child{margin-top:14px;font-size:14px;line-height:1.6;color:var(--ink-dim);max-width:36ch;}
+.guide-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+.guide{
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;min-width:0;
+  padding:16px 12px 14px;border-radius:14px;border:1px solid var(--edge-soft);
+  background:linear-gradient(180deg,rgba(23,16,38,.9),rgba(12,8,20,.96));
+}
+.guide .orb-img{width:clamp(96px,7.4vw,120px);margin:0 auto 6px;}
+.guide h3{font-family:var(--display);font-weight:500;font-size:19px;}
+.guide p{font-size:12.5px;line-height:1.5;color:var(--ink-dim);}
+.guide-foot{margin-top:auto;padding-top:8px;font-size:11px;color:var(--ink-faint);}
+@media (max-width:1180px){
+  .guides-in{grid-template-columns:minmax(0,1fr);}
+}
+@media (max-width:760px){
+  .guides-in{padding:18px;}
+  .guide-list{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+.sample-tag{
+  display:inline-block;align-self:flex-start;font-size:10.5px;letter-spacing:.04em;
+  color:var(--amber);background:rgba(224,169,75,.1);border:1px solid rgba(224,169,75,.28);
+  border-radius:999px;padding:3px 10px;margin-top:8px;
+}
 .avatar{
   width:30px;height:30px;border-radius:50%;flex:none;
   background:linear-gradient(140deg,#6B4AA0,#3D2C5C);
@@ -96,11 +150,19 @@ body::before{
 .hero-bg img{
   width:100%;height:100%;object-fit:cover;object-position:center 38%;
 }
+/* Top band hides the ghosted nav labels baked into hero-scene.jpg (x 64-100%).
+   It is masked out across x 26-60% so the glowing ring stays visible. */
+.hero-bg::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(10,7,16,.98) 0%,rgba(10,7,16,.96) 12%,rgba(10,7,16,0) 32%);
+  -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 14%,transparent 32%,transparent 52%,#000 66%,#000 100%);
+  mask-image:linear-gradient(90deg,#000 0%,#000 14%,transparent 32%,transparent 52%,#000 66%,#000 100%);
+}
 .hero-bg::after{
   content:"";position:absolute;inset:0;
   background:
     linear-gradient(90deg,rgba(10,7,16,.95) 0%,rgba(10,7,16,.72) 26%,rgba(10,7,16,.18) 48%,rgba(10,7,16,.72) 74%,rgba(10,7,16,.95) 100%),
-    linear-gradient(180deg,rgba(10,7,16,.6) 0%,transparent 30%,rgba(10,7,16,.75) 100%);
+    linear-gradient(180deg,rgba(10,7,16,0) 0%,rgba(10,7,16,0) 66%,rgba(10,7,16,.75) 100%);
 }
 .hero-in{
   position:relative;z-index:1;
@@ -286,6 +348,16 @@ body::before{
 .o-score{--c1:#D79A3E;--c2:#F6DCA0;--c3:#5A3A12;--glow:rgba(215,154,62,.45);}
 .o-synth{--c1:#4E7FD6;--c2:#A9C8F7;--c3:#1B2F5C;--glow:rgba(78,127,214,.45);}
 .o-match{--c1:#3FA98C;--c2:#9FE6CE;--c3:#14402F;--glow:rgba(63,169,140,.45);}
+/* Guide orbs: the approved mockup art, feathered to a circle, with a slow glow (off under reduced motion). */
+.orb-img{
+  display:block;aspect-ratio:1;height:auto;max-width:100%;object-fit:cover;border-radius:50%;
+  -webkit-mask-image:radial-gradient(closest-side,#000 62%,transparent 100%);
+  mask-image:radial-gradient(closest-side,#000 62%,transparent 100%);
+  animation:orb-glow 6s ease-in-out infinite;
+}
+.orbs .orb-img{width:clamp(66px,7vw,88px);margin:0 auto 11px;}
+@keyframes orb-glow{0%,100%{filter:brightness(.9)}50%{filter:brightness(1.12)}}
+@media (prefers-reduced-motion:reduce){.orb-img{animation:none;}}
 
 /* 4 — RESULTS */
 .res-head{font-family:var(--display);font-weight:500;font-size:clamp(21px,2.1vw,27px);}
@@ -415,6 +487,12 @@ footer{border-top:1px solid var(--edge-soft);}
   .grid{grid-template-columns:1fr;}
   .card.span{grid-column:auto;}
   .hero-in{grid-template-columns:1fr;padding-block:56px 46px;}
+  .brand-name{font-size:13px;}
+  .hero-bg::after{
+    background:
+      linear-gradient(180deg,rgba(10,7,16,.3) 0%,rgba(10,7,16,.72) 40%,rgba(10,7,16,.92) 100%),
+      linear-gradient(90deg,rgba(10,7,16,.95) 0%,rgba(10,7,16,.72) 26%,rgba(10,7,16,.18) 48%,rgba(10,7,16,.72) 74%,rgba(10,7,16,.95) 100%);
+  }
   .hero-rail{max-width:none;}
   .nav-links{display:none;}
   .side{display:none;}
@@ -442,13 +520,13 @@ footer{border-top:1px solid var(--edge-soft);}
     <div class="nav-links">
       <a href="./landing.html" class="on">Home</a>
       <a href="./workspace.html">Ideas</a>
-      <a href="#" >Resources</a>
+      <span class="nav-off" aria-disabled="true">Resources <i>not in V0</i></span>
       <a href="#truth">About</a>
     </div>
     <div class="nav-tools">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg>
-      <span class="avatar">JR</span>
+      <button type="button" class="icon-off" disabled aria-label="Search, not in V0" title="Search: not in V0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+      <button type="button" class="icon-off" disabled aria-label="Notifications, not in V0" title="Notifications: not in V0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg></button>
+      <a class="sign-in" href="./signin.html">Sign in</a>
     </div>
   </div>
 </nav>
@@ -463,19 +541,56 @@ footer{border-top:1px solid var(--edge-soft);}
         Start Exploring
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:15px;height:15px"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
       </a>
+      <a href="./signin.html" class="ghost-btn">Sign In</a>
     </div>
     <div class="hero-rail">
       <div class="pull">
         <span class="pull-line">&ldquo; A safe place</span>
         <span class="pull-line">for bold ideas. &rdquo;</span>
       </div>
-      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></span>Explore possibilities</div>
-      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6Z"/></svg></span>Get honest feedback</div>
-      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11v2h6v-2a6 6 0 0 0-3-11Z"/></svg></span>See real potential</div>
-      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>Take your next step</div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></span><span class="rt"><b>Explore possibilities</b><small>Turn your ideas into new angles and opportunities.</small></span></div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6Z"/></svg></span><span class="rt"><b>Get honest feedback</b><small>Challenge assumptions and find blind spots.</small></span></div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11v2h6v-2a6 6 0 0 0-3-11Z"/></svg></span><span class="rt"><b>See real potential</b><small>Scored on a fixed rubric. Not market data.</small></span></div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span><span class="rt"><b>Take your next step</b><small>Go from insight to action with a clear path forward.</small></span></div>
     </div>
   </div>
 </header>
+
+<section class="shell gutter guides" aria-labelledby="guides-title">
+  <div class="guides-in">
+    <div class="guides-copy">
+      <p class="eyebrow">Meet your four guides</p>
+      <h2 id="guides-title">Four perspectives.<br>A stronger you.</h2>
+      <p>Deeper insights, sharper feedback, and a clearer path forward, from four fixed, rule-based guides. Nothing here calls an AI model.</p>
+    </div>
+    <ul class="guide-list">
+      <li class="guide">
+        <img class="orb-img" src="assets/orb-critic.jpg" width="240" height="240" alt="">
+        <h3>The Critic</h3>
+        <p>Challenges assumptions and finds blind spots.</p>
+        <span class="guide-foot">Runs inside the workspace</span>
+      </li>
+      <li class="guide">
+        <img class="orb-img" src="assets/orb-score.jpg" width="240" height="240" alt="">
+        <h3>The Scorecard</h3>
+        <p>Scores your four answers on a fixed rubric.</p>
+        <span class="guide-foot">Runs inside the workspace</span>
+      </li>
+      <li class="guide">
+        <img class="orb-img" src="assets/orb-synth.jpg" width="240" height="240" alt="">
+        <h3>The Synthesizer</h3>
+        <p>Joins your answers into one bottom line.</p>
+        <span class="guide-foot">Runs inside the workspace</span>
+      </li>
+      <li class="guide">
+        <img class="orb-img" src="assets/orb-match.jpg" width="240" height="240" alt="">
+        <h3>The Matchmaker</h3>
+        <p>Names one strategic pattern. No people matching in V0.</p>
+        <span class="guide-foot">Runs inside the workspace</span>
+      </li>
+    </ul>
+  </div>
+</section>
 
 <main class="shell grid gutter" id="ideas">
 
@@ -549,27 +664,27 @@ footer{border-top:1px solid var(--edge-soft);}
   <section class="card">
     <div class="card-in">
       <div class="step"><b>3.</b> Exploration</div>
-      <div class="analyzing"><span class="pulse"></span>Reviewing your idea&hellip;</div>
+      <div class="analyzing"><span class="pulse"></span>Four rule-based passes, no model call</div>
       <div class="orbs">
         <div class="orb-cell">
-          <span class="orb o-critic"><i></i></span>
+          <img class="orb-img" src="assets/orb-critic.jpg" width="240" height="240" alt="">
           <h4>The Critic</h4>
           <p>Challenges assumptions and finds blind spots</p>
         </div>
         <div class="orb-cell">
-          <span class="orb o-score"><i></i></span>
+          <img class="orb-img" src="assets/orb-score.jpg" width="240" height="240" alt="">
           <h4>The Scorecard</h4>
-          <p>Evaluates potential and viability</p>
+          <p>Scores your four answers on a fixed rubric</p>
         </div>
         <div class="orb-cell">
-          <span class="orb o-synth"><i></i></span>
+          <img class="orb-img" src="assets/orb-synth.jpg" width="240" height="240" alt="">
           <h4>The Synthesizer</h4>
-          <p>Connects insights and uncovers opportunities</p>
+          <p>Joins your answers into one bottom line</p>
         </div>
         <div class="orb-cell">
-          <span class="orb o-match"><i></i></span>
+          <img class="orb-img" src="assets/orb-match.jpg" width="240" height="240" alt="">
           <h4>The Matchmaker</h4>
-          <p>Finds patterns and real-world possibilities</p>
+          <p>Names one strategic pattern. No people matching in V0</p>
         </div>
       </div>
     </div>
@@ -595,6 +710,7 @@ footer{border-top:1px solid var(--edge-soft);}
         </aside>
         <div class="stage">
           <h3 class="res-head">Here&rsquo;s what we found.</h3>
+          <p class="sample-tag">Illustrative example, not a real result</p>
           <p class="res-sub">A balanced view of your idea, with real insights and next steps.</p>
           <div class="tabs">
             <span class="tab on">Overview</span><span class="tab">Analysis</span>
@@ -686,7 +802,8 @@ footer{border-top:1px solid var(--edge-soft);}
         <div class="hub-top">
           <div>
             <h3>My Ideas</h3>
-            <p class="res-sub">Continue your journey or explore a new direction.</p>
+            <p class="res-sub">Illustrative examples. Your saved ideas appear here.</p>
+            <p class="sample-tag">Examples, not your records</p>
           </div>
           <span class="new-idea"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>New Idea</span>
         </div>
@@ -736,7 +853,9 @@ footer{border-top:1px solid var(--edge-soft);}
   continue the same record through later pivots. Your Idea Record stays in your browser and exports as a
   portable file you own. The four roles are deterministic passes over your own answers &mdash; a structured
   heuristic, not external market validation or proof of demand. Accounts, billing, team seats and API access
-  are not part of this version.
+  are not part of this version. The sample idea, scores and hub entries above are illustrations, not records.
+  The <a href="./signin.html">sign-in</a> and <a href="./create-account.html">create-account</a> pages are disabled
+  previews of accounts this version does not have.
 </section>
 
 <footer class="gutter">
