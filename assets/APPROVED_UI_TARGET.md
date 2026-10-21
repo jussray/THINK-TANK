@@ -1,6 +1,6 @@
 # THINK TANK: APPROVED UI TARGET
 
-**Status:** Founder-approved visual design, **not yet implemented or visually verified**.  
+**Status:** Founder-approved visual design. **Landing signed off 2026-10-21 at `20d9c06` (see sign-off log). Other states and the completion gate remain open.**  
 **Approval:** 2026-10-16 (approved image shared in ChatGPT).  
 **Authoritative repository:** `jussray/THINK-TANK` on `main`.  
 **Canonical entry:** `index.html`.  
@@ -43,6 +43,11 @@ This image combines a landing hero plus six product-state views; it is **not** e
 4. Run focused unit tests and domain/storage boundary checks before Playwright.
 5. Use Playwright on the **actual implementation** at desktop 1536×1024 and representative mobile viewport(s), compare with the canonical image and review both interactions and screenshots. Capture artifacts/links; do not invent a similarity percentage.
 6. Report what is matched, mismatched, unimplemented or blocked. Continue until the approved visual target is met **and the founder signs off**. No new unrelated PRs or provider work without a separate need and authority.
+
+## Founder sign-off log
+
+- **2026-10-21, in session:** Founder replied "Approved" to the landing sign-off request. Scope: the landing page (hero, four-guide band, walkthrough) at commit `20d9c06` on `visual/approved-ui-increment-1`, with V0-truth copy kept. Not in this sign-off: the sign-in and create-account pages, and the workspace states (start, interview, results, build, hub). Not merged to `main`; merging needs explicit approval of the PR and head SHA.
+- **Open at sign-off, reported to the founder:** the hero plate is 815px and soft at desktop width; the mockup nav sits over the hero image while the build uses a solid nav bar. No Playwright pixel comparison against the original PNG was run.
 
 ## Completion gate
 
