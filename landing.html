@@ -77,7 +77,7 @@ body::before{
 }
 .mark svg{width:19px;height:19px;}
 .brand-name{
-  font-size:15px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  font-size:15px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;
 }
 .nav-links{display:flex;gap:26px;font-size:14px;color:var(--ink-dim);}
 .nav-links a.on{color:var(--ink);font-weight:500;}
@@ -92,7 +92,7 @@ body::before{
 }
 .icon-off svg{width:18px;height:18px;display:block;}
 .sign-in{
-  display:inline-flex;align-items:center;min-height:40px;padding:0 14px;
+  display:inline-flex;align-items:center;min-height:40px;padding:0 14px;white-space:nowrap;flex:none;
   border-radius:999px;border:1px solid var(--edge);font-size:14px;color:var(--violet-soft);
 }
 .eyebrow{
@@ -487,6 +487,12 @@ footer{border-top:1px solid var(--edge-soft);}
   .grid{grid-template-columns:1fr;}
   .card.span{grid-column:auto;}
   .hero-in{grid-template-columns:1fr;padding-block:56px 46px;}
+  .brand-name{font-size:13px;}
+  .hero-bg::after{
+    background:
+      linear-gradient(180deg,rgba(10,7,16,.3) 0%,rgba(10,7,16,.72) 40%,rgba(10,7,16,.92) 100%),
+      linear-gradient(90deg,rgba(10,7,16,.95) 0%,rgba(10,7,16,.72) 26%,rgba(10,7,16,.18) 48%,rgba(10,7,16,.72) 74%,rgba(10,7,16,.95) 100%);
+  }
   .hero-rail{max-width:none;}
   .nav-links{display:none;}
   .side{display:none;}
