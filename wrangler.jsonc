@@ -6,21 +6,18 @@
   },
   "previews": {},
 
-  // Cloudflare is the single owner of this hostname. Declared here rather than
-  // only in the dashboard so the binding is reviewable, diffable, and travels
-  // with a buyer transfer. `custom_domain` makes the Worker the origin:
-  // Cloudflare creates the DNS record and certificate.
-  // www is the canonical host. The apex redirects to it through a Cloudflare
-  // Redirect Rule set in the dashboard, the same way jussco.company does; that
-  // rule is not expressible in this file.
+  // PRIVATE V0 runtime only. Cloudflare's public Worker
+  // (think-tank-public-front-door) owns thinktank.jussco.company/;
+  // www.thinktank.jussco.company permanently redirects to that hostname.
+  // Non-homepage public-host paths temporarily redirect to this Access-
+  // protected application hostname at the Cloudflare edge.
+  //
+  // IMPORTANT: Never attach this Worker as a Custom Domain to either public
+  // hostname: doing so would overwrite the public entrance on the next deploy.
   "routes": [
     {
-      "pattern": "www.thinktank.jussco.company",
-      "custom_domain": true
-    },
-    {
-      "pattern": "thinktank.jussco.company",
-      "custom_domain": true
+      "pattern": "thinktank-app.jussco.company/*",
+      "zone_name": "jussco.company"
     }
   ],
 

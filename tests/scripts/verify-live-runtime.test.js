@@ -137,6 +137,12 @@ test('live verifier fails when the manifest is edited to match tampered content'
   }
 });
 
+test('production verifier targets only the protected app hostname', () => {
+  const source = fs.readFileSync('scripts/verify-live-runtime.mjs', 'utf8');
+  assert.match(source, /https:\/\/thinktank-app\.jussco\.company/);
+  assert.doesNotMatch(source, /https:\/\/www\.thinktank\.jussco\.company/);
+});
+
 test('live verifier fails on a source SHA mismatch and on an environment mismatch', async () => {
   const dir = buildArtifact();
   const { stop, base } = await serve(dir);

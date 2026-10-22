@@ -1,6 +1,6 @@
 name: verify-live
 
-# Cloudflare is the single owner of www.thinktank.jussco.company (canonical). Workers Builds
+# Cloudflare publishes the protected app at thinktank-app.jussco.company. Workers Builds
 # performs the deploy; this workflow is the proof step that deploy cannot
 # perform on itself: it re-fetches every file named in the live manifest's
 # artifactFileHashes and re-hashes the bytes.
@@ -18,7 +18,7 @@ on:
       live_url:
         description: Base URL to verify
         required: true
-        default: https://www.thinktank.jussco.company
+        default: https://thinktank-app.jussco.company
         type: string
 
 permissions:
@@ -55,7 +55,7 @@ jobs:
           npm run check:storage-boundary
           npm run check:domain-purity
           npm run test:unit
-      - name: Verify live bytes against trusted source artifact
+      # The production app is protected by Cloudflare Access. A live verifier\n      # without a scoped, authorized Access session/service token MUST fail.\n      - name: Verify live bytes against trusted source artifact
         shell: bash
         env:
           THINK_TANK_EXPECTED_SHA: ${{ inputs.expected_head_sha }}
