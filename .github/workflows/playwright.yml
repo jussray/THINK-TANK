@@ -35,7 +35,10 @@ jobs:
       - run: npm run check:storage-boundary
       - run: npm run check:domain-purity
       - run: npm run test:unit
-      - run: npx playwright install --with-deps chromium
+      # Hosted Ubuntu already supplies browser system libraries. Avoid apt mirror stalls
+      # during --with-deps; browser execution still proves required shared libraries.
+      - name: Install Playwright Chromium without apt mirror dependency
+        run: npx playwright install chromium
       - name: Source runtime Playwright
         run: npm run test:e2e
       - name: Build inspected static artifact
