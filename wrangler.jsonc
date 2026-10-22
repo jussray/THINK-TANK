@@ -10,7 +10,14 @@
   // only in the dashboard so the binding is reviewable, diffable, and travels
   // with a buyer transfer. `custom_domain` makes the Worker the origin:
   // Cloudflare creates the DNS record and certificate.
+  // www is the canonical host. The apex redirects to it through a Cloudflare
+  // Redirect Rule set in the dashboard, the same way jussco.company does; that
+  // rule is not expressible in this file.
   "routes": [
+    {
+      "pattern": "www.thinktank.jussco.company",
+      "custom_domain": true
+    },
     {
       "pattern": "thinktank.jussco.company",
       "custom_domain": true

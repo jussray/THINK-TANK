@@ -1,6 +1,6 @@
 name: verify-live
 
-# Cloudflare is the single owner of thinktank.jussco.company. Workers Builds
+# Cloudflare is the single owner of www.thinktank.jussco.company (canonical). Workers Builds
 # performs the deploy; this workflow is the proof step that deploy cannot
 # perform on itself: it re-fetches every file named in the live manifest's
 # artifactFileHashes and re-hashes the bytes.
@@ -18,7 +18,7 @@ on:
       live_url:
         description: Base URL to verify
         required: true
-        default: https://thinktank.jussco.company
+        default: https://www.thinktank.jussco.company
         type: string
 
 permissions:

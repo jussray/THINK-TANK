@@ -123,7 +123,7 @@ The proof chain covers:
 
 ## Public deployment gate
 
-Cloudflare is the single owner of `thinktank.jussco.company`. Cloudflare Workers
+Cloudflare is the single owner of `www.thinktank.jussco.company`, the canonical host; `thinktank.jussco.company` redirects to it. Cloudflare Workers
 Builds performs the deploy from `wrangler.jsonc`, serving the inspected `_site`
 artifact; `npm run build` runs `build:static` then `check:runtime-manifest`, so a
 build whose artifact the manifest does not describe fails instead of deploying.

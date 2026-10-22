@@ -36,12 +36,14 @@ test('the Worker serves the inspected artifact directory, not the working tree',
   assert.equal(config.main, undefined, 'V0 must not gain a server entrypoint through deploy config');
 });
 
-test('the canonical hostname is bound as a Cloudflare custom domain', () => {
+test('both Think Tank hostnames are Cloudflare custom domains, www canonical', () => {
   const config = readWranglerConfig();
   const routes = config.routes ?? [];
-  const canonical = routes.find((route) => route.pattern === 'thinktank.jussco.company');
-  assert.ok(canonical, 'thinktank.jussco.company must be declared in wrangler.jsonc');
-  assert.equal(canonical.custom_domain, true, 'the Worker is the origin for this hostname');
+  for (const pattern of ['www.thinktank.jussco.company', 'thinktank.jussco.company']) {
+    const route = routes.find((candidate) => candidate.pattern === pattern);
+    assert.ok(route, `${pattern} must be declared in wrangler.jsonc`);
+    assert.equal(route.custom_domain, true, 'the Worker is the origin for this hostname');
+  }
 });
 
 test('Version/Preview URLs are explicitly disabled', () => {
