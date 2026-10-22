@@ -36,14 +36,14 @@ test('the Worker serves the inspected artifact directory, not the working tree',
   assert.equal(config.main, undefined, 'V0 must not gain a server entrypoint through deploy config');
 });
 
-test('both Think Tank hostnames are Cloudflare custom domains, www canonical', () => {
+test('private Worker deploy cannot claim the public Think Tank hostnames', () => {
   const config = readWranglerConfig();
-  const routes = config.routes ?? [];
-  for (const pattern of ['www.thinktank.jussco.company', 'thinktank.jussco.company']) {
-    const route = routes.find((candidate) => candidate.pattern === pattern);
-    assert.ok(route, `${pattern} must be declared in wrangler.jsonc`);
-    assert.equal(route.custom_domain, true, 'the Worker is the origin for this hostname');
-  }
+  // Public root and WWW redirect are separately owned in Cloudflare. A Worker
+  // Builds deployment must not recreate an overlapping public custom domain.
+  assert.deepEqual(config.routes, [
+    { pattern: 'thinktank-app.jussco.company/*', zone_name: 'jussco.company' }
+  ]);
+  assert.equal(config.routes.some((route) => route.custom_domain), false);
 });
 
 test('Version/Preview URLs are explicitly disabled', () => {
