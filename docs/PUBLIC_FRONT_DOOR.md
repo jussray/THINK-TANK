@@ -1,21 +1,29 @@
-# Think Tank public-front-door protection split
+# Think Tank public front door / independent protected app
 
-Live implementation on 2026-10-22:
+## Observed Cloudflare routing — 2026-10-22
 
-- The exact route thinktank.jussco.company/ serves the presentation-only front-door/worker.mjs.
-- The original *thinktank.jussco.company/* route continues serving the Access-protected think-tank Worker.
-- The original Worker, private routes, and Access policies were not changed.
-- Source: landing.html Git blob 8aa03b3b615109b9938b3351b06e34ca5c2548e9. Marketing images are pinned to public GitHub revision ba97d5b9871fc6dbfb163305f0f0113339b22259.
-- The deployed worker source is committed here for reproducibility. Any changes to landing.html need a deliberate update to front-door/worker.mjs and new visual/anonymous browser proof.
+Think Tank's deployment changed while the initial fix was being reviewed. Use **current provider state**, not the former single-Worker assumption:
 
-Tests: node --test tests/front-door.test.mjs
-Manual deployment, only after review: npx wrangler deploy --config wrangler.front-door.jsonc
+- `thinktank.jussco.company/` and `thinktank.jussco.company/*` now route to the **presentation-only** `think-tank-public-front-door` Worker.
+- `thinktank-app.jussco.company/*` routes to the **Access-protected** `think-tank` app Worker. The app's main `wrangler.jsonc` on current `main` now targets that private hostname, not the public one.
+- An active zone Single Redirect rule forwards *non-root* paths at the public hostname to the protected app hostname, preserving the path and query string. This rule executes before Worker routing.
+- `www.thinktank.jussco.company` redirects to the primary hostname with query-string preservation.
+- The public Worker serves only root GET/HEAD HTML, with no private data, storage bindings, application APIs or execution authority. Other paths fail closed if the redirect ever stops working.
 
-2026-10-22 proof:
-- / returned the correct Think Tank landing title to a fresh browser.
-- /index.html was challenged by Cloudflare Access.
-- /?ref=test was also challenged by Cloudflare Access. This is an open query-string routing limitation and must not be 'fixed' by broadly bypassing Access.
+An earlier unused marker route `thinktank.jussco.company/__frontdoor_home*` was created during query-string investigation. The active non-root redirect takes precedence and sends it to protected Access. It is not required by the current architecture; cleanup needs separate route review. No rewrite rule was added.
 
-Review attack flows: GET and HEAD to / are public; all private or mutation paths must still challenge; unknown paths must never be handled by the public-only Worker; maintain strict no-secret, no-storage, no-auth-bypass rule.
+## Anonymous browser evidence
 
-Rollback: if needed, the operator should remove only the newly added exact public route. Preserve the existing protected catch-all and Worker Access application.
+- `https://thinktank.jussco.company/` and `https://thinktank.jussco.company/?utm_source=probe` display the cinematic Think Tank landing.
+- `https://thinktank.jussco.company/index.html` and `/admin` display Cloudflare Access login.
+- `https://thinktank-app.jussco.company/` and `/index.html` display Cloudflare Access login.
+- Source: `landing.html` blob `8aa03b3b615109b9938b3351b06e34ca5c2548e9`; image assets pinned to revision `ba97d5b9871fc6dbfb163305f0f0113339b22259`.
+
+## Controls and rollback
+
+Tests: `node --test tests/front-door.test.mjs`.
+Reviewed manual deploy command: `npx wrangler deploy --config wrangler.front-door.jsonc`.
+
+Do not redeploy older `wrangler.jsonc` revisions that bind the protected `think-tank` Worker to the public hostname. The public Worker must remain unable to handle account, journal, student, or admin routes. Private origin authorization and Cloudflare Access both remain required. A later canonical hostname change must verify Cloudflare DNS, routes, rule order and exact deployed revisions.
+
+Because another actor changed the routes during this work, re-observe current live state immediately before deploying or editing DNS. Do not assume source-controlled configuration alone proves current provider state.
