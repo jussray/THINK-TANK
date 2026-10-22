@@ -27,13 +27,36 @@ Canonical source repository:
 
 https://github.com/jussray/THINK-TANK
 
-The intended public deployment URL is `https://www.thinktank.jussco.company` (canonical; `https://thinktank.jussco.company` redirects to it), served by **Cloudflare Workers** (`wrangler.jsonc`, assets-only, serving the inspected `_site` artifact). Cloudflare is the single owner of that hostname.
+## Live hostname roles (2026-10-22)
 
-Whether that URL is **live** remains **UNVERIFIED** here. It becomes verified when `scripts/verify-live-runtime.mjs` passes against it: that script re-fetches every file named in `artifactFileHashes` and re-hashes the bytes, so a pass attests to the served application rather than merely to a reachable page or a `version.json` that claims a SHA. Until such a run exists, treat the URL as intended, not as evidence of a deployment.
+- Public marketing entrance: `https://thinktank.jussco.company/`.
+  Dedicated Cloudflare Worker `think-tank-public-front-door`; public root
+  works with and without a query string.
+- WWW alias: `https://www.thinktank.jussco.company/`, permanent 301 to
+  the canonical public hostname, preserving path and query string.
+- Protected V0 static app: `https://thinktank-app.jussco.company/`,
+  served by the `think-tank` Worker under its existing Cloudflare Access
+  policy. The local-first interview lives at `index.html`, and the idea
+  workspace at `workspace.html`.
+- Legacy non-root URLs on the public hostname temporarily 302 to the
+  protected application hostname. The public Worker is NOT authorized to
+  expose private application files or assets.
+- `wrangler.jsonc` declares the private app route exclusively. Public
+  Worker routes and redirects are managed in Cloudflare and must be
+  verified separately from every Workers Builds deployment.
 
-`wrangler.jsonc` binds `www.thinktank.jussco.company` and `thinktank.jussco.company` as Cloudflare custom domains and sets `preview_urls: false`, so no branch build publishes an unapproved artifact under this product's name at a public `*.workers.dev` URL. Whether Workers Builds runs at all for non-production branches is a dashboard setting this repository cannot express.
+Unauthenticated Cloudflare browser tests confirmed a public homepage and
+Access protection for the private V0 workspace on 2026-10-22. This is
+not an account signup or backend authentication capability: those
+features remain outside V0. The production source-artifact manifest
+has **not** been independently proven against an exact deployed SHA.
+The manual live verifier must target the protected app hostname and
+requires authorized Access credentials to fetch application artifacts.
 
-Cloudflare is the **only** publication path. The GitHub Pages workflow was removed rather than left as a dormant second owner. A Vercel project also builds this repository; it is not a deployment surface for this product and nothing here treats its output as public truth. Disconnecting it is a provider-side action that this repository cannot perform.
+Cloudflare is the **only** publication path. The GitHub Pages workflow
+was removed rather than left as a dormant second owner. A Vercel project
+also builds this repository; it is not a deployment surface for this
+product and nothing here treats its output as public truth.
 
 ## Marketplace boundary
 
