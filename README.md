@@ -121,24 +121,43 @@ The proof chain covers:
 - served packaged-runtime Playwright;
 - mobile layout without horizontal overflow.
 
-## Public deployment gate
+## Public deployment boundary
 
-Cloudflare is the single owner of `www.thinktank.jussco.company`, the canonical host; `thinktank.jussco.company` redirects to it. Cloudflare Workers
-Builds performs the deploy from `wrangler.jsonc`, serving the inspected `_site`
-artifact; `npm run build` runs `build:static` then `check:runtime-manifest`, so a
-build whose artifact the manifest does not describe fails instead of deploying.
+**Canonical public entrance:** `https://thinktank.jussco.company/` is
+served by the dedicated `think-tank-public-front-door` Cloudflare Worker.
+`https://www.thinktank.jussco.company` uses a permanent 301 redirect to
+the canonical hostname, preserving paths and query strings.
 
-Deploying is not evidence of a correct public runtime. `.github/workflows/verify-live.yml`
-is the proof step, run manually against an exact 40-character SHA. It calls
-`scripts/verify-live-runtime.mjs`, which recomputes the live manifest's fingerprint
-from the manifest's own fields and then re-fetches and re-hashes **every** file named
-in `artifactFileHashes`. Reading fields out of `version.json` would only prove that a
-JSON file claims a SHA; it cannot detect tampered JavaScript or HTML, which is the
-actual risk on a custom domain, a mirror, or a CDN copy.
+**Access-protected V0 runtime:** `https://thinktank-app.jussco.company/`
+is routed to the separate `think-tank` Worker. Its existing Cloudflare
+Access application requires sign-in before serving the local-first static
+runtime, including `index.html` and `workspace.html`. Think Tank V0 has
+no implemented account signup, backend persistence, provider-backed agents,
+or billing; the `signin.html` and `create-account.html` pages are disabled
+previews, not working product authentication.
 
-The GitHub Pages publication workflow was removed: two publication paths to one
-product is two owners of one apex. No successful public publication receipt has been
-observed yet.
+**Compatibility:** As of 2026-10-22, Cloudflare uses a temporary 302
+redirect from non-root paths on the public hostname to the same path on
+the protected app hostname, preserving queries. The public root also works
+with query strings. This is an infrastructure routing bridge, not an
+application auth implementation.
+
+**Deployment owner:** Cloudflare Workers Builds deploys the private
+`think-tank` Worker from `main` using `wrangler.jsonc`. The Wrangler
+config intentionally binds **only** `thinktank-app.jussco.company/*`;
+it must never reclaim either public-facing hostname as a custom domain.
+The public-facing Worker, 301 WWW redirect, and 302 legacy-path bridge are
+managed separately in Cloudflare. Preview deployments are disabled.
+
+**Exact artifact proof:** `.github/workflows/verify-live.yml` rebuilds an
+exact source SHA, then runs `scripts/verify-live-runtime.mjs` against the
+protected application hostname. Because Cloudflare Access requires login
+and the verifier does not have an Access token, successful private live
+content attestation additionally requires an explicitly authorized
+service-token route or secure authenticated test session. A public-homepage
+200 is not evidence that the private artifact matches GitHub, and a
+successful source build is not evidence of a deployed production feature.
+The GitHub Pages publication workflow remains removed.
 
 ## Acquire readiness
 
