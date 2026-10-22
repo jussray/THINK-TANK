@@ -97,7 +97,10 @@
 @media(max-width:950px){.hero-content{grid-template-columns:1fr}.hero-perks{display:none}.hero{min-height:410px}.hub-list{grid-template-columns:1fr}}
 @media(max-width:650px){.wrap{width:min(100% - 32px,1450px)}.nav{padding:12px 0}.brand{font-size:12px;letter-spacing:.13em}.navlinks{gap:13px}.navlinks a:nth-child(n+3){display:none}.navlinks a{font-size:12px}.nav-action{display:none}.hero{min-height:425px}.hero-content{padding:52px 0}.hero h1{font-size:clamp(45px,11.3vw,62px)}.hero-lede{font-size:14px;max-width:300px}.portal{left:44%;width:340px;height:340px;top:22px;opacity:.6}.board{padding:28px 0 40px}.board-row+.board-row{margin-top:14px}.roster{gap:10px}.rolecard{padding:20px 12px;min-height:185px}.rolecard b{font-size:17px}.orb{width:64px;height:64px}#setup{padding:0}.panel-body{padding:17px}.btn{padding:10px 13px}.results-grid{grid-template-columns:1fr}.result-overview{grid-template-columns:1fr}.result-number{width:88px;height:88px;font-size:22px}.score-row{grid-template-columns:104px minmax(0,1fr) 40px;font-size:13px}.interview-actions #answerBtn{flex:1 1 100%;margin-left:0}.interview-actions .btn{flex:1 1 auto}.mic-btn{width:44px;height:44px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
-.result-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 16px}.result-tab{min-height:40px;padding:9px 14px;border-radius:999px;border:1px solid #5b4c74;background:#ffffff0b;color:#d7c5e8;font:600 13px/1.2 Inter,ui-sans-serif,system-ui,sans-serif;cursor:pointer}.result-tab[aria-selected="true"]{border-color:#b98cff;background:#2a1d4a;color:#fff;box-shadow:0 0 18px #a36cff55}.result-panel:not(.hidden){display:grid;gap:15px}</style>
+.result-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 16px}.result-tab{min-height:40px;padding:9px 14px;border-radius:999px;border:1px solid #5b4c74;background:#ffffff0b;color:#d7c5e8;font:600 13px/1.2 Inter,ui-sans-serif,system-ui,sans-serif;cursor:pointer}.result-tab[aria-selected="true"]{border-color:#b98cff;background:#2a1d4a;color:#fff;box-shadow:0 0 18px #a36cff55}.result-panel:not(.hidden){display:grid;gap:15px}
+@media(prefers-reduced-motion:no-preference){.panel{animation:panel-rise .7s cubic-bezier(.2,.7,.2,1) both}.panel-interview{animation-delay:.08s}.panel-roles{animation-delay:.16s}.panel-results{animation-delay:.1s}.panel-build{animation-delay:.18s}.panel-hub{animation-delay:.26s}.hero-copy{animation:panel-rise .9s ease both}.orb{animation:orb-breathe 5.5s ease-in-out infinite}.rolecard:nth-child(2) .orb{animation-delay:-1.4s}.rolecard:nth-child(3) .orb{animation-delay:-2.8s}.rolecard:nth-child(4) .orb{animation-delay:-4.1s}.btn{transition:transform .2s ease,box-shadow .2s ease}.btn:hover{transform:translateY(-1px)}}
+@keyframes panel-rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes orb-breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.22)}}</style>
 </head>
 <body>
 <nav class="site-nav"><div class="wrap nav"><a class="brand" href="#home" aria-label="Think Tank home"><span class="brandmark" aria-hidden="true">✧</span> THINK TANK</a><div class="navlinks"><a href="#home">Home</a><a href="#idea-hub">My Ideas</a><a href="./workspace.html" data-testid="open-workspace">Idea Workspace</a><a href="#roles">Explore</a><a href="#about">About</a></div><a class="nav-action" href="#interview">Start creating ↗</a></div></nav>
@@ -166,7 +169,7 @@
 </div>
 
 <div class="board-row">
- <article class="panel panel-results" id="results" aria-labelledby="resultsTitle">
+ <article class="panel panel-results panel-art" id="results" aria-labelledby="resultsTitle">
   <div class="panel-head"><span id="resultsTitle">4 · RESULTS</span><span id="resultsStatus">Awaiting interview</span></div>
   <div class="panel-body">
    <h3>Here's what we found.</h3>
@@ -210,7 +213,7 @@
   </div>
  </article>
 
- <article class="panel panel-build" id="build" aria-labelledby="buildTitle">
+ <article class="panel panel-build panel-art" id="build" aria-labelledby="buildTitle">
   <div class="panel-head"><span id="buildTitle">5 · BUILD YOUR IDEA</span><span id="buildStatus">No record</span></div>
   <div class="panel-body">
    <h3>Turn insight into action.</h3>
@@ -230,7 +233,7 @@
   </div>
  </article>
 
- <article class="panel panel-hub" id="idea-hub" aria-labelledby="hubTitle">
+ <article class="panel panel-hub panel-art" id="idea-hub" aria-labelledby="hubTitle">
   <div class="panel-head"><span id="hubTitle">6 · YOUR IDEA HUB</span><span>Local</span></div>
   <div class="panel-body">
    <h3>My Ideas</h3>
