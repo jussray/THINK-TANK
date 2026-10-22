@@ -13,7 +13,7 @@ body{background:radial-gradient(ellipse at 50% 0%,rgba(126,69,169,.17),transpare
 .hero-perks{border:1px solid rgba(199,164,255,.21);border-radius:16px;padding:clamp(16px,2vw,26px);background:rgba(8,8,26,.48);backdrop-filter:blur(15px)}
 .board{background:radial-gradient(ellipse at 50% 2%,rgba(108,49,164,.14),transparent 49%),#090914}
 .panel,.card,.rolecard{background:linear-gradient(140deg,rgba(24,17,46,.82),rgba(10,10,30,.78));border-color:rgba(171,127,252,.34);box-shadow:inset 0 1px rgba(255,255,255,.05),0 18px 45px rgba(0,0,0,.26)}
-.panel-art{background:linear-gradient(0deg,rgba(8,7,23,.85),rgba(8,7,23,.48)),url("./hero-scene.jpg") center/cover no-repeat}
+.panel-art{background:linear-gradient(0deg,rgba(8,7,23,.85),rgba(8,7,23,.48)),url("./band.jpg") center/cover no-repeat}
 .field textarea,.field input{background:rgba(11,9,28,.74);border-color:rgba(171,116,255,.63)}
 .btn.primary{box-shadow:0 6px 25px rgba(167,114,255,.3)}
 @media(max-width:760px){.hero{min-height:510px}.hero-art{background-position:55% center}.hero::after{background:linear-gradient(90deg,rgba(4,5,17,.84),rgba(4,5,17,.48)),linear-gradient(0deg,rgba(7,8,20,.85),transparent)}.hero-copy h1{font-size:clamp(2.8rem,11vw,4.8rem)}.hero-perks{backdrop-filter:none;background:rgba(10,8,27,.72)}}
