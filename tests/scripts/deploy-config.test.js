@@ -36,14 +36,17 @@ test('the Worker serves the inspected artifact directory, not the working tree',
   assert.equal(config.main, undefined, 'V0 must not gain a server entrypoint through deploy config');
 });
 
-test('both Think Tank hostnames are Cloudflare custom domains, www canonical', () => {
+test('www is the only Think Tank custom domain; apex redirects by dashboard Redirect Rule', () => {
   const config = readWranglerConfig();
   const routes = config.routes ?? [];
-  for (const pattern of ['www.thinktank.jussco.company', 'thinktank.jussco.company']) {
-    const route = routes.find((candidate) => candidate.pattern === pattern);
-    assert.ok(route, `${pattern} must be declared in wrangler.jsonc`);
-    assert.equal(route.custom_domain, true, 'the Worker is the origin for this hostname');
-  }
+  const www = routes.find((candidate) => candidate.pattern === 'www.thinktank.jussco.company');
+  assert.ok(www, 'www.thinktank.jussco.company must be declared in wrangler.jsonc');
+  assert.equal(www.custom_domain, true, 'the Worker is the origin for www');
+  assert.equal(
+    routes.find((candidate) => candidate.pattern === 'thinktank.jussco.company'),
+    undefined,
+    'the apex must not be a Worker custom domain; it redirects to www by dashboard Redirect Rule'
+  );
 });
 
 test('Version/Preview URLs are explicitly disabled', () => {

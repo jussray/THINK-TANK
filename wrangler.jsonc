@@ -17,10 +17,6 @@
     {
       "pattern": "www.thinktank.jussco.company",
       "custom_domain": true
-    },
-    {
-      "pattern": "thinktank.jussco.company",
-      "custom_domain": true
     }
   ],
 
