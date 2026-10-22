@@ -25,7 +25,7 @@ if (!trustedManifestPath) throw new Error('Trusted locally rebuilt artifact mani
 const trusted = JSON.parse(fs.readFileSync(trustedManifestPath, 'utf8'));
 if (trusted.source?.sha !== expectedSha) throw new Error('Trusted artifact source SHA mismatch');
 if (expectedEnv && trusted.runtime?.environment !== expectedEnv) throw new Error('Trusted artifact environment mismatch');
-if (expectedEnv === 'cloudflare-workers' && new URL(base).origin !== 'https://thinktank.jussco.company') {
+if (expectedEnv === 'cloudflare-workers' && new URL(base).origin !== 'https://www.thinktank.jussco.company') {
   throw new Error('Production proof must target the canonical Cloudflare hostname');
 }
 
