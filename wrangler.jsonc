@@ -6,14 +6,14 @@
   },
   "previews": {},
 
-  // Cloudflare is the single owner of this hostname. Declared here rather than
-  // only in the dashboard so the binding is reviewable, diffable, and travels
-  // with a buyer transfer. `custom_domain` makes the Worker the origin:
-  // Cloudflare creates the DNS record and certificate.
+  // Cloudflare already has a proxied CNAME for this host AND this Worker Route.
+  // A custom_domain tries to create a second DNS record and fails with 100117.
+  // Mirror the EXISTING route verbatim; do not delete or replace the DNS record.
+  // Route or DNS ownership changes require a separate founder-controlled gate.
   "routes": [
     {
-      "pattern": "thinktank.jussco.company",
-      "custom_domain": true
+      "pattern": "*thinktank.jussco.company/*",
+      "zone_name": "jussco.company"
     }
   ],
 
