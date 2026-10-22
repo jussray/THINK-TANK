@@ -18,8 +18,9 @@ test('HEAD is empty and other paths are denied by the public worker', async () =
   }
   assert.equal((await worker.fetch(new Request(origin + '/', {method:'POST'}))).status, 404);
 });
-test('wrangler config never catches authenticated application paths', () => {
+test('public Worker routes exclude the private app hostname', () => {
   const config = JSON.parse(readFileSync(new URL('../wrangler.front-door.jsonc', import.meta.url), 'utf8'));
-  assert.equal(config.routes[0].pattern, 'thinktank.jussco.company/');
+  assert.deepEqual(config.routes.map(r => r.pattern), ['thinktank.jussco.company/*', 'thinktank.jussco.company/']);
+  assert.ok(config.routes.every(r => !r.pattern.includes('thinktank-app.jussco.company')));
   assert.equal(config.preview_urls, false);
 });
