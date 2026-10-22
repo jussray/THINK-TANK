@@ -36,12 +36,14 @@ test('the Worker serves the inspected artifact directory, not the working tree',
   assert.equal(config.main, undefined, 'V0 must not gain a server entrypoint through deploy config');
 });
 
-test('the canonical hostname is bound as a Cloudflare custom domain', () => {
+test('the canonical hostname preserves the existing proxied Worker Route without claiming DNS', () => {
   const config = readWranglerConfig();
   const routes = config.routes ?? [];
-  const canonical = routes.find((route) => route.pattern === 'thinktank.jussco.company');
-  assert.ok(canonical, 'thinktank.jussco.company must be declared in wrangler.jsonc');
-  assert.equal(canonical.custom_domain, true, 'the Worker is the origin for this hostname');
+  assert.equal(routes.length, 1, 'one canonical route; do not add an alternate publication surface');
+  const [canonical] = routes;
+  assert.equal(canonical.pattern, '*thinktank.jussco.company/*', 'use the existing Cloudflare Worker Route');
+  assert.equal(canonical.zone_name, 'jussco.company', 'route must stay within the owned zone');
+  assert.equal(canonical.custom_domain, undefined, 'do not claim externally managed DNS via custom_domain');
 });
 
 test('Version/Preview URLs are explicitly disabled', () => {
