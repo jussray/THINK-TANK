@@ -10,7 +10,22 @@ const forbidden = [
   { label: 'sessionStorage', pattern: /\bsessionStorage\b/ },
   { label: 'Date.now', pattern: /\bDate\.now\s*\(/ },
   { label: 'new Date', pattern: /\bnew\s+Date\s*\(/ },
+  { label: 'Date()', pattern: /(?<!new\s)\bDate\s*\(/ },
+  { label: 'Date.parse', pattern: /\bDate\.parse\s*\(/ },
   { label: 'Math.random', pattern: /\bMath\.random\s*\(/ },
+  // Nondeterminism and network reachable without any of the literals above.
+  // crypto.randomUUID in particular is already used in index.html, so it is the
+  // idiom most likely to be copied into the domain by accident.
+  { label: 'crypto', pattern: /\bcrypto\b/ },
+  { label: 'performance', pattern: /\bperformance\b/ },
+  { label: 'XMLHttpRequest', pattern: /\bXMLHttpRequest\b/ },
+  { label: 'WebSocket', pattern: /\bWebSocket\b/ },
+  { label: 'EventSource', pattern: /\bEventSource\b/ },
+  { label: 'navigator', pattern: /\bnavigator\b/ },
+  { label: 'process.env', pattern: /\bprocess\.env\b/ },
+  { label: 'Intl', pattern: /\bIntl\b/ },
+  { label: 'toLocale*', pattern: /\.toLocale[A-Z]\w*\s*\(/ },
+  { label: 'localeCompare', pattern: /\.localeCompare\s*\(/ },
   { label: 'store import', pattern: /(?:from\s+|import\s*\()["'][^"']*\/stores\// },
   { label: 'runtime import', pattern: /(?:from\s+|import\s*\()["'][^"']*\/runtime\// },
   { label: 'provider import', pattern: /(?:from\s+|import\s*\()["'][^"']*\/providers\// },

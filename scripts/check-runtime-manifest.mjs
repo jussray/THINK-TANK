@@ -15,7 +15,20 @@ function readSha256(file) {
 function expectedSourceSha() {
   const explicit = process.env.THINK_TANK_EXPECTED_SHA?.trim();
   if (explicit) return explicit;
-  return execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+  // Cloudflare Workers Builds always exports the commit being built, but its
+  // build image may not provide a usable git dir. Without this fallback, running
+  // this checker as part of the deploy build would throw on a missing `git`
+  // rather than verify anything -- the gate would break the deploy instead of
+  // guarding it. Mirrors resolveSourceSha in build-static-artifact.mjs.
+  const workersCi = process.env.WORKERS_CI_COMMIT_SHA?.trim();
+  if (workersCi) return workersCi;
+  try {
+    return execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+  } catch {
+    throw new Error(
+      'Cannot determine the expected source SHA. Set THINK_TANK_EXPECTED_SHA (or run inside a Git checkout).'
+    );
+  }
 }
 
 function walk(directory) {
@@ -63,6 +76,25 @@ if ((manifest.dependencyLock?.sha256 ?? null) !== (lockfilePresent ? readSha256(
 const actualFiles = walk('_site').map((file) => path.relative('_site', file).replaceAll('\\', '/')).sort();
 if (JSON.stringify(actualFiles) !== JSON.stringify(manifest.artifactFiles)) {
   throw new Error(`Runtime manifest artifact file list mismatch: ${actualFiles.join(', ')}`);
+}
+
+// Recompute the packaged bytes. The file-name walk above cannot see content
+// tampering; this is what makes the manifest an attestation of the served app
+// rather than an attestation of its own metadata.
+const expectedHashes = manifest.artifactFileHashes;
+if (!expectedHashes || typeof expectedHashes !== 'object' || Array.isArray(expectedHashes)) {
+  throw new Error('Runtime manifest is missing artifactFileHashes. Rebuild the static artifact.');
+}
+const hashedNames = Object.keys(expectedHashes).sort();
+const expectedHashedNames = actualFiles.filter((file) => file !== 'version.json');
+if (JSON.stringify(hashedNames) !== JSON.stringify(expectedHashedNames)) {
+  throw new Error(`Runtime manifest file-hash coverage mismatch: hashed ${hashedNames.join(', ')}`);
+}
+for (const file of hashedNames) {
+  const actual = `sha256:${readSha256(path.join('_site', file))}`;
+  if (actual !== expectedHashes[file]) {
+    throw new Error(`Runtime manifest artifact content mismatch for ${file}: expected ${expectedHashes[file]}, got ${actual}`);
+  }
 }
 
 const { builtAt, manifestFingerprint, ...core } = manifest;

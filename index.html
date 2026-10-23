@@ -20,54 +20,239 @@
 }
 </script>
 <style>
-:root{--ink:#14161A;--ink-2:#1C1F25;--paper:#EDEAE2;--paper-dim:#B9B6AD;--brass:#C9A227;--teal:#3F9D89;--rust:#B5462F;--line:#33363C}
-*{box-sizing:border-box}body{margin:0;background:var(--ink);color:var(--paper);font-family:Inter,system-ui,sans-serif}.wrap{max-width:960px;margin:0 auto;padding:0 24px}nav{position:sticky;top:0;background:#14161ae8;border-bottom:1px solid var(--line);z-index:10}.nav{display:flex;justify-content:space-between;align-items:center;padding:16px 24px}.brand{font-family:Georgia,serif;font-size:20px;font-weight:700}.dot{color:var(--brass)}a,button{font:inherit}.btn{display:inline-block;border:1px solid var(--line);border-radius:3px;padding:12px 18px;background:transparent;color:var(--paper);text-decoration:none;cursor:pointer}.btn.primary{background:var(--brass);border-color:var(--brass);color:var(--ink);font-weight:700}.hero{padding:72px 0 48px;border-bottom:1px solid var(--line)}.eyebrow,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--paper-dim)}h1,h2,h3{font-family:Georgia,serif;margin:0}.hero h1{font-size:clamp(38px,6vw,58px);line-height:1.02;max-width:14ch;margin-top:18px}.hero p{max-width:58ch;color:var(--paper-dim);font-size:17px;line-height:1.6}.truth-note{max-width:68ch;margin-top:16px;padding:12px 14px;border-left:2px solid var(--teal);background:#17191e;color:var(--paper-dim);font-size:13px;line-height:1.55}.section{padding:64px 0;border-bottom:1px solid var(--line)}.interview-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:22px}.panel{border:1px solid var(--line);border-radius:6px;background:var(--ink-2);overflow:hidden}.panel-head{padding:12px 16px;border-bottom:1px solid var(--line);font-size:12px;color:var(--paper-dim);display:flex;justify-content:space-between}.panel-body{padding:18px}.field{display:grid;gap:8px;margin-bottom:14px}.field label{font-size:13px;color:var(--paper-dim)}input,textarea{width:100%;background:#101216;border:1px solid var(--line);color:var(--paper);border-radius:4px;padding:12px;font:inherit}textarea{min-height:110px;resize:vertical}.transcript{display:grid;gap:12px;max-height:420px;overflow:auto;padding-right:4px}.msg{border-left:2px solid var(--line);padding:8px 10px;background:#17191e}.msg .role{font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}.msg.interviewer{border-color:var(--teal)}.msg.interviewer .role{color:var(--teal)}.msg.founder{border-color:#8B9DC3}.msg.founder .role{color:#8B9DC3}.msg.critic{border-color:var(--rust)}.msg.critic .role{color:#D97B5F}.msg.scorecard{border-color:var(--brass)}.msg.scorecard .role{color:var(--brass)}.msg.synthesizer{border-color:#8B9DC3}.msg.synthesizer .role{color:#8B9DC3}.msg.matchmaker{border-color:#C38BB0}.msg.matchmaker .role{color:#C38BB0}.stack{display:grid;gap:14px}.card{border:1px solid var(--line);border-radius:6px;padding:16px;background:#17191e}.card h3{font-size:18px;margin-bottom:8px}.muted{color:var(--paper-dim)}.score{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.8;white-space:pre-line}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.status{font-size:12px;color:var(--paper-dim);line-height:1.5}.hidden{display:none}.version{font-size:12px;padding:8px 0;border-top:1px solid var(--line)}.version:first-child{border-top:0}.roster{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:24px}.rolecard{border:1px solid var(--line);padding:16px;border-radius:6px}.rolecard b{display:block;margin-bottom:6px}.footer{padding:30px 24px;color:var(--paper-dim);font-size:12px}@media(max-width:780px){.interview-grid{grid-template-columns:1fr}.hero{padding-top:54px}.wrap{padding:0 18px}.nav{padding:14px 18px}}
-</style>
+:root{color-scheme:dark;--ink:#080712;--panel:#131122;--panel2:#1e1830;--paper:#f8f3ff;--paper-dim:#bcb3ce;--brass:#f6c9a0;--violet:#b997ff;--teal:#70d3bf;--rust:#f19599;--line:#39304b;--glow:#c7a3ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--paper);background:radial-gradient(circle at 78% 33%,#24183d 0,transparent 34%),#090813;font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;overflow-x:hidden}button,input,textarea{font:inherit}button,a{touch-action:manipulation}a{color:inherit}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #dfcaff;outline-offset:3px}.wrap{width:min(100% - 52px,1450px);margin-inline:auto}.eyebrow,.mono,.panel-head{font:600 11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.13em;text-transform:uppercase}.eyebrow{color:#dfbbff}h1,h2,h3,p{margin-top:0}h1,h2,h3{font-family:Georgia,'Times New Roman',serif;font-weight:500;letter-spacing:-.025em}h2{font-size:clamp(28px,3.3vw,44px);line-height:1.12}h3{font-size:23px}.muted{color:var(--paper-dim)}.hidden{display:none!important}
+.site-nav{position:relative;z-index:20;border-bottom:1px solid #ffffff22;background:#0a0715b8;backdrop-filter:blur(18px)}.nav{display:flex;justify-content:space-between;align-items:center;gap:22px;padding:17px 0}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;text-transform:uppercase;font-size:15px;font-weight:800;letter-spacing:.23em;white-space:nowrap}.brandmark{display:grid;place-items:center;width:34px;height:34px;color:#d6b5ff;border:1px solid #bb8dff88;border-radius:11px;background:#54347e38;box-shadow:0 0 20px #a66cfd33;font-size:20px}.navlinks{display:flex;gap:30px;align-items:center}.navlinks a{text-decoration:none;color:#e6dff0;font-size:13px}.navlinks a:hover{color:#d0acff}.nav-action{font-size:12px;color:#e5cfff;text-decoration:none;border:1px solid #b894e366;padding:10px 16px;border-radius:40px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;border:1px solid #5b4c74;border-radius:12px;padding:11px 19px;background:#ffffff0b;color:var(--paper);text-decoration:none;cursor:pointer;font-weight:600;transition:transform .15s,border-color .2s,background .2s}.btn:hover{transform:translateY(-1px);border-color:var(--violet);background:#bc92ff25}.btn.primary{border-color:#c39bff;background:linear-gradient(110deg,#bd99ff,#dfbaff);color:#22102e;box-shadow:0 6px 24px #a36cff44}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}.hero{position:relative;isolation:isolate;min-height:430px;overflow:hidden;display:flex;align-items:center;border-bottom:1px solid #a384ca50;background:radial-gradient(ellipse at 53% 23%,#664d86 0,#352542 28%,#1b1531 60%,#090b18 95%)}.hero::after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#080714ef 0%,#0807148a 27%,transparent 60%,#080714c4 100%),linear-gradient(0deg,#080912 0%,transparent 27%)}.hero-art{position:absolute;inset:0;z-index:-2;overflow:hidden}.sky-haze{position:absolute;inset:0;background:radial-gradient(ellipse at 58% 52%,#ffd1b1aa,transparent 26%),radial-gradient(ellipse at 69% 30%,#b6a6f077,transparent 34%),linear-gradient(180deg,#1f1933,#4a3454 55%,#19142d)}.portal{position:absolute;left:55%;top:-80px;width:min(38vw,520px);height:min(38vw,520px);border-radius:50%;border:7px solid #fce3c8;box-shadow:0 0 5px #fff,0 0 24px #ffcfa9,0 0 70px #ffc09a99,inset 0 0 48px #df94ff9c;transform:rotate(-12deg)}.portal:after{content:'';position:absolute;inset:-18px;border:2px solid #deb1ff9c;border-radius:50%;box-shadow:0 0 25px #e2afff70}.ridge{position:absolute;inset:0;background:#171628}.ridge.far{background:#26203b;clip-path:polygon(0 66%,9% 54%,15% 61%,23% 39%,33% 66%,42% 50%,47% 69%,57% 44%,63% 57%,75% 37%,83% 62%,91% 41%,100% 65%,100% 100%,0 100%)}.ridge.near{background:#0b0b1d;clip-path:polygon(0 76%,10% 58%,16% 79%,26% 65%,32% 79%,41% 56%,51% 83%,62% 70%,71% 82%,82% 55%,89% 73%,100% 50%,100% 100%,0 100%);opacity:.8}.lake{position:absolute;bottom:0;width:100%;height:22%;background:repeating-linear-gradient(177deg,transparent 0px,transparent 10px,#e3b6b622 11px,transparent 13px),linear-gradient(180deg,#dbacb824,#161324 80%);opacity:.7}.hero-content{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.52fr);gap:45px;align-items:center;padding-top:58px;padding-bottom:66px}.hero-copy{max-width:570px}.hero h1{font-size:clamp(48px,6vw,84px);line-height:.96;margin:14px 0 20px;text-wrap:balance;text-shadow:0 3px 30px #0b0718}.hero h1 em{font-style:normal;color:#c7a1ff;display:block}.hero-lede{max-width:430px;font-size:16px;line-height:1.6;color:#ede8ef;text-shadow:0 2px 18px #060510}.hero-actions{display:flex;gap:13px;flex-wrap:wrap;margin-top:21px}.hero-perks{max-width:240px;margin-left:auto;padding:23px;border:1px solid #cbb5e344;border-radius:20px;background:#110e27ae;backdrop-filter:blur(20px);box-shadow:0 10px 40px #07061288}.hero-perks p{color:#e0bbff;font:italic 24px/1.18 Georgia,serif}.hero-perks ul{padding:0;margin:0;list-style:none}.hero-perks li{border-top:1px solid #bea5e129;padding:12px 0;color:#e1dae9;font-size:13px}.hero-perks li:before{content:'✦';color:#c39aff;margin-right:12px}.truth-note{color:#bfb6cc;font-size:12px;line-height:1.6;max-width:630px;margin-top:19px;padding:11px 13px;border:1px solid #b98ce63d;border-radius:10px;background:#110e20b8}
+
+/* Six-panel board (approved target, anatomy items 1–6) */
+.board{padding:46px 0 60px;background:radial-gradient(circle at 60% 40%,#281b3d55,transparent 52%);border-top:1px solid #382944}
+.board-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
+.board-row+.board-row{margin-top:18px}
+.panel,.card,.rolecard{border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#1b142b,#111021);overflow:hidden;box-shadow:0 15px 45px #03030a38}
+.panel{display:flex;flex-direction:column;min-width:0}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 19px;color:#d7c5e8;border-bottom:1px solid var(--line)}
+#sessionState,#resultsStatus,#buildStatus{color:#c6a3fc}
+.panel-body{flex:1;min-width:0;padding:clamp(20px,2.6vw,30px)}
+.panel h2{font-size:clamp(26px,2.4vw,36px);line-height:1.12;margin:12px 0 10px}
+.panel h3{font-size:clamp(22px,2vw,28px);margin:8px 0 10px}
+.panel-art{background:linear-gradient(180deg,#0a0716c7,#090714f5),url("./assets/band.jpg") center/cover no-repeat}
+.field{display:grid;gap:10px;margin-bottom:16px}.field label{color:#e7d9fa;font-weight:600;font-size:13px}.field textarea,.field input{width:100%;min-width:0;background:#100d20;border:1px solid #675083;border-radius:12px;color:#fff;padding:15px 17px;resize:vertical}.field textarea{min-height:145px}.field textarea::placeholder{color:#9386a7}
+#setup{text-align:center;padding:4px 0 0}#setup .field{text-align:left}#setup .field textarea{border-color:#b98cff;background:#110d24e6;box-shadow:0 0 0 1px #b98cff66,0 0 34px #a36cff44}#setup p{color:var(--paper-dim);margin-bottom:22px}
+.interview-tip{color:#e8ceff;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.starter-list{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:20px}.starter-chip{padding:8px 12px;border-radius:25px;border:1px solid #5a4772;color:#d6cbe5;font-size:12px;background:#ffffff08;cursor:pointer}.starter-chip:hover{border-color:var(--violet)}
+.interview-idle{min-height:240px;display:grid;place-items:center;text-align:center}
+.card{padding:20px;overflow-wrap:anywhere}.card h3{font-size:24px;margin-bottom:12px}.card p{margin-bottom:10px}.build-card{margin-bottom:14px}
+.score{font:500 13px/2 ui-monospace,monospace;white-space:pre-line}.version{font-size:12px;padding:8px 0;border-bottom:1px solid #433853}.version:last-child{border:0}.status{color:var(--paper-dim);font-size:12px;line-height:1.6}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.build-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 16px}.build-tab{padding:7px 12px;border-radius:20px;border:1px solid #5a4772;background:none;color:#bcb1ce;font-size:12px}.build-tab:disabled{opacity:.45;cursor:not-allowed}.build-tab.is-active{border-color:#c39bff;color:#f1e6ff;background:#bc92ff25}
+.hub-list{display:grid;gap:12px;margin-bottom:16px}.hub-item{border:1px solid #433853;border-radius:14px;padding:16px;background:#150f25;display:grid;gap:6px;justify-items:start}.hub-item-title{font:500 20px/1.25 Georgia,serif;overflow-wrap:anywhere}.hub-item-meta{font-size:12px;color:var(--paper-dim)}.hub-item .btn{margin-top:6px}
+.transcript{display:grid;gap:12px;max-height:360px;overflow:auto;padding-right:5px}.msg{padding:13px 15px;background:#0d0b19;border:1px solid #433553;border-left:3px solid #8d72aa;border-radius:11px;overflow-wrap:anywhere}.msg .role{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#c6a5f7;margin-bottom:6px;font-weight:700}.msg.interviewer{border-left-color:var(--teal)}.msg.founder{border-left-color:var(--violet)}.msg.critic{border-left-color:var(--rust)}.msg.scorecard{border-left-color:var(--brass)}.msg.synthesizer{border-left-color:#7fbcf0}.msg.matchmaker{border-left-color:var(--teal)}
+.roster{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}.rolecard{padding:26px 16px;text-align:center;min-height:250px;background:radial-gradient(circle at 50% 12%,#413363,#151121 70%)}.orb{display:grid;place-items:center;width:120px;height:120px;margin:0 auto 16px;border-radius:50%;border:2px solid #ca9fff;box-shadow:inset 0 0 20px #9b68f3,0 0 28px #ac70fa55;background:radial-gradient(circle at 34% 31%,#ffffffb0,#bb93ff 5%,#342554 25%,#080e24 60%,#aa6eff);font-size:28px}.rolecard:nth-child(2) .orb{border-color:#ffcc9c;box-shadow:inset 0 0 20px #c78b64,0 0 28px #e9a57255}.rolecard:nth-child(3) .orb{border-color:#9cbdff}.rolecard:nth-child(4) .orb{border-color:#78dfca;box-shadow:inset 0 0 20px #70c8b6,0 0 28px #6cdabc55}.rolecard b{display:block;font:500 20px Georgia,serif}.rolecard span{display:block;font-size:12px;line-height:1.5;margin-top:8px}.rolecard small{font-size:11px;color:#a98fc0}
+.micro-label{font-size:11px;letter-spacing:.15em;color:#ad95cf;text-transform:uppercase;font-weight:700}.footer{padding:27px 0;border-top:1px solid #352947;color:#a99eb7;font-size:12px}
+
+/* Hero art (approved hero crop) */
+.hero-art{background:linear-gradient(90deg,#090714 0%,#090714d9 12%,#0907141c 43%,transparent 80%),url("./assets/think-tank-hero-scene.webp") center right/auto 100% no-repeat}
+.hero-art .sky-haze,.hero-art .portal,.hero-art .ridge,.hero-art .lake{display:none}
+
+/* Results */
+.results-live{display:grid;gap:16px}.result-overview{border:1px solid #493958;border-radius:18px;padding:26px;background:linear-gradient(110deg,#191329,#211831);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:25px}
+.result-overview h3{font-size:clamp(22px,3vw,33px);margin:8px 0}.result-overview p{max-width:650px;color:var(--paper-dim);margin:0}
+.result-number{display:grid;place-items:center;width:112px;height:112px;border-radius:50%;border:7px solid #aee8c9;box-shadow:0 0 25px #7bc7ad33;background:#121829;font:500 26px Georgia,serif;color:#dcffe9}
+.result-number small{font:12px ui-monospace,monospace}.result-card-label{display:block;color:#cab1f9;font-weight:700;letter-spacing:.11em;font-size:11px;text-transform:uppercase;margin-bottom:12px}.results-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.results-grid .card{min-height:200px;padding:25px}
+.result-text{font-size:15px;line-height:1.75;color:#f1e9fb;white-space:pre-wrap;overflow-wrap:anywhere}
+.results-empty{border:1px solid #47375f;border-radius:18px;padding:35px;background:#1b1530;color:#d2c6e0}
+#answerBtn:disabled,#answerInput:disabled{display:none}
+#conversation .field:has(#answerInput:disabled){display:none}
+/* Increment 2: guided interview panel */
+.interview-progress{display:grid;gap:10px;margin-bottom:26px}
+.interview-progress-meta{font:600 11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase;color:#cdb6ef}
+.progress-track{height:4px;border-radius:4px;background:#ffffff1a;overflow:hidden}
+.progress-fill{height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,#9d7bf0,#dfbaff);box-shadow:0 0 14px #b38cff88;transition:width .35s ease}
+.question-title{font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.18;text-align:center;letter-spacing:-.02em;margin:0 0 10px;text-wrap:balance}
+.question-hint{text-align:center;color:var(--paper-dim);font-size:13px;margin:0 0 22px}
+.textarea-wrap{position:relative}
+.textarea-wrap textarea{padding-right:60px}
+.mic-btn{position:absolute;right:12px;bottom:12px;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;border:1px solid #5b4c74;background:#ffffff0b;color:#8f83a6;cursor:not-allowed}
+.voice-note{font-size:12px;color:#a99eb7;margin:8px 0 0}
+.interview-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+.interview-actions #answerBtn{margin-left:auto}
+.history-label{margin:30px 0 12px}
+/* Increment 3: results, engine-backed only */
+.result-number-wrap{display:grid;justify-items:center;gap:8px}
+.result-caption{font:11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:#bfb3d1}
+.score-row{display:grid;grid-template-columns:110px minmax(0,1fr) 44px;align-items:center;gap:12px;margin-bottom:14px;font-size:14px;color:#e9e1f5}
+.score-row b{text-align:right;font-weight:600}
+.score-track{height:6px;border-radius:6px;background:#ffffff1a;overflow:hidden}
+.score-fill{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,#70d3bf,#b997ff);transition:width .35s ease}
+.analysis-list{margin:0;display:grid;gap:12px}
+.analysis-list>div{border-top:1px solid #bea5e129;padding-top:10px}
+.analysis-list>div:first-child{border-top:0;padding-top:0}
+.analysis-list dt{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#cab1f9;font-weight:700}
+.analysis-list dd{margin:4px 0 0;color:#f1e9fb;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.result-gap{margin-top:15px;border:1px dashed #6a5785;border-radius:18px;padding:22px 25px;background:#14102a}
+.result-gap p{margin:8px 0 0;color:var(--paper-dim);font-size:14px}
+
+@media(min-width:1101px){.panel-results .results-grid{grid-template-columns:minmax(0,1fr)}.panel-results .result-overview{grid-template-columns:minmax(0,1fr)}.panel-results .results-grid .card{min-height:0}}
+@media(max-width:1100px){.board-row{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:950px){.hero-content{grid-template-columns:1fr}.hero-perks{display:none}.hero{min-height:410px}.hub-list{grid-template-columns:1fr}}
+@media(max-width:650px){.wrap{width:min(100% - 32px,1450px)}.nav{padding:12px 0}.brand{font-size:12px;letter-spacing:.13em}.navlinks{gap:13px}.navlinks a:nth-child(n+3){display:none}.navlinks a{font-size:12px}.nav-action{display:none}.hero{min-height:425px}.hero-content{padding:52px 0}.hero h1{font-size:clamp(45px,11.3vw,62px)}.hero-lede{font-size:14px;max-width:300px}.portal{left:44%;width:340px;height:340px;top:22px;opacity:.6}.board{padding:28px 0 40px}.board-row+.board-row{margin-top:14px}.roster{gap:10px}.rolecard{padding:20px 12px;min-height:185px}.rolecard b{font-size:17px}.orb{width:64px;height:64px}#setup{padding:0}.panel-body{padding:17px}.btn{padding:10px 13px}.results-grid{grid-template-columns:1fr}.result-overview{grid-template-columns:1fr}.result-number{width:88px;height:88px;font-size:22px}.score-row{grid-template-columns:104px minmax(0,1fr) 40px;font-size:13px}.interview-actions #answerBtn{flex:1 1 100%;margin-left:0}.interview-actions .btn{flex:1 1 auto}.mic-btn{width:44px;height:44px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+.result-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 16px}.result-tab{min-height:40px;padding:9px 14px;border-radius:999px;border:1px solid #5b4c74;background:#ffffff0b;color:#d7c5e8;font:600 13px/1.2 Inter,ui-sans-serif,system-ui,sans-serif;cursor:pointer}.result-tab[aria-selected="true"]{border-color:#b98cff;background:#2a1d4a;color:#fff;box-shadow:0 0 18px #a36cff55}.result-panel:not(.hidden){display:grid;gap:15px}
+@media(prefers-reduced-motion:no-preference){.panel{animation:panel-rise .7s cubic-bezier(.2,.7,.2,1) both}.panel-interview{animation-delay:.08s}.panel-roles{animation-delay:.16s}.panel-results{animation-delay:.1s}.panel-build{animation-delay:.18s}.panel-hub{animation-delay:.26s}.hero-copy{animation:panel-rise .9s ease both}.orb{animation:orb-breathe 5.5s ease-in-out infinite}.rolecard:nth-child(2) .orb{animation-delay:-1.4s}.rolecard:nth-child(3) .orb{animation-delay:-2.8s}.rolecard:nth-child(4) .orb{animation-delay:-4.1s}.btn{transition:transform .2s ease,box-shadow .2s ease}.btn:hover{transform:translateY(-1px)}}
+@keyframes panel-rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes orb-breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.22)}}</style>
 </head>
 <body>
-<nav><div class="wrap nav"><div class="brand">Think Tank<span class="dot">.</span></div><a class="btn primary" href="#interview">Start free</a></div></nav>
-<header class="hero"><div class="wrap"><div class="eyebrow">Idea pressure-testing, run like an interview</div><h1>Your idea sits down. Five roles ask the hard questions.</h1><p>Think Tank turns a founder thought into a durable Idea Record, challenges it, scores it against a fixed rubric, and keeps every pivot on the record.</p><div class="truth-note" data-testid="truth-boundary">V0 is deterministic and local-first. Its score is a structured heuristic based on your answers, not external market validation or proof of demand.</div><a class="btn primary" href="#interview" style="margin-top:18px">Start your first interview →</a></div></header>
-<section class="section" id="interview"><div class="wrap">
-<div class="eyebrow">Live V0</div><h2 style="font-size:34px;margin:12px 0 28px">One idea. One shared record.</h2>
-<div class="interview-grid">
-<div class="panel">
-<div class="panel-head"><span>INTERVIEW SESSION</span><span id="sessionState">READY</span></div>
-<div class="panel-body">
-<div id="setup">
-<div class="field"><label for="ideaInput">What are you thinking about building?</label><textarea id="ideaInput" maxlength="4000" placeholder="A subscription box for..." data-testid="idea-input"></textarea></div>
-<button class="btn primary" id="startBtn" data-testid="start-interview">Start interview</button>
-</div>
-<div id="conversation" class="hidden">
-<div class="transcript" id="transcript" data-testid="transcript"></div>
-<div class="field" style="margin-top:16px"><label for="answerInput">Your answer</label><textarea id="answerInput" maxlength="8000" data-testid="answer-input"></textarea></div>
-<div class="actions"><button class="btn primary" id="answerBtn" data-testid="submit-answer">Answer</button><button class="btn" id="resetBtn" data-testid="new-idea">New idea</button></div>
-</div>
-</div></div>
-<aside class="stack">
-<div class="card"><h3>Idea Record</h3><div id="recordSummary" class="muted" data-testid="idea-record">No active record yet.</div></div>
-<div class="card"><h3>Scorecard</h3><div id="scorecard" class="score muted" data-testid="scorecard">Complete the interview to score the idea.</div></div>
-<div class="card"><h3>Versions</h3><div id="versions" class="muted" data-testid="versions">No versions saved.</div></div>
-<div class="card">
-  <h3>Own your record</h3>
-  <p class="status">V0 stores Idea Records in this browser. Export creates a portable JSON copy; import restores a valid Think Tank export. No account or server sync is claimed yet.</p>
-  <div class="actions">
-    <button class="btn" id="exportBtn" data-testid="export-record">Export JSON</button>
-    <label class="btn" for="importInput">Import JSON</label>
-    <input class="hidden" id="importInput" data-testid="import-record" type="file" accept="application/json,.json">
+<nav class="site-nav"><div class="wrap nav"><a class="brand" href="#home" aria-label="Think Tank home"><span class="brandmark" aria-hidden="true">✧</span> THINK TANK</a><div class="navlinks"><a href="#home">Home</a><a href="#idea-hub">My Ideas</a><a href="./workspace.html" data-testid="open-workspace">Idea Workspace</a><a href="#roles">Explore</a><a href="#about">About</a></div><a class="nav-action" href="#interview">Start creating ↗</a></div></nav>
+<header class="hero" id="home">
+<div class="hero-art" aria-hidden="true"><div class="sky-haze"></div><div class="portal"></div><div class="ridge far"></div><div class="ridge near"></div><div class="lake"></div></div>
+<div class="wrap hero-content">
+ <div class="hero-copy"><div class="eyebrow">✦ YOUR NEXT CHAPTER STARTS HERE</div><h1>Where ideas become <em>companies.</em></h1><p class="hero-lede">Your idea deserves more than a quick answer. Explore, challenge, and shape it into a clearer next move.</p><div class="hero-actions"><a class="btn primary" href="#start">Start Exploring <span aria-hidden="true">→</span></a><a class="btn" href="#roles">See how it works</a></div><div class="truth-note" data-testid="truth-boundary">Think Tank V0 is deterministic and local-first. Its score is a structured heuristic from your answers, not external market validation or proof of demand.</div></div>
+ <aside class="hero-perks" aria-label="Why Think Tank"><p>“A place for bold ideas.”</p><ul><li>Explore possibilities</li><li>Get honest feedback</li><li>See real potential</li><li>Take your next step</li></ul></aside>
+</div></header>
+<main>
+<section class="board" aria-label="Think Tank workspace"><div class="wrap">
+
+<div class="board-row">
+ <article class="panel panel-start" id="start" aria-labelledby="startTitle">
+  <div class="panel-head"><span>1 · START</span><span>Local · V0</span></div>
+  <div class="panel-body panel-art">
+   <div id="setup">
+    <div class="interview-tip">From first spark to clearer direction</div>
+    <h2 id="startTitle">What's on your mind?</h2>
+    <p>You don't have to have it all figured out. Begin with a thought, and we'll ask the difficult questions.</p>
+    <div class="field"><label for="ideaInput">Describe your idea, problem, or opportunity</label><div class="textarea-wrap"><textarea id="ideaInput" maxlength="4000" placeholder="Describe an idea, a problem, or a dream…" data-testid="idea-input"></textarea><button type="button" class="mic-btn" disabled aria-label="Voice input is not available in V0" title="Voice input is not available in V0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></div><p class="voice-note">Voice input is not available in V0. Type your idea.</p></div>
+    <button class="btn primary" id="startBtn" data-testid="start-interview">Explore my idea <span aria-hidden="true">→</span></button>
+    <div class="starter-list" aria-label="Ways to start"><button type="button" class="starter-chip" data-starter="I have an idea for ">I have an idea</button><button type="button" class="starter-chip" data-starter="I want to solve a problem: ">I want to solve a problem</button><button type="button" class="starter-chip" data-starter="I'm considering a pivot from ">I'm considering a pivot</button></div>
+   </div>
+   <div id="startSummary" class="hidden">
+    <div class="micro-label">Working on</div>
+    <h3 id="startIdea"></h3>
+    <p class="muted">Your interview runs in the panel beside this one. Your Idea Record saves in this browser as you go.</p>
+   </div>
   </div>
-  <div class="status" id="portabilityStatus" data-testid="portability-status" role="status" aria-live="polite">Ready.</div>
+ </article>
+
+ <article class="panel panel-interview" id="interview" aria-labelledby="interviewTitle">
+  <div class="panel-head"><span id="interviewTitle">2 · GUIDED INTERVIEW</span><span id="sessionState">READY</span></div>
+  <div class="panel-body">
+   <div id="interviewIdle" class="interview-idle"><p class="muted">Describe an idea in the Start panel to begin. You'll answer four questions, one at a time.</p></div>
+   <div id="conversation" class="hidden">
+    <div class="interview-progress">
+     <div class="interview-progress-meta" id="progressLabel">Question 1 of 4</div>
+     <div class="progress-track" id="progressBar" role="progressbar" aria-label="Interview progress" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <h3 class="question-title" id="currentQuestion" aria-live="polite"></h3>
+    <p class="question-hint">Be as open and detailed as you like. There are no wrong answers.</p>
+    <div class="field"><label for="answerInput">Your answer</label><div class="textarea-wrap"><textarea id="answerInput" maxlength="8000" placeholder="Type your answer…" data-testid="answer-input"></textarea><button type="button" class="mic-btn" id="micBtn" disabled aria-label="Voice input is not available in V0" title="Voice input is not available in V0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></div><p class="voice-note">Voice input is not available in V0. Type your answer.</p></div>
+    <div class="interview-actions"><button class="btn" id="backBtn" type="button" disabled aria-describedby="backNote">← Back</button><button class="btn" id="resetBtn" data-testid="new-idea">New idea</button><button class="btn primary" id="answerBtn" data-testid="submit-answer">Next <span aria-hidden="true">→</span></button></div>
+    <p class="voice-note" id="backNote">Earlier answers are locked in V0, so Back is not available yet.</p>
+    <div class="micro-label history-label">Interview so far</div>
+    <div class="transcript" id="transcript" data-testid="transcript" aria-live="polite"></div>
+   </div>
+  </div>
+ </article>
+
+ <article class="panel panel-roles" id="roles">
+  <div class="panel-head"><span>3 · AI EXPLORATION</span><span>Deterministic · V0</span></div>
+  <div class="panel-body">
+   <h2>Four perspectives. One stronger idea.</h2>
+   <p class="muted">These are transparent, deterministic Think Tank roles in V0, not independently running AI agents.</p>
+   <div class="roster">
+    <div class="rolecard"><div class="orb" aria-hidden="true">✧</div><b>The Critic</b><span class="muted">Challenges assumptions and blind spots.</span></div>
+    <div class="rolecard"><div class="orb" aria-hidden="true">◈</div><b>The Scorecard</b><span class="muted">Evaluates a fixed first-pass rubric.</span></div>
+    <div class="rolecard"><div class="orb" aria-hidden="true">✺</div><b>The Synthesizer</b><span class="muted">Connects answers into a durable record.</span></div>
+    <div class="rolecard"><div class="orb" aria-hidden="true">✦</div><b>The Matchmaker</b><span class="muted">Identifies a strategic pattern to test.</span></div>
+   </div>
+  </div>
+ </article>
 </div>
-</aside>
+
+<div class="board-row">
+ <article class="panel panel-results panel-art" id="results" aria-labelledby="resultsTitle">
+  <div class="panel-head"><span id="resultsTitle">4 · RESULTS</span><span id="resultsStatus">Awaiting interview</span></div>
+  <div class="panel-body">
+   <h3>Here's what we found.</h3>
+   <p class="muted">A balanced first look, grounded in your answers. Real-world demand remains unverified.</p>
+   <div class="results-empty" id="resultsEmpty">Your results will appear here after the four-question interview. No fabricated score or market claims.</div>
+   <div class="results-live hidden" id="resultsLive" aria-live="polite">
+    <div class="result-overview"><div><span class="micro-label">Overview · Fixed first-pass rubric</span><h3 id="resultIdea"></h3><p>The result reflects your interview answers, not independent customer research or investment advice.</p></div><div class="result-number-wrap"><div class="result-number" id="resultScore" aria-label="Heuristic score"></div><span class="result-caption">Heuristic score</span></div></div>
+    <div class="result-tabs" role="tablist" aria-label="Results sections">
+     <button class="result-tab" id="tab-overview" role="tab" type="button" aria-controls="panel-overview" aria-selected="true" tabindex="0">Overview</button>
+     <button class="result-tab" id="tab-analysis" role="tab" type="button" aria-controls="panel-analysis" aria-selected="false" tabindex="-1">Analysis</button>
+     <button class="result-tab" id="tab-opportunities" role="tab" type="button" aria-controls="panel-opportunities" aria-selected="false" tabindex="-1">Opportunities</button>
+     <button class="result-tab" id="tab-risks" role="tab" type="button" aria-controls="panel-risks" aria-selected="false" tabindex="-1">Risks</button>
+     <button class="result-tab" id="tab-next" role="tab" type="button" aria-controls="panel-next" aria-selected="false" tabindex="-1">Next Steps</button>
+    </div>
+    <section class="result-panel" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
+     <article class="card"><span class="result-card-label">✦ Bottom line · Heuristic, not validation</span><div class="result-text" id="resultBottomLine"></div></article>
+     <article class="card"><span class="result-card-label">✦ Scorecard · Heuristic, not validation</span>
+      <div class="score-row"><span>Market</span><span class="score-track"><span class="score-fill" id="barMarket"></span></span><b id="valMarket"></b></div>
+      <div class="score-row"><span>Differentiation</span><span class="score-track"><span class="score-fill" id="barDifferentiation"></span></span><b id="valDifferentiation"></b></div>
+      <div class="score-row"><span>Timing</span><span class="score-track"><span class="score-fill" id="barTiming"></span></span><b id="valTiming"></b></div>
+     </article>
+    </section>
+    <section class="result-panel hidden" id="panel-analysis" role="tabpanel" aria-labelledby="tab-analysis">
+     <article class="card"><span class="result-card-label">✦ Analysis · From your answers</span><dl class="analysis-list">
+      <div><dt>Customer</dt><dd id="resultCustomer"></dd></div>
+      <div><dt>Current alternative</dt><dd id="resultAlternative"></dd></div>
+      <div><dt>Wedge</dt><dd id="resultWedge"></dd></div>
+      <div><dt>Moat</dt><dd id="resultMoat"></dd></div>
+     </dl></article>
+    </section>
+    <section class="result-panel hidden" id="panel-opportunities" role="tabpanel" aria-labelledby="tab-opportunities">
+     <div class="result-gap" data-testid="strengths-gap"><span class="micro-label">Strengths &amp; opportunities</span><p>Not scored in V0. The rubric measures market, differentiation, and timing only, so this result does not claim strengths or opportunities.</p></div>
+    </section>
+    <section class="result-panel hidden" id="panel-risks" role="tabpanel" aria-labelledby="tab-risks">
+     <article class="card"><span class="result-card-label">✦ Critic · Risks & assumptions</span><div class="result-text" id="resultCritique"></div></article>
+    </section>
+    <section class="result-panel hidden" id="panel-next" role="tabpanel" aria-labelledby="tab-next">
+     <article class="card"><span class="result-card-label">✦ Matchmaker · Next strategic test</span><div class="result-text" id="resultPattern"></div></article>
+    </section>
+   </div>
+  </div>
+ </article>
+
+ <article class="panel panel-build panel-art" id="build" aria-labelledby="buildTitle">
+  <div class="panel-head"><span id="buildTitle">5 · BUILD YOUR IDEA</span><span id="buildStatus">No record</span></div>
+  <div class="panel-body">
+   <h3>Turn insight into action.</h3>
+   <p class="muted">Your Idea Record is saved in this browser. Plan, milestones, research, and people are not available in V0.</p>
+   <div class="card build-card"><div class="micro-label">Your Idea Record</div><div id="recordSummary" class="muted" data-testid="idea-record">No active record yet.</div></div>
+   <div class="card build-card"><div class="micro-label">Your Scorecard</div><div id="scorecard" class="score muted" data-testid="scorecard">Complete the interview to score the idea.</div></div>
+   <div class="card build-card"><div class="micro-label">Next strategic test</div><div id="nextTest" class="muted" data-testid="next-test">Complete the interview to get the next strategic test.</div></div>
+   <div class="build-tabs" role="group" aria-label="Build tabs">
+    <button type="button" class="build-tab" disabled title="Not available in V0">Plan</button>
+    <button type="button" class="build-tab" disabled title="Not available in V0">Milestones</button>
+    <button type="button" class="build-tab" disabled title="Not available in V0">Research</button>
+    <button type="button" class="build-tab" disabled title="Not available in V0">People</button>
+    <span class="build-tab is-active" aria-current="true">Versions</span>
+   </div>
+   <div class="micro-label" style="margin-bottom:8px">Version history</div>
+   <div id="versions" class="muted" data-testid="versions">No versions saved.</div>
+  </div>
+ </article>
+
+ <article class="panel panel-hub panel-art" id="idea-hub" aria-labelledby="hubTitle">
+  <div class="panel-head"><span id="hubTitle">6 · YOUR IDEA HUB</span><span>Local</span></div>
+  <div class="panel-body">
+   <h3>My Ideas</h3>
+   <p class="muted">V0 keeps one current Idea Record in this browser. Accounts and cloud sync are not available.</p>
+   <div id="hubList" class="hub-list"></div>
+   <div class="card">
+    <div class="micro-label">Own your work</div>
+    <h3 style="margin:10px 0 8px">Your idea, your record.</h3>
+    <p class="status">Export a portable JSON copy, or restore one you saved. There is no account or server sync in the verified V0.</p>
+    <div class="actions"><button class="btn" id="exportBtn" data-testid="export-record">↓ Export JSON</button><label class="btn" for="importInput">↑ Import JSON</label><input class="hidden" id="importInput" data-testid="import-record" type="file" accept="application/json,.json"></div>
+    <div class="status" id="portabilityStatus" data-testid="portability-status" role="status" aria-live="polite">Ready.</div>
+   </div>
+  </div>
+ </article>
 </div>
-<div class="roster">
-<div class="rolecard"><b>01 Interviewer</b><span class="muted">Collects the founder's claims.</span></div>
-<div class="rolecard"><b>02 Critic</b><span class="muted">Challenges weak assumptions.</span></div>
-<div class="rolecard"><b>03 Scorecard</b><span class="muted">Scores a fixed rubric.</span></div>
-<div class="rolecard"><b>04 Synthesizer</b><span class="muted">Turns answers into the record.</span></div>
-<div class="rolecard"><b>05 Matchmaker</b><span class="muted">Names a strategic pattern to test.</span></div>
-</div>
+
 </div></section>
-<footer class="footer"><div class="wrap">Think Tank · V0 interview loop · local-first persistence · portable Idea Records</div></footer>
+</main>
+<footer class="footer" id="about"><div class="wrap">THINK TANK · Where ideas become companies · V0 local-first interview and portable Idea Records</div></footer>
 <script src="./app/contracts/runtime-contracts.js"></script>
 <script src="./app/stores/idea-store.js"></script>
 <script src="./app/stores/local-idea-store.js"></script>
@@ -98,19 +283,27 @@ async function requireCapability(capability){const capabilities=await capabiliti
 async function runCapability(capability,action){try{await requireCapability(capability);return await action()}catch(error){setPortabilityStatus(`Action refused: ${errorMessage(error)}`)}}
 async function save(){record=await ideaStore.saveCurrent(record);await renderRecord()}
 async function load(){try{return await ideaReadModel.loadCurrent()}catch(error){setPortabilityStatus(`Stored Idea Record refused: ${errorMessage(error)}`);return null}}
+function showInterviewMode(on,idea=''){$('setup').classList.toggle('hidden',on);$('startSummary').classList.toggle('hidden',!on);$('startIdea').textContent=on?idea:'';$('interviewIdle').classList.toggle('hidden',on);$('conversation').classList.toggle('hidden',!on)}
 function addMessage(role,text){const node=document.createElement('div');node.className=`msg ${role.toLowerCase()}`;const roleNode=document.createElement('div');roleNode.className='role';roleNode.textContent=role;const textNode=document.createElement('div');textNode.textContent=text;node.append(roleNode,textNode);$('transcript').appendChild(node);$('transcript').scrollTop=$('transcript').scrollHeight}
-async function finish(){await requireCapability(C.ANALYSIS_RUN);const assessment=ThinkTankDomain.assessIdea(record);record.scorecard=assessment.scorecard;record.critique=assessment.critique;record.modules=assessment.modules;record.pattern=assessment.pattern;record.status='complete';record.updatedAt=now();const version={schemaVersion:ThinkTankContracts.SCHEMA.IDEA_VERSION,version:record.versions.length+1,createdAt:now(),idea:record.idea,scorecard:record.scorecard,modules:record.modules};record.versions.push(version);await save();addMessage('CRITIC',record.critique);addMessage('SCORECARD',`Market ${record.scorecard.market}/10 · Differentiation ${record.scorecard.differentiation}/10 · Timing ${record.scorecard.timing}/10`);addMessage('SYNTHESIZER','Record built: customer, current alternative, wedge, and moat are now captured.');addMessage('MATCHMAKER',record.pattern);$('answerInput').disabled=true;$('answerBtn').disabled=true;$('sessionState').textContent='COMPLETE'}
-function ask(){addMessage('INTERVIEWER',QUESTIONS[questionIndex]);$('sessionState').textContent=`QUESTION ${questionIndex+1}/${QUESTIONS.length}`}
-async function resumeInterview(r){if(!r||r.status!=='interviewing')return;record=r;questionIndex=Math.min(Array.isArray(r.answers)?r.answers.length:0,QUESTIONS.length);$('setup').classList.add('hidden');$('conversation').classList.remove('hidden');$('transcript').textContent='';$('answerInput').disabled=false;$('answerBtn').disabled=false;for(let i=0;i<questionIndex;i++){const entry=r.answers[i];addMessage('INTERVIEWER',entry.question||QUESTIONS[i]);addMessage('FOUNDER',entry.answer)}if(questionIndex<QUESTIONS.length){ask();setPortabilityStatus('Recovered in-progress interview.')}else{$('sessionState').textContent='REVIEW REQUIRED';setPortabilityStatus('Recovered all interview answers but no completed assessment. Start a new idea or import a completed record.')}}
-async function start(){const idea=$('ideaInput').value.trim();if(!idea)return;$('setup').classList.add('hidden');$('conversation').classList.remove('hidden');$('transcript').textContent='';const prior=await load();const startedAt=now();record={schemaVersion:ThinkTankContracts.SCHEMA.IDEA_RECORD,id:prior?.id||crypto.randomUUID(),idea,status:'interviewing',createdAt:prior?.createdAt||startedAt,updatedAt:startedAt,answers:[],modules:{},scorecard:null,critique:'',pattern:'',versions:Array.isArray(prior?.versions)?prior.versions:[]};questionIndex=0;await save();setPortabilityStatus(prior?'Continuing this Idea Record as a new pivot.':'Interview started.');ask()}
+async function finish(){await requireCapability(C.ANALYSIS_RUN);const assessment=ThinkTankDomain.assessIdea(record);record.scorecard=assessment.scorecard;record.critique=assessment.critique;record.modules=assessment.modules;record.pattern=assessment.pattern;record.status='complete';record.updatedAt=now();const version={schemaVersion:ThinkTankContracts.SCHEMA.IDEA_VERSION,version:record.versions.length+1,createdAt:now(),idea:record.idea,scorecard:record.scorecard,modules:record.modules};record.versions.push(version);await save();addMessage('CRITIC',record.critique);addMessage('SCORECARD',`Market ${record.scorecard.market}/10 · Differentiation ${record.scorecard.differentiation}/10 · Timing ${record.scorecard.timing}/10`);addMessage('SYNTHESIZER','Record built: customer, current alternative, wedge, and moat are now captured.');addMessage('MATCHMAKER',record.pattern);$('answerInput').disabled=true;$('answerBtn').disabled=true;$('sessionState').textContent='COMPLETE';$('currentQuestion').textContent='Interview complete.';syncProgress();setPortabilityStatus('Interview complete. Your Idea Record and results are saved in this browser.')}
+function ask(){addMessage('INTERVIEWER',QUESTIONS[questionIndex]);$('sessionState').textContent=`QUESTION ${questionIndex+1}/${QUESTIONS.length}`;$('currentQuestion').textContent=QUESTIONS[questionIndex];$('answerBtn').innerHTML=questionIndex===QUESTIONS.length-1?'Finish <span aria-hidden="true">→</span>':'Next <span aria-hidden="true">→</span>';syncProgress()}
+function syncProgress(){const total=QUESTIONS.length;const done=Boolean(record&&record.status==='complete');const answered=done?total:Math.min(questionIndex,total);$('progressFill').style.width=`${Math.round(answered/total*100)}%`;$('progressBar').setAttribute('aria-valuenow',String(answered));$('progressLabel').textContent=done?`Complete · ${total} of ${total} answered`:answered===total?'All answers recorded · review required':`Question ${answered+1} of ${total}`}
+async function resumeInterview(r){if(!r||r.status!=='interviewing')return;record=r;questionIndex=Math.min(Array.isArray(r.answers)?r.answers.length:0,QUESTIONS.length);showInterviewMode(true,r.idea);$('transcript').textContent='';$('answerInput').disabled=false;$('answerBtn').disabled=false;for(let i=0;i<questionIndex;i++){const entry=r.answers[i];addMessage('INTERVIEWER',entry.question||QUESTIONS[i]);addMessage('FOUNDER',entry.answer)}if(questionIndex<QUESTIONS.length){ask();setPortabilityStatus('Recovered in-progress interview.')}else{$('sessionState').textContent='REVIEW REQUIRED';$('currentQuestion').textContent='All answers are recorded.';syncProgress();setPortabilityStatus('Recovered all interview answers but no completed assessment. Start a new idea or import a completed record.')}}
+async function start(){const idea=$('ideaInput').value.trim();if(!idea)return;showInterviewMode(true,idea);$('transcript').textContent='';const prior=await load();const startedAt=now();record={schemaVersion:ThinkTankContracts.SCHEMA.IDEA_RECORD,id:prior?.id||crypto.randomUUID(),idea,status:'interviewing',createdAt:prior?.createdAt||startedAt,updatedAt:startedAt,answers:[],modules:{},scorecard:null,critique:'',pattern:'',versions:Array.isArray(prior?.versions)?prior.versions:[]};questionIndex=0;await save();setPortabilityStatus(prior?'Continuing this Idea Record as a new pivot.':'Interview started.');ask()}
 async function answer(){const value=$('answerInput').value.trim();if(!value||!record)return;addMessage('FOUNDER',value);record.answers.push({question:QUESTIONS[questionIndex],answer:value,createdAt:now()});record.updatedAt=now();await save();$('answerInput').value='';questionIndex++;if(questionIndex<QUESTIONS.length)ask();else await finish()}
-async function reset(){await ideaStore.clearCurrent();record=null;questionIndex=0;$('conversation').classList.add('hidden');$('setup').classList.remove('hidden');$('ideaInput').value='';$('answerInput').value='';$('answerInput').disabled=false;$('answerBtn').disabled=false;$('transcript').textContent='';$('sessionState').textContent='READY';setPortabilityStatus('Ready.');await renderRecord()}
+async function reset(){await ideaStore.clearCurrent();record=null;questionIndex=0;showInterviewMode(false);$('ideaInput').value='';$('answerInput').value='';$('answerInput').disabled=false;$('answerBtn').disabled=false;$('transcript').textContent='';$('sessionState').textContent='READY';$('currentQuestion').textContent='';syncProgress();setPortabilityStatus('Ready.');await renderRecord()}
 function appendText(parent,tag,text,className){const node=document.createElement(tag);if(className)node.className=className;node.textContent=text;parent.appendChild(node);return node}
-async function renderRecord(){const r=record||await load();const summary=$('recordSummary');const score=$('scorecard');const versionsNode=$('versions');if(!r){summary.textContent='No active record yet.';score.textContent='Complete the interview to score the idea.';versionsNode.textContent='No versions saved.';return}summary.textContent='';appendText(summary,'strong',r.idea);summary.appendChild(document.createElement('br'));appendText(summary,'span',`${r.answers?.length||0}/${QUESTIONS.length} answers · ${r.status}`,'muted');score.textContent=r.scorecard?`Market ${r.scorecard.market}/10\nDifferentiation ${r.scorecard.differentiation}/10\nTiming ${r.scorecard.timing}/10\nOverall ${r.scorecard.total}/10`:'Awaiting completed interview.';const versions=Array.isArray(r.versions)?r.versions:[];versionsNode.textContent='';if(!versions.length){versionsNode.textContent='No versions saved.';return}[...versions].reverse().forEach(v=>appendText(versionsNode,'div',`v${v.version} · overall ${v.scorecard?.total ?? 'n/a'}/10`,'version'))}
+function renderVisualResults(r){const ready=Boolean(r && r.status==='complete' && r.scorecard);$('resultsStatus').textContent=ready?'Scored · heuristic':'Awaiting interview';$('resultsEmpty').classList.toggle('hidden',ready);$('resultsLive').classList.toggle('hidden',!ready);if(!ready)return;$('resultIdea').textContent=r.idea;$('resultScore').textContent=(r.scorecard.total??'n/a')+'/10';$('resultBottomLine').textContent='Heuristic total '+r.scorecard.total+'/10 from your four answers. Demand is unverified: treat this as a first pass, not evidence.';const s=r.scorecard;[['barMarket','valMarket',s.market],['barDifferentiation','valDifferentiation',s.differentiation],['barTiming','valTiming',s.timing]].forEach(([bar,val,n])=>{$(bar).style.width=`${Math.max(0,Math.min(10,Number(n)||0))*10}%`;$(val).textContent=`${n??'n/a'}/10`});const m=r.modules||{};$('resultCustomer').textContent=m.customer||'Not recorded';$('resultAlternative').textContent=m.alternative||'Not recorded';$('resultWedge').textContent=m.wedge||'Not recorded';$('resultMoat').textContent=m.moat||'Not recorded';$('resultCritique').textContent=r.critique||'No critique recorded.';$('resultPattern').textContent=r.pattern||'No strategic pattern recorded.'}
+function renderHub(r){const list=$('hubList');list.textContent='';if(!r){appendText(list,'p','No ideas yet. Describe one in the Start panel.','muted');return}const item=document.createElement('article');item.className='hub-item';appendText(item,'div',r.idea,'hub-item-title');appendText(item,'div',`${r.answers?.length||0}/${QUESTIONS.length} answers · ${r.status==='complete'?'complete':'in progress'}`,'hub-item-meta');const open=document.createElement('a');open.className='btn';open.href=r.status==='complete'?'#results':'#interview';open.textContent=r.status==='complete'?'View results':'Continue';item.appendChild(open);list.appendChild(item)}
+async function renderRecord(){const r=record||await load();renderVisualResults(r);renderHub(r);$('buildStatus').textContent=r?(r.status==='complete'?'Saved · complete':'Saved · in progress'):'No record';$('nextTest').textContent=r&&r.status==='complete'&&r.pattern?r.pattern:'Complete the interview to get the next strategic test.';const summary=$('recordSummary');const score=$('scorecard');const versionsNode=$('versions');if(!r){summary.textContent='No active record yet.';score.textContent='Complete the interview to score the idea.';versionsNode.textContent='No versions saved.';return}summary.textContent='';appendText(summary,'strong',r.idea);summary.appendChild(document.createElement('br'));appendText(summary,'span',`${r.answers?.length||0}/${QUESTIONS.length} answers · ${r.status}`,'muted');score.textContent=r.scorecard?`Market ${r.scorecard.market}/10\nDifferentiation ${r.scorecard.differentiation}/10\nTiming ${r.scorecard.timing}/10\nOverall ${r.scorecard.total}/10`:'Awaiting completed interview.';const versions=Array.isArray(r.versions)?r.versions:[];versionsNode.textContent='';if(!versions.length){versionsNode.textContent='No versions saved.';return}[...versions].reverse().forEach(v=>appendText(versionsNode,'div',`v${v.version} · overall ${v.scorecard?.total ?? 'n/a'}/10`,'version'))}
 async function exportRecord(){const current=record||await load();if(!current){setPortabilityStatus('Nothing to export yet. Complete or start an interview first.');return}const normalized=ThinkTankContracts.normalizeIdeaRecordV1(current);record=normalized;const payload={format:EXPORT_FORMAT,exportedAt:now(),record:normalized};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=`think-tank-${normalized.id}.json`;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);setPortabilityStatus('Portable Idea Record exported.')}
 async function importRecordFile(file){if(!file)return;try{if(file.size>MAX_IMPORT_BYTES)throw new Error('File is too large.');const payload=JSON.parse(await file.text());if(payload?.format!==EXPORT_FORMAT)throw new Error('Unsupported export format.');const imported=ThinkTankContracts.normalizeIdeaRecordV1(payload.record);record=await ideaStore.saveCurrent(imported);await renderRecord();await resumeInterview(record);setPortabilityStatus(record.status==='interviewing'?`Imported and resumed Idea Record ${record.id}.`:`Imported Idea Record ${record.id}.`)}catch(error){setPortabilityStatus(`Import refused: ${errorMessage(error)}`)}finally{$('importInput').value=''}}
 async function boot(){try{await requireCapability(C.IDEA_READ);record=await load();await renderRecord();await resumeInterview(record)}catch(error){setPortabilityStatus(`Startup refused: ${errorMessage(error)}`)}}
-$('startBtn').addEventListener('click',()=>void runCapability(C.IDEA_EDIT,start));$('answerBtn').addEventListener('click',()=>void runCapability(C.IDEA_EDIT,answer));$('resetBtn').addEventListener('click',()=>void runCapability(C.IDEA_EDIT,reset));$('exportBtn').addEventListener('click',()=>void runCapability(C.RECORD_EXPORT,exportRecord));$('importInput').addEventListener('change',event=>void runCapability(C.RECORD_IMPORT,()=>importRecordFile(event.target.files?.[0])));void boot();
+$('startBtn').addEventListener('click',()=>void runCapability(C.IDEA_EDIT,start));$('answerBtn').addEventListener('click',()=>void runCapability(C.IDEA_EDIT,answer));$('resetBtn').addEventListener('click',()=>void runCapability(C.IDEA_EDIT,reset));$('exportBtn').addEventListener('click',()=>void runCapability(C.RECORD_EXPORT,exportRecord));$('importInput').addEventListener('change',event=>void runCapability(C.RECORD_IMPORT,()=>importRecordFile(event.target.files?.[0])));document.querySelectorAll('.starter-chip').forEach(chip=>chip.addEventListener('click',()=>{const input=$('ideaInput');input.value=chip.dataset.starter||'';input.focus();input.setSelectionRange(input.value.length,input.value.length)}));void boot();
+function selectResultTab(id,focus){document.querySelectorAll('.result-tab').forEach(t=>{const on=t.id===`tab-${id}`;t.setAttribute('aria-selected',String(on));t.tabIndex=on?0:-1;if(on&&focus)t.focus()});document.querySelectorAll('.result-panel').forEach(p=>p.classList.toggle('hidden',p.id!==`panel-${id}`))}
+$('results').addEventListener('click',e=>{const t=e.target.closest('.result-tab');if(t)selectResultTab(t.id.slice(4),false)});
+$('results').addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight'].includes(e.key))return;const tabs=[...document.querySelectorAll('.result-tab')];const i=tabs.indexOf(document.activeElement);if(i<0)return;e.preventDefault();selectResultTab(tabs[(i+(e.key==='ArrowRight'?1:tabs.length-1))%tabs.length].id.slice(4),true)});
+selectResultTab('overview',false);
 </script>
 </body>
 </html>
