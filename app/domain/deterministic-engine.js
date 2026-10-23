@@ -25,11 +25,26 @@
     };
   }
 
+  const TOO_GENERAL =
+    'Your weakest evidence is still too general. Name a concrete behavior, buyer, or switching trigger before treating this as validated.';
+  const SPECIFIC_ENOUGH =
+    'The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.';
+
   function critiqueIdea(record) {
-    const shortest = [...record.answers].sort((a, b) => a.answer.length - b.answer.length)[0];
-    return shortest && shortest.answer.length < 35
-      ? 'Your weakest evidence is still too general. Name a concrete behavior, buyer, or switching trigger before treating this as validated.'
-      : 'The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.';
+    // An interview with no answers has supplied no evidence at all, so it cannot
+    // earn the favorable critique. Previously `shortest` was undefined here and
+    // the ternary fell through to SPECIFIC_ENOUGH -- an empty interview was told
+    // its claims were "specific enough for a first pass".
+    if (!record.answers.length) return TOO_GENERAL;
+
+    // Measure trimmed length, matching scoreIdea. Measuring raw length here let
+    // whitespace-only answers read as long and specific to the critic while the
+    // scorer saw them as empty: the two passes disagreed about the same input.
+    const shortest = [...record.answers]
+      .map((entry) => entry.answer.trim().length)
+      .sort((a, b) => a - b)[0];
+
+    return shortest < 35 ? TOO_GENERAL : SPECIFIC_ENOUGH;
   }
 
   function synthesizeIdea(record) {

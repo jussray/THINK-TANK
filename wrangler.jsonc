@@ -1,0 +1,29 @@
+{
+  "name": "think-tank",
+  "compatibility_date": "2026-10-16",
+  "assets": {
+    "directory": "./_site"
+  },
+  "previews": {},
+
+  // PRIVATE V0 runtime only. Cloudflare's public Worker
+  // (think-tank-public-front-door) owns thinktank.jussco.company/;
+  // www.thinktank.jussco.company permanently redirects to that hostname.
+  // Non-homepage public-host paths temporarily redirect to this Access-
+  // protected application hostname at the Cloudflare edge.
+  //
+  // IMPORTANT: Never attach this Worker as a Custom Domain to either public
+  // hostname: doing so would overwrite the public entrance on the next deploy.
+  "routes": [
+    {
+      "pattern": "thinktank-app.jussco.company/*",
+      "zone_name": "jussco.company"
+    }
+  ],
+
+  // Version/Preview URLs off. A preview build of any branch would otherwise get
+  // a public *.workers.dev URL that serves an unapproved artifact under the
+  // product's name, with nothing stating which commit it came from.
+  // (Wrangler still calls this field `preview_urls`.)
+  "preview_urls": false
+}

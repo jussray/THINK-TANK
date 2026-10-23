@@ -221,5 +221,6 @@ __marimo__/
 node_modules/
 _site/
 test-results/
+visual-proof/
 playwright-report/
 npm-debug.log*

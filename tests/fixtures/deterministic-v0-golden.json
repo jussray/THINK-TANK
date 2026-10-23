@@ -7,14 +7,29 @@
       "record": {
         "idea": "A subscription inventory assistant for independent shops",
         "answers": [
-          {"answer": "Independent shops pay because stockouts waste hours and lose repeat sales each week."},
-          {"answer": "They use spreadsheets and manual text messages to track inventory and reorder."},
-          {"answer": "They would switch this month if setup takes under ten minutes and prevents one stockout."},
-          {"answer": "The moat is accumulated supplier response data and workflows tuned to each shop."}
+          {
+            "answer": "Independent shops pay because stockouts waste hours and lose repeat sales each week."
+          },
+          {
+            "answer": "They use spreadsheets and manual text messages to track inventory and reorder."
+          },
+          {
+            "answer": "They would switch this month if setup takes under ten minutes and prevents one stockout."
+          },
+          {
+            "answer": "The moat is accumulated supplier response data and workflows tuned to each shop."
+          }
         ]
       },
       "expected": {
-        "scorecard": {"market": 10, "differentiation": 8, "timing": 7, "total": 8},
+        "engineVersion": "v0.1.0",
+        "rubricVersion": "v0",
+        "scorecard": {
+          "market": 10,
+          "differentiation": 8,
+          "timing": 7,
+          "total": 8
+        },
         "critique": "The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.",
         "modules": {
           "customer": "Independent shops pay because stockouts waste hours and lose repeat sales each week.",
@@ -30,14 +45,29 @@
       "record": {
         "idea": "A marketplace for neighborhood helpers",
         "answers": [
-          {"answer": "Local families."},
-          {"answer": "Group chats."},
-          {"answer": "Faster matching."},
-          {"answer": "Community trust."}
+          {
+            "answer": "Local families."
+          },
+          {
+            "answer": "Group chats."
+          },
+          {
+            "answer": "Faster matching."
+          },
+          {
+            "answer": "Community trust."
+          }
         ]
       },
       "expected": {
-        "scorecard": {"market": 3, "differentiation": 4, "timing": 3, "total": 3},
+        "engineVersion": "v0.1.0",
+        "rubricVersion": "v0",
+        "scorecard": {
+          "market": 3,
+          "differentiation": 4,
+          "timing": 3,
+          "total": 3
+        },
         "critique": "Your weakest evidence is still too general. Name a concrete behavior, buyer, or switching trigger before treating this as validated.",
         "modules": {
           "customer": "Local families.",
@@ -46,6 +76,439 @@
           "moat": "Community trust."
         },
         "pattern": "Two-sided cold start: prove one constrained side first."
+      }
+    },
+    {
+      "name": "no answers at all",
+      "record": {
+        "idea": "An idea with no interview yet",
+        "answers": []
+      },
+      "expected": {
+        "engineVersion": "v0.1.0",
+        "rubricVersion": "v0",
+        "scorecard": {
+          "market": 3,
+          "differentiation": 4,
+          "timing": 3,
+          "total": 3
+        },
+        "critique": "Your weakest evidence is still too general. Name a concrete behavior, buyer, or switching trigger before treating this as validated.",
+        "modules": {
+          "customer": "",
+          "alternative": "",
+          "wedge": "",
+          "moat": ""
+        },
+        "pattern": "Founder-led wedge: test the narrowest painful use case before broadening."
+      }
+    },
+    {
+      "name": "whitespace-only answers",
+      "record": {
+        "idea": "A whitespace idea",
+        "answers": [
+          {
+            "question": "Q1",
+            "answer": "                                          "
+          },
+          {
+            "question": "Q2",
+            "answer": "                                          "
+          },
+          {
+            "question": "Q3",
+            "answer": "                                          "
+          },
+          {
+            "question": "Q4",
+            "answer": "                                          "
+          }
+        ]
+      },
+      "expected": {
+        "engineVersion": "v0.1.0",
+        "rubricVersion": "v0",
+        "scorecard": {
+          "market": 3,
+          "differentiation": 4,
+          "timing": 3,
+          "total": 3
+        },
+        "critique": "Your weakest evidence is still too general. Name a concrete behavior, buyer, or switching trigger before treating this as validated.",
+        "modules": {
+          "customer": "                                          ",
+          "alternative": "                                          ",
+          "wedge": "                                          ",
+          "moat": "                                          "
+        },
+        "pattern": "Founder-led wedge: test the narrowest painful use case before broadening."
+      }
+    },
+    {
+      "name": "all answers one char below the 35 specificity threshold",
+      "record": {
+        "idea": "A boundary idea",
+        "answers": [
+          {
+            "question": "Q1",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q2",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q3",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q4",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      },
+      "expected": {
+        "engineVersion": "v0.1.0",
+        "rubricVersion": "v0",
+        "scorecard": {
+          "market": 3,
+          "differentiation": 4,
+          "timing": 3,
+          "total": 3
+        },
+        "critique": "Your weakest evidence is still too general. Name a concrete behavior, buyer, or switching trigger before treating this as validated.",
+        "modules": {
+          "customer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "alternative": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "wedge": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "moat": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "pattern": "Founder-led wedge: test the narrowest painful use case before broadening."
+      }
+    },
+    {
+      "name": "all answers exactly at the 35 specificity threshold",
+      "record": {
+        "idea": "A boundary idea",
+        "answers": [
+          {
+            "question": "Q1",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q2",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q3",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q4",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      },
+      "expected": {
+        "engineVersion": "v0.1.0",
+        "rubricVersion": "v0",
+        "scorecard": {
+          "market": 10,
+          "differentiation": 4,
+          "timing": 5,
+          "total": 6
+        },
+        "critique": "The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.",
+        "modules": {
+          "customer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "alternative": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "wedge": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "moat": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "pattern": "Founder-led wedge: test the narrowest painful use case before broadening."
+      }
+    },
+    {
+      "name": "all answers one char below the 45 threshold",
+      "record": {
+        "idea": "A boundary idea",
+        "answers": [
+          {
+            "question": "Q1",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q2",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q3",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q4",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      },
+      "expected": {
+        "engineVersion": "v0.1.0",
+        "rubricVersion": "v0",
+        "scorecard": {
+          "market": 10,
+          "differentiation": 4,
+          "timing": 5,
+          "total": 6
+        },
+        "critique": "The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.",
+        "modules": {
+          "customer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "alternative": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "wedge": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "moat": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "pattern": "Founder-led wedge: test the narrowest painful use case before broadening."
+      }
+    },
+    {
+      "name": "all answers exactly at the 45 threshold",
+      "record": {
+        "idea": "A boundary idea",
+        "answers": [
+          {
+            "question": "Q1",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q2",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q3",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q4",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      },
+      "expected": {
+        "engineVersion": "v0.1.0",
+        "rubricVersion": "v0",
+        "scorecard": {
+          "market": 10,
+          "differentiation": 8,
+          "timing": 7,
+          "total": 8
+        },
+        "critique": "The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.",
+        "modules": {
+          "customer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "alternative": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "wedge": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "moat": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "pattern": "Founder-led wedge: test the narrowest painful use case before broadening."
+      }
+    },
+    {
+      "name": "mixed lengths straddling both thresholds",
+      "record": {
+        "idea": "A mixed idea",
+        "answers": [
+          {
+            "question": "Q1",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q2",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q3",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q4",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      },
+      "expected": {
+        "engineVersion": "v0.1.0",
+        "rubricVersion": "v0",
+        "scorecard": {
+          "market": 9,
+          "differentiation": 4,
+          "timing": 7,
+          "total": 7
+        },
+        "critique": "Your weakest evidence is still too general. Name a concrete behavior, buyer, or switching trigger before treating this as validated.",
+        "modules": {
+          "customer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "alternative": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "wedge": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "moat": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "pattern": "Founder-led wedge: test the narrowest painful use case before broadening."
+      }
+    },
+    {
+      "name": "single answer only",
+      "record": {
+        "idea": "A single answer idea",
+        "answers": [
+          {
+            "question": "Q1",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      },
+      "expected": {
+        "engineVersion": "v0.1.0",
+        "rubricVersion": "v0",
+        "scorecard": {
+          "market": 5,
+          "differentiation": 4,
+          "timing": 5,
+          "total": 5
+        },
+        "critique": "The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.",
+        "modules": {
+          "customer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "alternative": "",
+          "wedge": "",
+          "moat": ""
+        },
+        "pattern": "Founder-led wedge: test the narrowest painful use case before broadening."
+      }
+    },
+    {
+      "name": "subscription pattern branch",
+      "record": {
+        "idea": "A subscription service for studios",
+        "answers": [
+          {
+            "question": "Q1",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q2",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q3",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q4",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      },
+      "expected": {
+        "engineVersion": "v0.1.0",
+        "rubricVersion": "v0",
+        "scorecard": {
+          "market": 10,
+          "differentiation": 8,
+          "timing": 7,
+          "total": 8
+        },
+        "critique": "The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.",
+        "modules": {
+          "customer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "alternative": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "wedge": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "moat": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "pattern": "Retention-first business: test repeat value before acquisition scale."
+      }
+    },
+    {
+      "name": "marketplace pattern branch",
+      "record": {
+        "idea": "A marketplace for studios",
+        "answers": [
+          {
+            "question": "Q1",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q2",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q3",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q4",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      },
+      "expected": {
+        "engineVersion": "v0.1.0",
+        "rubricVersion": "v0",
+        "scorecard": {
+          "market": 10,
+          "differentiation": 8,
+          "timing": 7,
+          "total": 8
+        },
+        "critique": "The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.",
+        "modules": {
+          "customer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "alternative": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "wedge": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "moat": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "pattern": "Two-sided cold start: prove one constrained side first."
+      }
+    },
+    {
+      "name": "default pattern branch",
+      "record": {
+        "idea": "A tool for studios",
+        "answers": [
+          {
+            "question": "Q1",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q2",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q3",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          },
+          {
+            "question": "Q4",
+            "answer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          }
+        ]
+      },
+      "expected": {
+        "engineVersion": "v0.1.0",
+        "rubricVersion": "v0",
+        "scorecard": {
+          "market": 10,
+          "differentiation": 8,
+          "timing": 7,
+          "total": 8
+        },
+        "critique": "The claims are specific enough for a first pass, but none are external evidence yet. The next risk is confusing a coherent story with market proof.",
+        "modules": {
+          "customer": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "alternative": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "wedge": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "moat": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "pattern": "Founder-led wedge: test the narrowest painful use case before broadening."
       }
     }
   ]
