@@ -4,10 +4,16 @@ This document defines what a future buyer can verify and transfer without turnin
 
 ## Canonical transferable assets
 
-- `index.html` — current V0 application.
-- `tests/interview.spec.js` — browser proof of the core founder path and portable-record path.
+- `index.html` — current V0 application shell and controller.
+- `app/` — the runtime modules `index.html` loads (`contracts/`, `stores/`, `domain/`, `policy/`). The application does not function without these; transferring `index.html` alone yields a non-working product.
+- `scripts/` — the build and verification gates (`build-static-artifact.mjs`, `check-runtime-manifest.mjs`, `check-storage-boundary.mjs`, `check-domain-purity.mjs`).
+- `package.json` — the script entry points those gates are invoked through.
+- `tests/` — the full proof surface: browser specs plus the unit and gate-mutation suites that demonstrate each gate can fail.
 - `.github/workflows/playwright.yml` — continuous browser verification.
-- `.github/workflows/publish-pages.yml` — founder-gated public publication path.
+- `wrangler.jsonc` — Cloudflare Workers deploy configuration; Cloudflare is the single
+  owner of the public hostname.
+- `.github/workflows/verify-live.yml` + `scripts/verify-live-runtime.mjs` — the founder-run
+  proof that the served runtime is the approved source, by re-hashing every served file.
 - `AGENTS.md` — repository operating contract.
 - `docs/PROJECT_SOVEREIGNTY.md` — provider-independence and recovery contract.
 - `PUBLIC_FACE.md` — public positioning and truth boundary.

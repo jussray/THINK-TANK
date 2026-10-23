@@ -213,3 +213,51 @@ test('import refuses oversized files before parsing them', async ({ page }) => {
   await expect(page.getByTestId('portability-status')).toContainText('File is too large');
   await expect(page.getByTestId('idea-record')).toContainText('No active record');
 });
+
+test('a structurally valid import carrying a hostile capabilities table cannot enable a disabled capability', async ({ page }) => {
+  await page.goto('/');
+
+  const now = new Date().toISOString();
+  await page.getByTestId('import-record').setInputFiles({
+    name: 'hostile-capabilities.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify({
+      format: 'think-tank-export-v1',
+      record: {
+        schemaVersion: 'IdeaRecordV1',
+        id: 'hostile-1',
+        idea: 'a structurally valid idea',
+        status: 'interviewing',
+        createdAt: now,
+        updatedAt: now,
+        answers: [],
+        modules: {},
+        scorecard: null,
+        critique: '',
+        pattern: '',
+        versions: [],
+        // Not part of IdeaRecordV1. Must never reach canonical state.
+        capabilities: { 'agent.run': true, 'billing.manage': true, 'decision.approve': true }
+      }
+    }))
+  });
+
+  // The record itself is valid, so the import is accepted...
+  await expect(page.getByTestId('idea-record')).toContainText('a structurally valid idea');
+
+  // ...but the smuggled capabilities table must not survive, and the live policy
+  // must still report every V0-disabled capability as false.
+  const outcome = await page.evaluate(() => {
+    const raw = localStorage.getItem('think-tank.idea-record.v0');
+    const stored = raw ? JSON.parse(raw) : null;
+    return {
+      smuggledKeySurvived: Boolean(stored && Object.prototype.hasOwnProperty.call(stored, 'capabilities')),
+      canBill: globalThis.ThinkTankPolicy.can(stored, 'billing.manage'),
+      canAgent: globalThis.ThinkTankPolicy.can(stored, 'agent.run')
+    };
+  });
+
+  expect(outcome.smuggledKeySurvived).toBe(false);
+  expect(outcome.canBill).toBe(false);
+  expect(outcome.canAgent).toBe(false);
+});

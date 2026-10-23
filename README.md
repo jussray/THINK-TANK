@@ -69,7 +69,11 @@ Every inspected static build produces `_site/version.json` as `ThinkTankRuntimeM
 - the exact packaged file list;
 - a non-secret manifest fingerprint.
 
-`npm run check:runtime-manifest` independently recomputes those values and fails if the packaged artifact does not match the expected source subject.
+- a `sha256` of every packaged file's contents.
+
+`npm run check:runtime-manifest` independently recomputes those values — including re-hashing the packaged bytes of each served file — and fails if the packaged artifact does not match the expected source subject.
+
+This content binding is what makes the manifest an attestation of the *served application* rather than of its own metadata. `tests/scripts/gate-mutation.test.js` proves the check fails on a tampered artifact; a gate that has never been shown to fail is not evidence.
 
 Direct dev dependency versions are pinned, but this repository does **not** currently commit a `package-lock.json`. The manifest exposes that fact instead of hiding it. Transitive fresh-install reproducibility therefore remains unproved until a trustworthy lockfile is generated and verified.
 
@@ -117,18 +121,43 @@ The proof chain covers:
 - served packaged-runtime Playwright;
 - mobile layout without horizontal overflow.
 
-## Public deployment gate
+## Public deployment boundary
 
-`.github/workflows/publish-pages.yml` is a **manual** publication path. It requires:
+**Canonical public entrance:** `https://thinktank.jussco.company/` is
+served by the dedicated `think-tank-public-front-door` Cloudflare Worker.
+`https://www.thinktank.jussco.company` uses a permanent 301 redirect to
+the canonical hostname, preserving paths and query strings.
 
-- the exact current `main` SHA;
-- an auditable founder publication approval reference;
-- successful exact-subject tests and packaged-runtime proof;
-- GitHub Pages provider configuration.
+**Access-protected V0 runtime:** `https://thinktank-app.jussco.company/`
+is routed to the separate `think-tank` Worker. Its existing Cloudflare
+Access application requires sign-in before serving the local-first static
+runtime, including `index.html` and `workspace.html`. Think Tank V0 has
+no implemented account signup, backend persistence, provider-backed agents,
+or billing; the `signin.html` and `create-account.html` pages are disabled
+previews, not working product authentication.
 
-Verification rejects a stale approval if `main` has already moved. After verification, the package job checks out the immutable approved SHA rather than moving `main`. After deploy, the workflow fetches the live `/version.json` and refuses success unless it identifies that same approved SHA and the `github-pages` runtime environment.
+**Compatibility:** As of 2026-10-22, Cloudflare uses a temporary 302
+redirect from non-root paths on the public hostname to the same path on
+the protected app hostname, preserving queries. The public root also works
+with query strings. This is an infrastructure routing bridge, not an
+application auth implementation.
 
-The workflow is intentionally not triggered by normal pushes. Source readiness and offline artifact readiness are not public-runtime truth. No successful public publication receipt has been observed yet.
+**Deployment owner:** Cloudflare Workers Builds deploys the private
+`think-tank` Worker from `main` using `wrangler.jsonc`. The Wrangler
+config intentionally binds **only** `thinktank-app.jussco.company/*`;
+it must never reclaim either public-facing hostname as a custom domain.
+The public-facing Worker, 301 WWW redirect, and 302 legacy-path bridge are
+managed separately in Cloudflare. Preview deployments are disabled.
+
+**Exact artifact proof:** `.github/workflows/verify-live.yml` rebuilds an
+exact source SHA, then runs `scripts/verify-live-runtime.mjs` against the
+protected application hostname. Because Cloudflare Access requires login
+and the verifier does not have an Access token, successful private live
+content attestation additionally requires an explicitly authorized
+service-token route or secure authenticated test session. A public-homepage
+200 is not evidence that the private artifact matches GitHub, and a
+successful source build is not evidence of a deployed production feature.
+The GitHub Pages publication workflow remains removed.
 
 ## Acquire readiness
 
