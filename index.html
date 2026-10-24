@@ -100,7 +100,7 @@
 .result-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 16px}.result-tab{min-height:40px;padding:9px 14px;border-radius:999px;border:1px solid #5b4c74;background:#ffffff0b;color:#d7c5e8;font:600 13px/1.2 Inter,ui-sans-serif,system-ui,sans-serif;cursor:pointer}.result-tab[aria-selected="true"]{border-color:#b98cff;background:#2a1d4a;color:#fff;box-shadow:0 0 18px #a36cff55}.result-panel:not(.hidden){display:grid;gap:15px}
 @media(prefers-reduced-motion:no-preference){.panel{animation:panel-rise .7s cubic-bezier(.2,.7,.2,1) both}.panel-interview{animation-delay:.08s}.panel-roles{animation-delay:.16s}.panel-results{animation-delay:.1s}.panel-build{animation-delay:.18s}.panel-hub{animation-delay:.26s}.hero-copy{animation:panel-rise .9s ease both}.orb{animation:orb-breathe 5.5s ease-in-out infinite}.rolecard:nth-child(2) .orb{animation-delay:-1.4s}.rolecard:nth-child(3) .orb{animation-delay:-2.8s}.rolecard:nth-child(4) .orb{animation-delay:-4.1s}.btn{transition:transform .2s ease,box-shadow .2s ease}.btn:hover{transform:translateY(-1px)}}
 @keyframes panel-rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-@keyframes orb-breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.22)}}</style>
+@keyframes orb-breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.22)}}img.orb{object-fit:cover;padding:0;display:block}.idle-frame{width:100%;max-width:420px;display:grid;gap:14px;justify-items:center}.idle-frame .progress-track{width:100%}@media (prefers-reduced-motion:no-preference){.hero-art{animation:hero-drift 40s ease-in-out infinite alternate}}@keyframes hero-drift{from{transform:scale(1.02)}to{transform:scale(1.06) translate3d(-.6%,.4%,0)}}</style>
 </head>
 <body>
 <nav class="site-nav"><div class="wrap nav"><a class="brand" href="#home" aria-label="Think Tank home"><span class="brandmark" aria-hidden="true">✧</span> THINK TANK</a><div class="navlinks"><a href="#home">Home</a><a href="#idea-hub">My Ideas</a><a href="./workspace.html" data-testid="open-workspace">Idea Workspace</a><a href="#roles">Explore</a><a href="#about">About</a></div><a class="nav-action" href="#interview">Start creating ↗</a></div></nav>
@@ -136,7 +136,7 @@
  <article class="panel panel-interview" id="interview" aria-labelledby="interviewTitle">
   <div class="panel-head"><span id="interviewTitle">2 · GUIDED INTERVIEW</span><span id="sessionState">READY</span></div>
   <div class="panel-body">
-   <div id="interviewIdle" class="interview-idle"><p class="muted">Describe an idea in the Start panel to begin. You'll answer four questions, one at a time.</p></div>
+   <div id="interviewIdle" class="interview-idle"><div class="idle-frame"><div class="interview-progress-meta">Question 1 of 4 · not started</div><div class="progress-track" aria-hidden="true"><div class="progress-fill" style="width:0%"></div></div><p class="muted">Describe an idea in the Start panel to begin. You'll answer four questions, one at a time.</p></div></div>
    <div id="conversation" class="hidden">
     <div class="interview-progress">
      <div class="interview-progress-meta" id="progressLabel">Question 1 of 4</div>
@@ -159,10 +159,10 @@
    <h2>Four perspectives. One stronger idea.</h2>
    <p class="muted">These are transparent, deterministic Think Tank roles in V0, not independently running AI agents.</p>
    <div class="roster">
-    <div class="rolecard"><div class="orb" aria-hidden="true">✧</div><b>The Critic</b><span class="muted">Challenges assumptions and blind spots.</span></div>
-    <div class="rolecard"><div class="orb" aria-hidden="true">◈</div><b>The Scorecard</b><span class="muted">Evaluates a fixed first-pass rubric.</span></div>
-    <div class="rolecard"><div class="orb" aria-hidden="true">✺</div><b>The Synthesizer</b><span class="muted">Connects answers into a durable record.</span></div>
-    <div class="rolecard"><div class="orb" aria-hidden="true">✦</div><b>The Matchmaker</b><span class="muted">Identifies a strategic pattern to test.</span></div>
+    <div class="rolecard"><img class="orb" src="assets/orb-critic.jpg" alt="" aria-hidden="true" width="120" height="120" decoding="async"><b>The Critic</b><span class="muted">Challenges assumptions and blind spots.</span></div>
+    <div class="rolecard"><img class="orb" src="assets/orb-score.jpg" alt="" aria-hidden="true" width="120" height="120" decoding="async"><b>The Scorecard</b><span class="muted">Evaluates a fixed first-pass rubric.</span></div>
+    <div class="rolecard"><img class="orb" src="assets/orb-synth.jpg" alt="" aria-hidden="true" width="120" height="120" decoding="async"><b>The Synthesizer</b><span class="muted">Connects answers into a durable record.</span></div>
+    <div class="rolecard"><img class="orb" src="assets/orb-match.jpg" alt="" aria-hidden="true" width="120" height="120" decoding="async"><b>The Matchmaker</b><span class="muted">Identifies a strategic pattern to test.</span></div>
    </div>
   </div>
  </article>
