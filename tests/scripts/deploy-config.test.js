@@ -36,14 +36,62 @@ test('the Worker serves the inspected artifact directory, not the working tree',
   assert.equal(config.main, undefined, 'V0 must not gain a server entrypoint through deploy config');
 });
 
-test('private Worker deploy cannot claim the public Think Tank hostnames', () => {
+// Public journey files the private Worker may serve on the public host. Exact
+// file routes only: no wildcard, no "/" and no workspace.html.
+const PUBLIC_JOURNEY_FILES = [
+  'index.html',
+  'landing.html',
+  'signin.html',
+  'create-account.html',
+  'app/contracts/runtime-contracts.js',
+  'app/domain/deterministic-engine.js',
+  'app/policy/capability-service.js',
+  'app/policy/local-capability-policy.js',
+  'app/stores/idea-store.js',
+  'app/stores/local-idea-store.js',
+  'assets/auth.css',
+  'assets/hero-scene.jpg',
+  'assets/band.jpg',
+  'assets/c1.jpg',
+  'assets/c2.jpg',
+  'assets/c3.jpg',
+  'assets/c4.jpg',
+  'assets/orb-critic.jpg',
+  'assets/orb-score.jpg',
+  'assets/orb-synth.jpg',
+  'assets/orb-match.jpg'
+];
+
+test('private Worker claims only the exact public journey files and the protected app host', () => {
   const config = readWranglerConfig();
-  // Public root and WWW redirect are separately owned in Cloudflare. A Worker
-  // Builds deployment must not recreate an overlapping public custom domain.
-  assert.deepEqual(config.routes, [
-    { pattern: 'thinktank-app.jussco.company/*', zone_name: 'jussco.company' }
-  ]);
+  // Founder ruling: the www canonical public root and the apex redirect stay owned in Cloudflare.
+  // The private Worker may serve only the exact public journey files listed above, on www.
+  // Every other public-host path stays at the Access-protected app host, and no
+  // Worker Custom Domain may be declared on either public hostname.
+  const expected = [
+    { pattern: 'thinktank-app.jussco.company/*', zone_name: 'jussco.company' },
+    ...PUBLIC_JOURNEY_FILES.map((file) => ({
+      pattern: `www.thinktank.jussco.company/${file}`,
+      zone_name: 'jussco.company'
+    }))
+  ];
+  assert.deepEqual(config.routes, expected);
   assert.equal(config.routes.some((route) => route.custom_domain), false);
+  assert.equal(
+    config.routes.some((route) => route.pattern.includes('*') && route.pattern.startsWith('www.thinktank.jussco.company')),
+    false,
+    'no wildcard may cover the public host'
+  );
+  assert.equal(
+    config.routes.some((route) => route.pattern.startsWith('thinktank.jussco.company/')),
+    false,
+    'the apex carries no Worker route; it redirects to www at the edge'
+  );
+  assert.equal(
+    config.routes.some((route) => route.pattern === 'www.thinktank.jussco.company/workspace.html'),
+    false,
+    'workspace.html stays behind Access'
+  );
 });
 
 test('Version/Preview URLs are explicitly disabled', () => {
