@@ -64,26 +64,31 @@ const PUBLIC_JOURNEY_FILES = [
 
 test('private Worker claims only the exact public journey files and the protected app host', () => {
   const config = readWranglerConfig();
-  // Founder ruling: the public root and the WWW redirect stay owned in Cloudflare.
-  // The private Worker may serve only the exact public journey files listed above.
+  // Founder ruling: the www canonical public root and the apex redirect stay owned in Cloudflare.
+  // The private Worker may serve only the exact public journey files listed above, on www.
   // Every other public-host path stays at the Access-protected app host, and no
   // Worker Custom Domain may be declared on either public hostname.
   const expected = [
     { pattern: 'thinktank-app.jussco.company/*', zone_name: 'jussco.company' },
     ...PUBLIC_JOURNEY_FILES.map((file) => ({
-      pattern: `thinktank.jussco.company/${file}`,
+      pattern: `www.thinktank.jussco.company/${file}`,
       zone_name: 'jussco.company'
     }))
   ];
   assert.deepEqual(config.routes, expected);
   assert.equal(config.routes.some((route) => route.custom_domain), false);
   assert.equal(
-    config.routes.some((route) => route.pattern.includes('*') && route.pattern.startsWith('thinktank.jussco.company')),
+    config.routes.some((route) => route.pattern.includes('*') && route.pattern.startsWith('www.thinktank.jussco.company')),
     false,
     'no wildcard may cover the public host'
   );
   assert.equal(
-    config.routes.some((route) => route.pattern === 'thinktank.jussco.company/workspace.html'),
+    config.routes.some((route) => route.pattern.startsWith('thinktank.jussco.company/')),
+    false,
+    'the apex carries no Worker route; it redirects to www at the edge'
+  );
+  assert.equal(
+    config.routes.some((route) => route.pattern === 'www.thinktank.jussco.company/workspace.html'),
     false,
     'workspace.html stays behind Access'
   );
