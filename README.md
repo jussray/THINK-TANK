@@ -22,7 +22,7 @@ Provider-backed agents, server-side persistence, authentication, billing, Team, 
 
 ## Capability truth
 
-V0 now has one project-owned capability policy for the local founder runtime. Browser actions are checked against that policy rather than assuming every future product feature exists.
+The interview page (`index.html`) checks its browser actions against one project-owned capability policy. The other pages (`workspace.html`, `landing.html`) do not load that policy, so it is not a platform-wide gate.
 
 Currently enabled and proved:
 
