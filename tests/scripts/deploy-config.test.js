@@ -74,3 +74,38 @@ test('Cloudflare deployment uses a pinned, project-local Wrangler CLI', () => {
   assert.equal(pin, '4.149.0', 'production deploy requires the reviewed exact Wrangler version');
   assert.match(pin, /^\d+\.\d+\.\d+$/, 'do not permit implicit latest, caret, or range');
 });
+
+test('all local stylesheet links and their image assets belong to the signed static artifact', () => {
+  const path = require('node:path');
+  const build = fs.readFileSync('scripts/build-static-artifact.mjs', 'utf8');
+  const list = build.match(/const requiredFiles = \[([\s\S]*?)\];/);
+  assert.ok(list, 'packaging allowlist must be explicit');
+  const bundled = new Set([...list[1].matchAll(/'([^']+)'/g)].map((hit) => hit[1]));
+  const pages = ['index.html', 'landing.html', 'workspace.html', 'signin.html', 'create-account.html'];
+  let checked = 0;
+
+  for (const page of pages) {
+    const html = fs.readFileSync(page, 'utf8');
+    const stylesheetLinks = html.matchAll(/<link\b[^>]*\brel=["']stylesheet["'][^>]*\bhref=["']([^"']+)["'][^>]*>/gi);
+    for (const [, href] of stylesheetLinks) {
+      if (/^(?:https?:|\/\/|data:)/i.test(href)) continue;
+      const clean = href.split(/[?#]/, 1)[0];
+      const normalized = path.posix.normalize(path.posix.join(path.posix.dirname(page), clean));
+      assert.ok(!normalized.startsWith('../') && !path.posix.isAbsolute(normalized), 'stylesheet must stay in the source tree');
+      assert.ok(bundled.has(normalized), page + ' links unbundled CSS: ' + normalized);
+      assert.ok(fs.existsSync(normalized), 'stylesheet does not exist: ' + normalized);
+      checked += 1;
+
+      const css = fs.readFileSync(normalized, 'utf8');
+      for (const [, quoted, bare] of css.matchAll(/url\(\s*(?:["']([^"']+)["']|([^)]+))\s*\)/gi)) {
+        const url = (quoted ?? bare ?? '').trim();
+        if (!url || /^(?:https?:|\/\/|data:|#)/i.test(url)) continue;
+        const image = path.posix.normalize(path.posix.join(path.posix.dirname(normalized), url.split(/[?#]/, 1)[0]));
+        assert.ok(!image.startsWith('../') && !path.posix.isAbsolute(image), 'stylesheet asset must remain local');
+        assert.ok(bundled.has(image), normalized + ' references unbundled asset: ' + image);
+        assert.ok(fs.existsSync(image), 'stylesheet image asset does not exist: ' + image);
+      }
+    }
+  }
+  assert.ok(checked >= 2, 'at least interactive UI and authentication CSS must be accounted for');
+});
