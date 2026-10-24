@@ -30,3 +30,24 @@ test('hero drift is defined and runs only when reduced motion is not requested',
   assert.match(html, /@keyframes hero-drift\{from\{transform:scale\(1\.02\)\}to\{transform:scale\(1\.06\) translate3d\(-\.6%,\.4%,0\)\}\}/, 'hero-drift keyframes present');
   assert.match(html, /\.idle-frame\{[^}]*max-width:420px/, 'idle frame width is capped');
 });
+
+test('layout rules are not gated behind the motion preference', () => {
+  const marker = '@media(prefers-reduced-motion:no-preference){';
+  const start = html.indexOf(marker);
+  assert.ok(start >= 0, 'motion-gated block present');
+  let depth = 0;
+  let end = -1;
+  for (let i = start + marker.length - 1; i < html.length; i++) {
+    if (html[i] === '{') depth++;
+    else if (html[i] === '}') {
+      depth--;
+      if (depth === 0) { end = i; break; }
+    }
+  }
+  assert.ok(end > start, 'motion-gated block closes');
+  const gated = html.slice(start, end + 1);
+  assert.doesNotMatch(gated, /\.hub-head\{/, 'hub header flex layout must not depend on motion preference');
+  assert.doesNotMatch(gated, /\.orb img\{/, 'orb image sizing must not depend on motion preference');
+  assert.match(html, /\.hub-head\{display:flex/, 'hub header flex rule present outside the gated block');
+  assert.match(html, /\.orb img\{display:block;width:100%;height:100%;border-radius:50%/, 'orb image sizing present outside the gated block');
+});
