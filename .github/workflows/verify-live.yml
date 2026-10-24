@@ -1,9 +1,10 @@
 name: verify-live
 
 # Cloudflare publishes the protected app at thinktank-app.jussco.company. Workers Builds
-# performs the deploy; this workflow is the proof step that deploy cannot
-# perform on itself: it re-fetches every file named in the live manifest's
-# artifactFileHashes and re-hashes the bytes.
+# is the intended deployer until an explicit provider cutover; the manually gated
+# deploy-worker.yml fallback must NEVER run concurrently with it.
+# Regardless of deployment path, this independent proof re-fetches and hashes every
+# live file listed in the runtime manifest artifactFileHashes; a deploy is not evidence.
 #
 # Manual by design. A deploy is not evidence of a correct public runtime, and
 # this workflow is what turns "intended" into verified in PUBLIC_FACE.md.
