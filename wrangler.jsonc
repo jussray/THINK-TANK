@@ -6,19 +6,38 @@
   },
   "previews": {},
 
-  // PRIVATE V0 runtime only. Cloudflare's public Worker
-  // (think-tank-public-front-door) owns thinktank.jussco.company/;
-  // www.thinktank.jussco.company permanently redirects to that hostname.
-  // Non-homepage public-host paths temporarily redirect to this Access-
-  // protected application hostname at the Cloudflare edge.
+  // PRIVATE V0 runtime. Cloudflare's public front door (think-tank-public-front-door)
+  // owns thinktank.jussco.company/ exactly. The exact routes below expose only the
+  // public journey pages and the static files they load, on the public host.
+  // Every other public-host path still redirects at the Cloudflare edge to the
+  // Access-protected app host, and workspace.html stays behind Access.
+  // www.thinktank.jussco.company permanently redirects to the public host.
   //
   // IMPORTANT: Never attach this Worker as a Custom Domain to either public
   // hostname: doing so would overwrite the public entrance on the next deploy.
   "routes": [
-    {
-      "pattern": "thinktank-app.jussco.company/*",
-      "zone_name": "jussco.company"
-    }
+    { "pattern": "thinktank-app.jussco.company/*", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/index.html", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/landing.html", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/signin.html", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/create-account.html", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/app/contracts/runtime-contracts.js", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/app/domain/deterministic-engine.js", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/app/policy/capability-service.js", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/app/policy/local-capability-policy.js", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/app/stores/idea-store.js", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/app/stores/local-idea-store.js", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/assets/auth.css", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/assets/hero-scene.jpg", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/assets/band.jpg", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/assets/c1.jpg", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/assets/c2.jpg", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/assets/c3.jpg", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/assets/c4.jpg", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/assets/orb-critic.jpg", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/assets/orb-score.jpg", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/assets/orb-synth.jpg", "zone_name": "jussco.company" },
+    { "pattern": "thinktank.jussco.company/assets/orb-match.jpg", "zone_name": "jussco.company" }
   ],
 
   // Version/Preview URLs off. A preview build of any branch would otherwise get
