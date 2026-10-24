@@ -109,3 +109,11 @@ test('all local stylesheet links and their image assets belong to the signed sta
   }
   assert.ok(checked >= 2, 'at least interactive UI and authentication CSS must be accounted for');
 });
+
+test('verify-live keeps its live-proof step as a real YAML step', () => {
+  // A literal backslash-n inside a comment swallowed this step and left a duplicate
+  // `shell:` key in the build step, so the live proof never ran.
+  const src = fs.readFileSync('.github/workflows/verify-live.yml', 'utf8');
+  assert.doesNotMatch(src, /\\n/, 'verify-live.yml must not contain literal backslash-n sequences');
+  assert.match(src, /^ {6}- name: Verify live bytes against trusted source artifact$/m);
+});
