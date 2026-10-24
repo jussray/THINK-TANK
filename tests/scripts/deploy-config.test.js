@@ -109,3 +109,22 @@ test('all local stylesheet links and their image assets belong to the signed sta
   }
   assert.ok(checked >= 2, 'at least interactive UI and authentication CSS must be accounted for');
 });
+
+test('verify-live keeps its live-proof step as a real YAML step', () => {
+  // A literal backslash-n inside a comment swallowed this step and left a duplicate
+  // `shell:` key in the build step, so the live proof never ran.
+  const src = fs.readFileSync('.github/workflows/verify-live.yml', 'utf8');
+  assert.doesNotMatch(src, /\\n/, 'verify-live.yml must not contain literal backslash-n sequences');
+  assert.match(src, /^ {6}- name: Verify live bytes against trusted source artifact$/m);
+});
+
+test('the Cloudflare deploy credentials are scoped to the credential and deploy steps, not the whole job', () => {
+  // Job-level env reaches every step, including npm install and the unit tests,
+  // which run dependency and repository code before any deploy step.
+  const src = fs.readFileSync('.github/workflows/deploy-worker.yml', 'utf8');
+  const jobEnv = src.match(/^    env:\n([\s\S]*?)^    steps:/m);
+  assert.ok(jobEnv, 'deploy job env block must exist');
+  assert.doesNotMatch(jobEnv[1], /CLOUDFLARE_(API_TOKEN|ACCOUNT_ID)/, 'job-level env would expose deploy credentials to npm install and tests');
+  const deployStep = src.slice(src.indexOf('- name: Deploy the gated _site artifact'));
+  assert.match(deployStep, /CLOUDFLARE_API_TOKEN: \$\{\{ secrets\.CLOUDFLARE_API_TOKEN \}\}/);
+});
