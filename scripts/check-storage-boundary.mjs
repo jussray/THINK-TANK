@@ -19,9 +19,10 @@ const allowed = new Set([
   'assets/motion.js'
 ]);
 
-// The V0 application controller is the inline <script> in index.html, and the
-// build/check gates are .mjs. A '*.js'-only pathspec exempted both, so direct
-// localStorage access outside the store layer passed this gate unseen.
+// The V0 application controllers live in .js files (app/index-page.js,
+// app/workspace-page.js), and the build/check gates are .mjs. A '*.js'-only
+// pathspec once exempted an inline controller, so direct localStorage access
+// outside the store layer passed this gate unseen.
 const result = spawnSync(
   'git',
   ['grep', '-n', 'localStorage', '--', '*.js', '*.mjs', '*.cjs', '*.ts', '*.html'],
