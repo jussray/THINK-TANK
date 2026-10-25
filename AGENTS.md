@@ -37,3 +37,26 @@ All builder agents (Claude, Codex, Copilot, Gemini, ChatGPT, and any future agen
 **Installed and verified:** The founder-approved original PNG is committed at `assets/think-tank-approved-ui-2026-10-16.png`. Its Git blob SHA is `9ec62735e7a91f271843d0ccadc02c88c953e254`; its SHA-256 is the value above. Use this precise file for visual review; do not regenerate or substitute artwork.
 
 Until the founder accepts verified Playwright desktop/mobile comparisons against the original, the mockup is an **active implementation target**, not an implemented or deployed state. Preserve the proven local-first deterministic interview, Idea Record, scoring, version recovery, export/import, and capability-policy boundaries. Do not claim new AI or provider-backed features because the mockup depicts them. Never close the visual target using green unit tests alone; require real browser screenshots, working user journeys, accessibility checks, and founder signoff.
+
+## Founder convergence directive (2026-10-25)
+
+THINK-TANK must unite the June 8 AI cofounder foundation with the later,
+founder-approved cinematic product experience. **This is one evolving app,
+not a choice between two competing products.**
+
+- Keep the new visuals, existing user journeys, and verified offline continuity
+  as the baseline. Redesign is permitted **only** when integrating both versions
+  creates a genuine overall product upgrade, with visual comparison and founder
+  approval before replacing an approved state.
+- Preserve original idea records, founder-edited modules, concept history,
+  versions, exports, and rollback paths. Starting a new idea must not
+  implicitly convert it into a pivot or overwrite a previous idea.
+- AI provider connections are explicit opt-in; no founder content is sent to
+  outside models, made public, shared, migrated, or deleted without the
+  founder's permission. Never expose provider keys to the browser.
+- Keep the June foundation recovery archive unmodified. Revive deliberately
+  under a reviewable branch with authenticated, per-idea-scoped API calls.
+- Do not claim production AI, account sync, research or public matchmaking
+  until their implementations and real-path tests pass.
+- Do not modify `main`, merge a PR, or deploy this revival without the
+  founder's review and approval.
