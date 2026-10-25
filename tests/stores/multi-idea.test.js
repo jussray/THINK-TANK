@@ -52,3 +52,21 @@ test('corrupt idea collection fails closed instead of silently overwriting it', 
   await assert.rejects(() => store.saveCurrent(idea('a')), /valid JSON/);
   assert.equal(data.get('think-tank.idea-collection.v1'), 'not-json');
 });
+
+test('clearing the active pointer first persists a legacy-only record to the collection', async () => {
+  const { store, data } = setup();
+  data.set('think-tank.idea-record.v0', JSON.stringify(idea('legacy-only')));
+  await store.clearCurrent();
+  assert.equal(await store.loadCurrent(), null);
+  const records = await store.listRecords();
+  assert.equal(records.length, 1);
+  assert.equal(records[0].id, 'legacy-only');
+  assert.equal((await store.selectCurrent('legacy-only')).id, 'legacy-only');
+});
+
+test('corrupt legacy current record refuses reset instead of deleting unknown bytes', async () => {
+  const { store, data } = setup();
+  data.set('think-tank.idea-record.v0', 'corrupt contents');
+  await assert.rejects(() => store.clearCurrent(), /valid JSON/);
+  assert.equal(data.get('think-tank.idea-record.v0'), 'corrupt contents');
+});
