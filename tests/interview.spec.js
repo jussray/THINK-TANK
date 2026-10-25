@@ -113,12 +113,50 @@ test('in-progress portable record resumes after import', async ({ page }) => {
   await expect(page.getByTestId('versions')).toContainText('v1');
 });
 
+test('new idea from Start preserves the previous idea as an independent record', async ({ page }) => {
+  await completeInterview(page, 'First idea kept separate from the second idea');
+  const first = await downloadRecord(page);
+
+  await page.getByTestId('idea-input').fill('Second independent idea about a different user need');
+  await page.getByTestId('start-interview').click();
+  const second = await downloadRecord(page);
+
+  expect(second.record.id).not.toBe(first.record.id);
+  expect(second.record.versions).toHaveLength(0);
+  await expect(page.locator('#hubList')).toContainText('First idea kept separate');
+  await expect(page.locator('#hubList')).toContainText('Second independent idea');
+
+  await page.reload();
+  await expect(page.locator('#hubList')).toContainText('First idea kept separate');
+  await page.locator('#hubList').getByRole('button', { name: 'Open idea' }).first().click();
+  await expect(page.getByTestId('idea-record')).toContainText('First idea kept separate');
+  const restored = await downloadRecord(page);
+  expect(restored.record.id).toBe(first.record.id);
+  expect(restored.record.versions).toHaveLength(1);
+});
+
+test('restarting an incomplete interview with the same idea resumes answers without clearing them', async ({ page }) => {
+  await startInterview(page);
+  await answerInterview(page, DEFAULT_ANSWERS.slice(0, 2));
+  const before = await downloadRecord(page);
+  await page.reload();
+  await page.getByTestId('idea-input').fill(DEFAULT_IDEA);
+  await page.getByTestId('start-interview').click();
+
+  await expect(page.locator('#sessionState')).toHaveText('QUESTION 3/4');
+  const after = await downloadRecord(page);
+  expect(after.record.id).toBe(before.record.id);
+  expect(after.record.answers).toEqual(before.record.answers);
+});
+
 test('pivot preserves Idea Record identity and adds a new version', async ({ page }) => {
   await completeInterview(page);
   const first = await downloadRecord(page);
   const originalId = first.record.id;
 
   await page.reload();
+  // An ordinary new idea is independent. Pivoting is always a deliberate action.
+  await page.getByRole('button', { name: "I'm considering a pivot" }).click();
   const pivotIdea = 'A focused founder interview tool for validating one painful startup assumption at a time.';
   await page.getByTestId('idea-input').fill(pivotIdea);
   await page.getByTestId('start-interview').click();
