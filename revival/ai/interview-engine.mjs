@@ -65,10 +65,19 @@ export function prepareInterview({ record, history = [], answer = null }) {
   }
   messages.push(...prior);
   if (answer !== null) messages.push({ role: 'user', content: requireText(answer, 'answer') });
-  if (messages[messages.length - 1].role !== 'user') {
+  // Provider APIs require alternating role turns. Merge adjacent founder
+  // messages from the original idea context and V0 session transcript rather
+  // than fabricating an assistant answer or losing either piece of content.
+  const alternating = [];
+  for (const message of messages) {
+    const last = alternating[alternating.length - 1];
+    if (last && last.role === message.role) last.content += '\\n\\n' + message.content;
+    else alternating.push({ ...message });
+  }
+  if (alternating[alternating.length - 1].role !== 'user') {
     throw new TypeError('the latest turn must be from the founder');
   }
-  return { ideaId, system: SYSTEM, messages };
+  return { ideaId, system: SYSTEM, messages: alternating };
 }
 
 /**
