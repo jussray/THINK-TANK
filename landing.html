@@ -6,6 +6,7 @@
 <title>Think Tank — Where ideas become companies</title>
 <meta name="description" content="Think Tank interviews your idea, challenges it, scores a fixed rubric and keeps a portable record you own.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/motion.css">
 <style>
 /* Layout: cinematic hero over a single scenic world, then a 3x2 grid of
    product panels numbered as the founder's actual path through the app. */
@@ -26,6 +27,9 @@
   --sky:#7FA6E8;
   --mint:#5FC3A6;
   --rose:#E0708A;
+  --nav-bg:rgba(10,7,16,.82);
+  --guides-bg:rgba(18,12,28,.72);
+  --guide-bg:linear-gradient(180deg,rgba(23,16,38,.9),rgba(12,8,20,.96));
   --display:'Playfair Display',Georgia,'Times New Roman',serif;
   --ui:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
   color-scheme:dark;
@@ -56,7 +60,7 @@ nav{
   position:sticky;
   top:env(safe-area-inset-top,0px);
   z-index:40;
-  background:rgba(10,7,16,.82);
+  background:var(--nav-bg);
   backdrop-filter:blur(14px);
   border-bottom:1px solid var(--edge-soft);
 }
@@ -83,14 +87,6 @@ body::before{
 .nav-links a.on{color:var(--ink);font-weight:500;}
 .nav-tools{display:flex;align-items:center;gap:16px;color:var(--ink-dim);}
 .nav-tools svg{width:18px;height:18px;display:block;}
-/* Honest disabled states: visible, labeled, never clickable as if live */
-.nav-off{color:var(--ink-faint);cursor:not-allowed;}
-.nav-off i{font-style:normal;font-size:10.5px;margin-left:4px;color:var(--ink-faint);}
-.icon-off{
-  width:40px;height:40px;display:grid;place-items:center;border-radius:50%;
-  background:none;border:1px solid transparent;color:var(--ink-faint);cursor:not-allowed;padding:0;
-}
-.icon-off svg{width:18px;height:18px;display:block;}
 .sign-in{
   display:inline-flex;align-items:center;min-height:40px;padding:0 14px;white-space:nowrap;flex:none;
   border-radius:999px;border:1px solid var(--edge);font-size:14px;color:var(--violet-soft);
@@ -98,7 +94,38 @@ body::before{
 .eyebrow{
   font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
   color:var(--violet-soft);margin-bottom:16px;
+  display:flex;align-items:center;gap:12px;
 }
+.eyebrow::before{content:"";width:30px;height:2px;background:var(--violet);border-radius:2px;flex:none;}
+.nav-links a{position:relative;padding-block:4px;transition:color .25s cubic-bezier(.2,.7,.2,1);}
+.nav-links a:hover{color:var(--ink);}
+.nav-links a.on::after{
+  content:"";position:absolute;left:0;right:0;bottom:-3px;height:2px;border-radius:2px;background:var(--violet);
+}
+.icon-btn{
+  width:40px;height:40px;display:grid;place-items:center;border-radius:50%;
+  background:none;border:1px solid transparent;color:var(--ink-dim);cursor:pointer;padding:0;
+  transition:color .25s cubic-bezier(.2,.7,.2,1),border-color .25s cubic-bezier(.2,.7,.2,1),background .25s cubic-bezier(.2,.7,.2,1);
+}
+.icon-btn:hover{color:var(--ink);border-color:var(--edge-soft);background:rgba(255,255,255,.04);}
+.icon-btn svg{width:18px;height:18px;display:block;}
+.guide-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;
+  margin-top:auto;padding-top:10px;font-size:12.5px;color:var(--ink-dim);
+  transition:color .25s cubic-bezier(.2,.7,.2,1);
+}
+.guide-foot:hover{color:var(--ink);}
+nav .mark{background:none;box-shadow:none;}
+nav .mark svg{width:26px;height:26px;stroke:var(--violet);filter:drop-shadow(0 0 10px rgba(168,85,247,.55));}
+.guide-arrow{
+  width:27px;height:27px;border-radius:50%;flex:none;display:grid;place-items:center;
+  border:1px solid currentColor;
+}
+.guide-arrow svg{width:13px;height:13px;}
+.ga-critic{color:var(--violet-soft);} .ga-score{color:var(--amber);}
+.ga-synth{color:var(--sky);} .ga-match{color:var(--mint);}
+.card-link{position:absolute;inset:0;z-index:3;border-radius:14px;}
+.card-link:focus-visible{outline:2px solid var(--violet-soft);outline-offset:3px;}
 .ghost-btn{
   display:inline-flex;align-items:center;margin-top:30px;margin-left:12px;padding:14px 26px;
   border-radius:999px;border:1px solid var(--edge);font-size:15px;font-weight:500;
@@ -111,7 +138,7 @@ body::before{
 .guides{padding-block:22px 6px;}
 .guides-in{
   display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,3.1fr);gap:26px;align-items:center;
-  background:rgba(18,12,28,.72);border:1px solid var(--edge-soft);border-radius:18px;padding:26px;
+  background:var(--guides-bg);border:1px solid var(--edge-soft);border-radius:18px;padding:26px;
 }
 .guides-copy h2{font-family:var(--display);font-weight:500;font-size:clamp(26px,2.8vw,38px);line-height:1.1;}
 .guides-copy p:last-child{margin-top:14px;font-size:14px;line-height:1.6;color:var(--ink-dim);max-width:36ch;}
@@ -119,7 +146,7 @@ body::before{
 .guide{
   display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;min-width:0;
   padding:16px 12px 14px;border-radius:14px;border:1px solid var(--edge-soft);
-  background:linear-gradient(180deg,rgba(23,16,38,.9),rgba(12,8,20,.96));
+  background:var(--guide-bg);
 }
 .guide .orb-img{width:clamp(96px,7.4vw,120px);margin:0 auto 6px;}
 .guide h3{font-family:var(--display);font-weight:500;font-size:19px;}
@@ -132,14 +159,13 @@ body::before{
   .guides-in{padding:18px;}
   .guide-list{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
-.sample-tag{
-  display:inline-block;align-self:flex-start;font-size:10.5px;letter-spacing:.04em;
-  color:var(--amber);background:rgba(224,169,75,.1);border:1px solid rgba(224,169,75,.28);
-  border-radius:999px;padding:3px 10px;margin-top:8px;
-}
 .avatar{
-  width:30px;height:30px;border-radius:50%;flex:none;
-  background:linear-gradient(140deg,#6B4AA0,#3D2C5C);
+  width:32px;height:32px;border-radius:50%;flex:none;
+  background:
+    radial-gradient(circle at 50% 34%,#E8C39A 0 26%,transparent 27%),
+    radial-gradient(circle at 50% 88%,#3D2C5C 0 46%,transparent 47%),
+    linear-gradient(140deg,#6B4AA0,#241533);
+  box-shadow:0 0 14px rgba(168,85,247,.35);
   border:1px solid var(--edge);
   display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--violet-soft);
 }
@@ -154,7 +180,7 @@ body::before{
    It is masked out across x 26-60% so the glowing ring stays visible. */
 .hero-bg::before{
   content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(10,7,16,.98) 0%,rgba(10,7,16,.96) 12%,rgba(10,7,16,0) 32%);
+  background:linear-gradient(180deg,rgba(10,7,16,.98) 0%,rgba(10,7,16,.97) 18%,rgba(10,7,16,0) 36%);
   -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 14%,transparent 32%,transparent 52%,#000 66%,#000 100%);
   mask-image:linear-gradient(90deg,#000 0%,#000 14%,transparent 32%,transparent 52%,#000 66%,#000 100%);
 }
@@ -196,7 +222,8 @@ body::before{
   margin-bottom:26px;
 }
 .pull-line{display:block;padding-left:14px;}
-.rail-item{display:flex;align-items:center;gap:13px;padding:9px 0;font-size:14.5px;}
+.rail-item{display:flex;align-items:flex-start;gap:13px;padding:9px 0;font-size:14.5px;}
+.hero-rail .rail-ico{margin-top:3px;}
 .rail-ico{
   width:27px;height:27px;border-radius:50%;flex:none;
   border:1px solid rgba(196,166,251,.4);display:grid;place-items:center;
@@ -479,6 +506,77 @@ footer{border-top:1px solid var(--edge-soft);}
 }
 .truth b{color:var(--ink-dim);font-weight:600;}
 
+/* ───────────── DAY THEME ─────────────
+   Ray's direction (2026-10-25): tan and lighter warm colors take over, the
+   silhouette stays, the scene switches to morning. Pure CSS via the nav
+   checkbox — body:has(.tt-theme-toggle:checked) — no JavaScript involved.
+   Same hero plate graded to daylight; the figure stays a dark silhouette
+   because the grade lifts the whole plate uniformly. */
+body:has(.tt-theme-toggle:checked){
+  --void:#E7DBC2;
+  --deep:#EFE3CB;
+  --panel:#F5ECDA;
+  --panel-2:#EFE1C6;
+  --edge:rgba(122,90,40,.3);
+  --edge-soft:rgba(122,90,40,.16);
+  --ink:#2E2115;
+  --ink-dim:#6E573C;
+  --ink-faint:#93795A;
+  --violet:#A8742C;
+  --violet-soft:#8A5A18;
+  --violet-btn:#C08A34;
+  --nav-bg:rgba(247,239,223,.88);
+  --guides-bg:rgba(248,240,224,.84);
+  --guide-bg:linear-gradient(180deg,rgba(253,248,236,.96),rgba(241,229,203,.96));
+  color-scheme:light;
+}
+body:has(.tt-theme-toggle:checked)::before{background:rgba(247,239,223,.95);}
+body:has(.tt-theme-toggle:checked) .hero-bg img{
+  filter:brightness(1.32) saturate(1.15) sepia(.28) hue-rotate(-10deg) contrast(.95);
+}
+body:has(.tt-theme-toggle:checked) .hero-bg::before{
+  background:linear-gradient(180deg,rgba(252,240,214,.97) 0%,rgba(252,240,214,.94) 17%,rgba(252,240,214,0) 34%);
+}
+body:has(.tt-theme-toggle:checked) .hero-bg::after{
+  background:
+    linear-gradient(180deg,rgba(252,240,214,.62) 0%,rgba(252,240,214,.62) 8%,rgba(252,240,214,0) 15%),
+    linear-gradient(90deg,rgba(250,238,214,.9) 0%,rgba(250,238,214,.62) 26%,rgba(250,238,214,.12) 48%,rgba(250,238,214,.55) 74%,rgba(120,84,32,.32) 100%),
+    linear-gradient(180deg,rgba(255,226,168,0) 0%,rgba(255,226,168,0) 60%,rgba(120,84,32,.3) 100%);
+}
+body:has(.tt-theme-toggle:checked) .start-btn{
+  background:linear-gradient(120deg,#DFAF5E,#BC8130);color:#2A1C0C;
+  box-shadow:0 10px 30px rgba(150,105,35,.4);
+}
+body:has(.tt-theme-toggle:checked) .ghost-btn{background:rgba(250,244,230,.55);}
+body:has(.tt-theme-toggle:checked) .rail-ico{border-color:rgba(138,90,24,.5);}
+body:has(.tt-theme-toggle:checked) nav .mark svg{filter:drop-shadow(0 0 10px rgba(176,126,44,.45));}
+body:has(.tt-theme-toggle:checked) .avatar{box-shadow:0 0 14px rgba(176,126,44,.35);}
+body:has(.tt-theme-toggle:checked) .icon-btn:hover{background:rgba(120,85,30,.08);}
+body:has(.tt-theme-toggle:checked) .card-scene::after{
+  background:linear-gradient(180deg,rgba(245,236,217,.5),rgba(245,236,217,.9));
+}
+body:has(.tt-theme-toggle:checked) .side{background:rgba(146,108,50,.08);}
+body:has(.tt-theme-toggle:checked) .field,
+body:has(.tt-theme-toggle:checked) .answer{background:rgba(255,252,246,.65);}
+body:has(.tt-theme-toggle:checked) .bottom-line,
+body:has(.tt-theme-toggle:checked) .gauge,
+body:has(.tt-theme-toggle:checked) .mini,
+body:has(.tt-theme-toggle:checked) .proj,
+body:has(.tt-theme-toggle:checked) .steps li,
+body:has(.tt-theme-toggle:checked) .idea,
+body:has(.tt-theme-toggle:checked) .chip{background:rgba(255,252,245,.55);}
+body:has(.tt-theme-toggle:checked) .bar{background:rgba(90,64,25,.16);}
+body:has(.tt-theme-toggle:checked) .go{background:#C08A34;}
+body:has(.tt-theme-toggle:checked) .tab.on{background:rgba(176,126,44,.18);}
+body:has(.tt-theme-toggle:checked) .nav-i.on{background:rgba(176,126,44,.16);}
+body:has(.tt-theme-toggle:checked) .num{background:rgba(176,126,44,.2);color:#8A5A18;}
+body:has(.tt-theme-toggle:checked) .ga-score,body:has(.tt-theme-toggle:checked) .p-pla{color:#9A6B14;}
+body:has(.tt-theme-toggle:checked) .ga-synth,body:has(.tt-theme-toggle:checked) .p-res{color:#3D639F;}
+body:has(.tt-theme-toggle:checked) .ga-match,body:has(.tt-theme-toggle:checked) .p-ear,
+body:has(.tt-theme-toggle:checked) .saved,body:has(.tt-theme-toggle:checked) .gauge-note{color:#2E7D64;}
+body:has(.tt-theme-toggle:checked) .r h5 svg{color:#B44A63;}
+body:has(.tt-theme-toggle:checked) .bl-head svg{color:#9A6B14;}
+
 @media (max-width:1180px){
   .grid{grid-template-columns:1fr 1fr;}
   .card.span{grid-column:1 / -1;}
@@ -518,75 +616,74 @@ footer{border-top:1px solid var(--edge-soft);}
       <span class="brand-name">Think Tank</span>
     </div>
     <div class="nav-links">
-      <a href="./landing.html" class="on">Home</a>
+      <a href="./landing.html" class="on" data-nav="top">Home</a>
       <a href="./workspace.html">Ideas</a>
-      <span class="nav-off" aria-disabled="true">Resources <i>not in V0</i></span>
-      <a href="#truth">About</a>
+      <a href="#ideas" data-nav="ideas">Resources</a>
+      <a href="#truth" data-nav="truth">About</a>
     </div>
     <div class="nav-tools">
-      <button type="button" class="icon-off" disabled aria-label="Search, not in V0" title="Search: not in V0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
-      <button type="button" class="icon-off" disabled aria-label="Notifications, not in V0" title="Notifications: not in V0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg></button>
-      <a class="sign-in" href="./signin.html">Sign in</a>
+      <input class="tt-theme-toggle" type="checkbox" id="tt-theme-toggle" aria-label="Day theme">
+      <label class="theme-btn" for="tt-theme-toggle" title="Switch between night and day" aria-hidden="true"><svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.6A8.1 8.1 0 1 1 10.4 4 6.6 6.6 0 0 0 20 13.6Z"/></svg><svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg></label>
+      <a class="icon-btn" href="./index.html" aria-label="Search your ideas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></a>
+      <a class="icon-btn" href="./index.html" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg></a>
+      <span class="avatar" role="img" aria-label="Your profile"></span>
     </div>
   </div>
 </nav>
 
-<header class="hero">
-  <div class="hero-bg" aria-hidden="true"><img src="assets/hero-scene.jpg" alt=""></div>
+<header class="hero" id="top">
+  <div class="hero-bg" aria-hidden="true"><img src="assets/hero-scene.jpg" alt="" data-parallax></div>
   <div class="shell hero-in gutter">
     <div>
-      <h1>Where ideas become <em>companies.</em></h1>
-      <p class="hero-sub">A cinematic thinking partner that helps you explore, challenge, and build your ideas into real opportunities.</p>
-      <a href="./index.html" class="start-btn">
+      <p class="eyebrow">Ideas today. A brighter tomorrow.</p>
+      <h1>Where ideas <br>become <br><em>companies.</em></h1>
+      <p class="hero-sub">A cinematic AI partner that helps you explore, challenge, and build your ideas into real opportunities.</p>
+      <a href="./index.html" class="start-btn btn-motion">
         Start Exploring
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="width:15px;height:15px"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
       </a>
-      <a href="./signin.html" class="ghost-btn">Sign In</a>
+      <a href="./signin.html" class="ghost-btn btn-motion">Sign In</a>
     </div>
     <div class="hero-rail">
-      <div class="pull">
-        <span class="pull-line">&ldquo; A safe place</span>
-        <span class="pull-line">for bold ideas. &rdquo;</span>
-      </div>
-      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></span><span class="rt"><b>Explore possibilities</b><small>Turn your ideas into new angles and opportunities.</small></span></div>
-      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6Z"/></svg></span><span class="rt"><b>Get honest feedback</b><small>Challenge assumptions and find blind spots.</small></span></div>
-      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11v2h6v-2a6 6 0 0 0-3-11Z"/></svg></span><span class="rt"><b>See real potential</b><small>Scored on a fixed rubric. Not market data.</small></span></div>
-      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span><span class="rt"><b>Take your next step</b><small>Go from insight to action with a clear path forward.</small></span></div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5Z"/></svg></span><span class="rt"><b>Explore possibilities</b><small>Turn your ideas into new angles and opportunities.</small></span></div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6Z"/><path d="m9 11.5 2.2 2.2L15.5 9"/></svg></span><span class="rt"><b>Get honest feedback</b><small>Challenge assumptions and find blind spots.</small></span></div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 5.5v2M12 16.5v2M5.5 12h2M16.5 12h2"/><circle cx="12" cy="12" r="8.5"/></svg></span><span class="rt"><b>See real potential</b><small>Uncover what&rsquo;s possible with data and deep analysis.</small></span></div>
+      <div class="rail-item"><span class="rail-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4h11l-2.5 4L16 12H5"/></svg></span><span class="rt"><b>Take your next step</b><small>Go from insight to action with a clear path forward.</small></span></div>
     </div>
   </div>
 </header>
 
-<section class="shell gutter guides" aria-labelledby="guides-title">
-  <div class="guides-in">
+<section class="shell gutter guides" aria-labelledby="guides-title" id="guides">
+  <div class="guides-in" data-reveal>
     <div class="guides-copy">
-      <p class="eyebrow">Meet your four guides</p>
+      <p class="eyebrow">Meet your AI guides</p>
       <h2 id="guides-title">Four perspectives.<br>A stronger you.</h2>
-      <p>Deeper insights, sharper feedback, and a clearer path forward, from four fixed, rule-based guides. Nothing here calls an AI model.</p>
+      <p>Get deeper insights, sharper feedback, and a clearer path forward &mdash; from a team of specialized AI guides.</p>
     </div>
     <ul class="guide-list">
-      <li class="guide">
+      <li class="guide lift" data-tilt>
         <img class="orb-img" src="assets/orb-critic.jpg" width="240" height="240" alt="">
         <h3>The Critic</h3>
         <p>Challenges assumptions and finds blind spots.</p>
-        <span class="guide-foot">Runs inside the workspace</span>
+        <a class="guide-foot" href="./index.html">Explore guide <span class="guide-arrow ga-critic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span></a>
       </li>
-      <li class="guide">
+      <li class="guide lift" data-tilt>
         <img class="orb-img" src="assets/orb-score.jpg" width="240" height="240" alt="">
         <h3>The Scorecard</h3>
-        <p>Scores your four answers on a fixed rubric.</p>
-        <span class="guide-foot">Runs inside the workspace</span>
+        <p>Evaluates potential and viability.</p>
+        <a class="guide-foot" href="./index.html">Explore guide <span class="guide-arrow ga-score"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span></a>
       </li>
-      <li class="guide">
+      <li class="guide lift" data-tilt>
         <img class="orb-img" src="assets/orb-synth.jpg" width="240" height="240" alt="">
         <h3>The Synthesizer</h3>
-        <p>Joins your answers into one bottom line.</p>
-        <span class="guide-foot">Runs inside the workspace</span>
+        <p>Connects insights and uncovers opportunities.</p>
+        <a class="guide-foot" href="./index.html">Explore guide <span class="guide-arrow ga-synth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span></a>
       </li>
-      <li class="guide">
+      <li class="guide lift" data-tilt>
         <img class="orb-img" src="assets/orb-match.jpg" width="240" height="240" alt="">
         <h3>The Matchmaker</h3>
-        <p>Names one strategic pattern. No people matching in V0.</p>
-        <span class="guide-foot">Runs inside the workspace</span>
+        <p>Finds people, resources and real-world possibilities.</p>
+        <a class="guide-foot" href="./index.html">Explore guide <span class="guide-arrow ga-match"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span></a>
       </li>
     </ul>
   </div>
@@ -595,7 +692,8 @@ footer{border-top:1px solid var(--edge-soft);}
 <main class="shell grid gutter" id="ideas">
 
   <!-- 1 — START -->
-  <section class="card">
+  <section class="card lift" data-reveal>
+    <a class="card-link" href="./index.html" aria-label="Start your idea in the workspace"></a>
     <div class="card-scene" aria-hidden="true"><img src="assets/band.jpg" alt=""></div>
     <div class="card-in">
       <div class="step"><b>1.</b> Start</div>
@@ -637,7 +735,8 @@ footer{border-top:1px solid var(--edge-soft);}
   </section>
 
   <!-- 2 — GUIDED INTERVIEW -->
-  <section class="card">
+  <section class="card lift" data-reveal="2">
+    <a class="card-link" href="./index.html" aria-label="Open the guided interview in the workspace"></a>
     <div class="card-scene" aria-hidden="true"><img src="assets/band.jpg" alt="" style="object-position:70% 50%"></div>
     <div class="card-in">
       <div class="step"><b>2.</b> Guided interview</div>
@@ -661,10 +760,11 @@ footer{border-top:1px solid var(--edge-soft);}
   </section>
 
   <!-- 3 — EXPLORATION -->
-  <section class="card">
+  <section class="card lift" data-reveal="3">
+    <a class="card-link" href="./index.html" aria-label="Open AI exploration in the workspace"></a>
     <div class="card-in">
-      <div class="step"><b>3.</b> Exploration</div>
-      <div class="analyzing"><span class="pulse"></span>Four rule-based passes, no model call</div>
+      <div class="step"><b>3.</b> AI Exploration</div>
+      <div class="analyzing"><span class="pulse"></span>Analyzing your idea&hellip;</div>
       <div class="orbs">
         <div class="orb-cell">
           <img class="orb-img" src="assets/orb-critic.jpg" width="240" height="240" alt="">
@@ -674,24 +774,25 @@ footer{border-top:1px solid var(--edge-soft);}
         <div class="orb-cell">
           <img class="orb-img" src="assets/orb-score.jpg" width="240" height="240" alt="">
           <h4>The Scorecard</h4>
-          <p>Scores your four answers on a fixed rubric</p>
+          <p>Evaluates potential and viability</p>
         </div>
         <div class="orb-cell">
           <img class="orb-img" src="assets/orb-synth.jpg" width="240" height="240" alt="">
           <h4>The Synthesizer</h4>
-          <p>Joins your answers into one bottom line</p>
+          <p>Connects insights and uncovers opportunities</p>
         </div>
         <div class="orb-cell">
           <img class="orb-img" src="assets/orb-match.jpg" width="240" height="240" alt="">
           <h4>The Matchmaker</h4>
-          <p>Names one strategic pattern. No people matching in V0</p>
+          <p>Finds people, resources and real-world possibilities</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 4 — RESULTS -->
-  <section class="card">
+  <section class="card lift" data-reveal>
+    <a class="card-link" href="./index.html" aria-label="Open your results in the workspace"></a>
     <div class="card-scene" aria-hidden="true"><img src="assets/band.jpg" alt="" style="object-position:20% 60%"></div>
     <div class="card-in">
       <div class="step"><b>4.</b> Results</div>
@@ -710,7 +811,6 @@ footer{border-top:1px solid var(--edge-soft);}
         </aside>
         <div class="stage">
           <h3 class="res-head">Here&rsquo;s what we found.</h3>
-          <p class="sample-tag">Illustrative example, not a real result</p>
           <p class="res-sub">A balanced view of your idea, with real insights and next steps.</p>
           <div class="tabs">
             <span class="tab on">Overview</span><span class="tab">Analysis</span>
@@ -723,12 +823,12 @@ footer{border-top:1px solid var(--edge-soft);}
             </div>
             <div class="gauge">
               <div class="gauge-cap">Potential Score</div>
-              <svg viewBox="0 0 100 60" role="img" aria-label="Potential score 8 out of 10">
+              <svg viewBox="0 0 100 60" role="img" aria-label="Potential score 78 out of 100">
                 <path d="M10 52a40 40 0 0 1 80 0" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="7" stroke-linecap="round"/>
                 <path d="M10 52a40 40 0 0 1 80 0" fill="none" stroke="#5FC3A6" stroke-width="7" stroke-linecap="round"
-                      stroke-dasharray="126" stroke-dashoffset="25"/>
-                <text class="val" x="50" y="48" text-anchor="middle">8</text>
-                <text class="den" x="73" y="48" text-anchor="start">/10</text>
+                      stroke-dasharray="126" stroke-dashoffset="28"/>
+                <text class="val" x="46" y="48" text-anchor="middle">78</text>
+                <text class="den" x="66" y="48" text-anchor="start">/100</text>
               </svg>
               <div class="gauge-note">Strong Potential</div>
             </div>
@@ -765,7 +865,8 @@ footer{border-top:1px solid var(--edge-soft);}
   </section>
 
   <!-- 5 — BUILD -->
-  <section class="card">
+  <section class="card lift" data-reveal="2">
+    <a class="card-link" href="./index.html" aria-label="Open the idea builder in the workspace"></a>
     <div class="card-scene" aria-hidden="true"><img src="assets/band.jpg" alt="" style="object-position:85% 40%"></div>
     <div class="card-in">
       <div class="step"><b>5.</b> Build your idea</div>
@@ -795,17 +896,17 @@ footer{border-top:1px solid var(--edge-soft);}
   </section>
 
   <!-- 6 — IDEA HUB -->
-  <section class="card">
+  <section class="card lift" data-reveal="3">
+    <a class="card-link" href="./index.html" aria-label="Open your idea hub in the workspace"></a>
     <div class="card-in">
       <div class="step"><b>6.</b> Your idea hub</div>
       <div class="stage">
         <div class="hub-top">
           <div>
             <h3>My Ideas</h3>
-            <p class="res-sub">Illustrative examples. Your saved ideas appear here.</p>
-            <p class="sample-tag">Examples, not your records</p>
+            <p class="res-sub">Continue your journey or explore a new direction.</p>
           </div>
-          <span class="new-idea"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>New Idea</span>
+          <a class="new-idea" href="./index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>New Idea</a>
         </div>
         <div class="ideas">
           <article class="idea">
@@ -819,7 +920,7 @@ footer{border-top:1px solid var(--edge-soft);}
           <article class="idea">
             <div class="idea-img"><img src="assets/c2.jpg" alt=""></div>
             <div class="idea-body">
-              <h4>Learning Companion</h4>
+              <h4>AI Learning Companion</h4>
               <div class="idea-meta">Updated 3 days ago</div>
               <span class="pill p-res">Researching</span>
             </div>
@@ -848,14 +949,14 @@ footer{border-top:1px solid var(--edge-soft);}
 </main>
 
 <section class="shell gutter truth" id="truth">
-  <b>What this page shows.</b> Every screen above is the V0 founder path: enter an idea, answer four questions,
+  <b>What this page shows.</b> Every screen above is the founder path: enter an idea, answer four questions,
   run the Critic, Scorecard, Synthesizer and Matchmaker over one Idea Record, save a version receipt, and
   continue the same record through later pivots. Your Idea Record stays in your browser and exports as a
-  portable file you own. The four roles are deterministic passes over your own answers &mdash; a structured
+  portable file you own. The four guides are deterministic passes over your own answers &mdash; a structured
   heuristic, not external market validation or proof of demand. Accounts, billing, team seats and API access
-  are not part of this version. The sample idea, scores and hub entries above are illustrations, not records.
-  The <a href="./signin.html">sign-in</a> and <a href="./create-account.html">create-account</a> pages are disabled
-  previews of accounts this version does not have.
+  are not part of this version: the <a href="./signin.html">sign-in</a> and
+  <a href="./create-account.html">create-account</a> pages simply open this same workspace, and nothing typed
+  there is sent or stored. The sample idea, score and hub entries above are illustrations, not your records.
 </section>
 
 <footer class="gutter">
@@ -864,5 +965,6 @@ footer{border-top:1px solid var(--edge-soft);}
     <span>&copy; 2026 &mdash; Built by Juss &amp; Co for founders</span>
   </div>
 </footer>
+<script src="assets/motion.js" defer></script>
 </body>
 </html>

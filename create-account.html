@@ -4,12 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Create account · Think Tank</title>
-<meta name="description" content="Account creation is not part of this version. This is a disabled preview of the layout; nothing you enter is sent or saved.">
+<meta name="description" content="Create your Think Tank account and turn your ideas into opportunities.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="assets/auth.css">
+<link rel="stylesheet" href="assets/motion.css">
 </head>
 <body>
-<div class="bg" aria-hidden="true"><img src="assets/hero-scene.jpg" alt=""></div>
+<div class="bg" aria-hidden="true"><img src="assets/hero-scene.jpg" alt="" data-parallax></div>
 
 <header class="top gutter">
   <div class="top-in">
@@ -22,119 +23,134 @@
     <nav class="nav-links" aria-label="Main">
       <a href="./landing.html">Home</a>
       <a href="./index.html">Ideas</a>
-      <span class="nav-off" aria-disabled="true">Resources <i>not in V0</i></span>
+      <a href="./landing.html#ideas">Resources</a>
       <a href="./landing.html#truth">About</a>
     </nav>
     <div class="nav-tools">
-      <button type="button" class="icon-off" disabled aria-label="Search, not in V0" title="Search: not in V0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
-      <button type="button" class="icon-off" disabled aria-label="Notifications, not in V0" title="Notifications: not in V0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg></button>
+      <input class="tt-theme-toggle" type="checkbox" id="tt-theme-toggle" aria-label="Day theme">
+      <label class="theme-btn" for="tt-theme-toggle" title="Switch between night and day" aria-hidden="true"><svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.6A8.1 8.1 0 1 1 10.4 4 6.6 6.6 0 0 0 20 13.6Z"/></svg><svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg></label>
+      <a class="icon-btn" href="./index.html" aria-label="Search your ideas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></a>
+      <a class="icon-btn" href="./index.html" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg></a>
+      <span class="avatar" role="img" aria-label="Your profile"></span>
     </div>
   </div>
 </header>
 
 <main class="main gutter">
-  <section class="hero-copy" aria-labelledby="hero-title">
+  <section class="hero-copy" aria-labelledby="hero-title" data-reveal>
     <p class="kicker-line">Ideas today. A brighter tomorrow.</p>
     <h1 id="hero-title">Turn your ideas into <em>opportunities.</em></h1>
-    <p class="lede">Join Think Tank, a thinking partner that helps you explore, challenge, and build your ideas into real opportunities.</p>
+    <p class="lede">Join Think Tank, the AI partner that helps you explore, challenge, and build your ideas into real opportunities.</p>
 
     <div class="rail">
       <div class="rail-item">
-        <span class="rail-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></span>
+        <span class="rail-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5Z"/></svg></span>
         <div><b>Explore possibilities</b><small>Turn your ideas into new angles and opportunities.</small></div>
       </div>
       <div class="rail-item">
-        <span class="rail-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6Z"/></svg></span>
+        <span class="rail-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6Z"/><path d="m9 11.5 2.2 2.2L15.5 9"/></svg></span>
         <div><b>Get honest feedback</b><small>Challenge assumptions and find blind spots.</small></div>
       </div>
       <div class="rail-item">
-        <span class="rail-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+        <span class="rail-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 5.5v2M12 16.5v2M5.5 12h2M16.5 12h2"/><circle cx="12" cy="12" r="8.5"/></svg></span>
         <div><b>Take your next step</b><small>Go from insight to action with a clear path forward.</small></div>
       </div>
     </div>
 
-    <p class="quote">&ldquo;A safe place for bold ideas.&rdquo;</p>
+    <blockquote class="quote">
+      <p>&ldquo;A safe place<br>for bold ideas.&rdquo;</p>
+      <cite>Think Tank</cite>
+    </blockquote>
   </section>
 
-  <section class="card" aria-labelledby="create-title">
+  <section class="card" aria-labelledby="create-title" data-reveal="2" data-tilt>
     <p class="kicker">Join Think Tank</p>
     <h2 id="create-title">Create your account.</h2>
 
-    <div class="notice" role="note">
-      <strong>Not in V0.</strong> Account creation is not part of this version. This page previews the layout; nothing you enter is sent or saved.
-    </div>
+    <!-- Entry form: per the founder's 2026-10-25 decision this navigates
+         straight into the workspace. Nothing typed here is sent or stored. -->
+    <form id="create-form" action="./index.html" method="get">
+      <fieldset class="roles">
+        <legend class="sub">Choose how you&rsquo;ll use Think Tank to get started.</legend>
+        <div class="role-grid">
+          <label class="role">
+            <input type="radio" name="role" value="founder" checked>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M14 4c3 0 5 2 6 6-3 3-6 4-9 4l-4-4c0-3 2-6 7-6Z"/><path d="m8 12-3 3m0 0 2 2 2 0 0-2 0-2M5 18l-2 2"/><circle cx="15" cy="9" r="1.2"/></svg>
+            <b>Founder</b><small>Build and launch opportunities</small>
+          </label>
+          <label class="role">
+            <input type="radio" name="role" value="creator">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>
+            <b>Creator</b><small>Turn ideas into content</small>
+          </label>
+          <label class="role">
+            <input type="radio" name="role" value="learner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5Z"/><path d="M6 11v5c2 2 10 2 12 0v-5"/></svg>
+            <b>Learner</b><small>Explore and grow</small>
+          </label>
+          <label class="role">
+            <input type="radio" name="role" value="partner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M3 20c.6-3.4 3-5 6-5s5.4 1.6 6 5M15 15c2.6 0 4.6 1.4 5 4"/></svg>
+            <b>Partner</b><small>Collaborate and invest</small>
+          </label>
+        </div>
+      </fieldset>
 
-    <fieldset class="roles" disabled>
-      <legend class="sub">Choose how you&rsquo;ll use Think Tank to get started. <span class="tag">Not in V0</span></legend>
-      <div class="role-grid">
-        <label class="role">
-          <input type="radio" name="role" value="founder" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M14 4c3 0 5 2 6 6-3 3-6 4-9 4l-4-4c0-3 2-6 7-6Z"/><path d="m8 12-3 3m0 0 2 2 2 0 0-2 0-2M5 18l-2 2"/><circle cx="15" cy="9" r="1.2"/></svg>
-          <b>Founder</b><small>Build and launch opportunities</small>
-        </label>
-        <label class="role">
-          <input type="radio" name="role" value="creator" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>
-          <b>Creator</b><small>Turn ideas into content</small>
-        </label>
-        <label class="role">
-          <input type="radio" name="role" value="learner" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5Z"/><path d="M6 11v5c2 2 10 2 12 0v-5"/></svg>
-          <b>Learner</b><small>Explore and grow</small>
-        </label>
-        <label class="role">
-          <input type="radio" name="role" value="partner" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M3 20c.6-3.4 3-5 6-5s5.4 1.6 6 5M15 15c2.6 0 4.6 1.4 5 4"/></svg>
-          <b>Partner</b><small>Collaborate and invest</small>
-        </label>
-      </div>
-    </fieldset>
+      <label class="field" for="name">
+        <span class="lbl visually-hidden">Full name</span>
+        <span class="input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>
+          <input id="name" type="text" autocomplete="name" placeholder="Full name">
+        </span>
+      </label>
 
-    <label class="field" for="name">
-      <span class="lbl">Full name</span>
-      <span class="input">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>
-        <input id="name" type="text" autocomplete="name" placeholder="Full name" disabled>
-      </span>
-    </label>
+      <label class="field" for="email">
+        <span class="lbl visually-hidden">Email</span>
+        <span class="input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+          <input id="email" type="email" autocomplete="email" placeholder="Email address">
+        </span>
+      </label>
 
-    <label class="field" for="email">
-      <span class="lbl">Email</span>
-      <span class="input">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-        <input id="email" type="email" autocomplete="email" placeholder="Email address" disabled>
-      </span>
-    </label>
+      <label class="field" for="password">
+        <span class="lbl visually-hidden">Password</span>
+        <span class="input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <input id="password" type="password" autocomplete="new-password" placeholder="Password">
+          <svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </span>
+      </label>
 
-    <label class="field" for="password">
-      <span class="lbl">Password</span>
-      <span class="input">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-        <input id="password" type="password" autocomplete="new-password" placeholder="Password" disabled>
-      </span>
-    </label>
+      <label class="field" for="confirm">
+        <span class="lbl visually-hidden">Confirm password</span>
+        <span class="input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <input id="confirm" type="password" autocomplete="new-password" placeholder="Confirm password">
+          <svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </span>
+      </label>
 
-    <label class="field" for="confirm">
-      <span class="lbl">Confirm password</span>
-      <span class="input">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-        <input id="confirm" type="password" autocomplete="new-password" placeholder="Confirm password" disabled>
-      </span>
-    </label>
+      <label class="check terms"><input type="checkbox"><span>I agree to the <a href="./landing.html#truth">Terms of Service</a> and <a href="./landing.html#truth">Privacy Policy</a>.</span></label>
 
-    <div class="row">
-      <label class="check"><input type="checkbox" disabled><span>I agree to the Terms of Service and Privacy Policy.</span></label>
-    </div>
-    <p class="off" style="margin-top:6px;font-size:12px">Terms and Privacy documents are not part of V0. <small>Not in V0</small></p>
-
-    <button type="button" class="btn-primary" disabled>Create Account &rarr; <small>Not in V0</small></button>
+      <button type="submit" class="btn-primary btn-motion">Create Account <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+    </form>
 
     <div class="or">or</div>
-    <button type="button" class="btn-social" disabled><span class="g" aria-hidden="true">G</span>Continue with Google <small>Not in V0</small></button>
+    <a class="btn-social btn-motion" href="./index.html">
+      <svg class="glogo" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.3-2.1 3.7-5.2 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.7-2.9c-1 .7-2.4 1.2-4.2 1.2-3.2 0-5.9-2.1-6.8-5.1L1.3 17.2C3.3 21.2 7.3 24 12 24z"/><path fill="#FBBC05" d="M5.2 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3L1.3 6.8C.5 8.4 0 10.1 0 12s.5 3.6 1.3 5.2l3.9-2.9z"/><path fill="#EA4335" d="M12 4.7c1.8 0 3 .8 3.7 1.4l3.3-3.2C17.9 1.1 15.2 0 12 0 7.3 0 3.3 2.8 1.3 6.8l3.9 2.9c.9-2.9 3.6-5 6.8-5z"/></svg>
+      Continue with Google
+    </a>
 
-    <p class="foot">Already have an account? <a href="./signin.html">Sign In &rarr;</a></p>
-    <a class="open" href="./index.html">Open the workspace without an account</a>
+    <p class="foot">Already have an account? <a href="./signin.html">Sign in &rarr;</a></p>
   </section>
 </main>
+<script>
+  // Entry, not account creation: discard anything typed and open the workspace.
+  document.getElementById('create-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    window.location.href = './index.html';
+  });
+</script>
+<script src="assets/motion.js" defer></script>
 </body>
 </html>
