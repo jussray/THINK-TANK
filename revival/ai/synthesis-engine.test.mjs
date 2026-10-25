@@ -24,7 +24,7 @@ test('synthesis prepares only explicit idea and interview answers, not private w
 
 test('draft package includes complete June module suite and never mutates founder record', async () => {
   const before = JSON.stringify(record);
-  const draft = await generateDraftPackage({ record }, async () => fakeOutput);
+  const draft = await generateDraftPackage({ record, externalAIConsent:true }, async () => fakeOutput);
   assert.deepEqual(Object.keys(draft.modules), MODULE_NAMES);
   assert.equal(draft.validationStatus, 'unverified-founder-hypotheses');
   assert.equal(draft.status, 'pending-founder-review');
@@ -35,7 +35,7 @@ test('draft package includes complete June module suite and never mutates founde
 test('parse rejects unsupported or incomplete model output without changing any state', async () => {
   assert.throws(() => parseDraftPackage('nonsense'), /valid JSON/);
   assert.throws(() => parseDraftPackage(JSON.stringify({modules:{summary:'Only a summary'}})), /module problem/);
-  await assert.rejects(generateDraftPackage({ record }, async () => '{}'), /modules object/);
+  await assert.rejects(generateDraftPackage({ record, externalAIConsent:true }, async () => '{}'), /modules object/);
 });
 
 test('synthesis removes arbitrary model-authored fields instead of trusting them', () => {
@@ -46,6 +46,9 @@ test('synthesis removes arbitrary model-authored fields instead of trusting them
 });
 
 test('provider use is opt-in and record must be scoped to one idea', async () => {
-  await assert.rejects(generateDraftPackage({ record }), /consented model provider/);
+  await assert.rejects(generateDraftPackage({ record, externalAIConsent:true }), /consented model provider/);
+  let calls=0;
+  await assert.rejects(generateDraftPackage({ record }, async () => { calls++; return fakeOutput; }), /Founder consent/);
+  assert.equal(calls,0);
   assert.throws(() => prepareSynthesis({record: {...record, answers: 'invalid'}}), /answers are invalid/);
 });
