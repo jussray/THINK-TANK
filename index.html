@@ -333,7 +333,17 @@ function appendText(parent,tag,text,className){const node=document.createElement
 function renderVisualResults(r){const ready=Boolean(r && r.status==='complete' && r.scorecard);$('resultsStatus').textContent=ready?'Scored · heuristic':'Awaiting interview';$('resultsEmpty').classList.toggle('hidden',ready);$('resultsLive').classList.toggle('hidden',!ready);if(!ready)return;$('resultIdea').textContent=r.idea;$('resultScore').textContent=(r.scorecard.total??'n/a')+'/10';$('resultBottomLine').textContent='Heuristic total '+r.scorecard.total+'/10 from your four answers. Demand is unverified: treat this as a first pass, not evidence.';const s=r.scorecard;[['barMarket','valMarket',s.market],['barDifferentiation','valDifferentiation',s.differentiation],['barTiming','valTiming',s.timing]].forEach(([bar,val,n])=>{$(bar).style.width=`${Math.max(0,Math.min(10,Number(n)||0))*10}%`;$(val).textContent=`${n??'n/a'}/10`});const m=r.modules||{};$('resultCustomer').textContent=m.customer||'Not recorded';$('resultAlternative').textContent=m.alternative||'Not recorded';$('resultWedge').textContent=m.wedge||'Not recorded';$('resultMoat').textContent=m.moat||'Not recorded';$('resultCritique').textContent=r.critique||'No critique recorded.';$('resultPattern').textContent=r.pattern||'No strategic pattern recorded.'}
 async function renderHub(r){
   const list=$('hubList');list.textContent='';
-  const saved=await ideaStore.listRecords();
+  let saved;
+  try{saved=await ideaStore.listRecords()}
+  catch(error){
+    // Never erase, normalize over, or render invalid user data. Keep the
+    // specific error already surfaced by load() visible for recovery.
+    appendText(list,'p','Saved ideas could not be opened because local data is invalid. Nothing was changed.','muted');
+    if(!$('portabilityStatus').textContent.includes('refused')){
+      setPortabilityStatus('Stored Idea Record refused: '+errorMessage(error));
+    }
+    return;
+  }
   if(!saved.length){appendText(list,'p','No ideas yet. Describe one in the Start panel.','muted');return}
   for(const itemRecord of saved){
     const item=document.createElement('article');item.className='hub-item';
