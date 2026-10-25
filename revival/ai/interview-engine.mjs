@@ -94,6 +94,9 @@ export function extractQuestion(raw) {
 }
 
 export async function interviewTurn(input, provider) {
+  // The caller must obtain and verify founder-scoped consent before passing
+  // it here. No outbound provider invocation is allowed on the default path.
+  if (input?.externalAIConsent !== true) throw new Error('Founder consent for external AI interview is required');
   if (typeof provider !== 'function') throw new TypeError('a consented model provider is required');
   const prepared = prepareInterview(input);
   const raw = await provider({ system: prepared.system, messages: prepared.messages });
