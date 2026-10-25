@@ -12,7 +12,11 @@ const allowed = new Set([
   'scripts/check-domain-purity.mjs',
   'tests/scripts/gate-mutation.test.js',
   // Browser proof asserting on persisted state is verification, not app access.
-  'tests/interview.spec.js'
+  'tests/interview.spec.js',
+  // Display preference only: motion.js persists the 'tt-theme' day/night
+  // flag (founder addendum 2026-10-25). It never reads or writes Idea
+  // Record data — records still flow solely through app/stores.
+  'assets/motion.js'
 ]);
 
 // The V0 application controller is the inline <script> in index.html, and the

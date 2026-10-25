@@ -13,6 +13,8 @@ const requiredFiles = [
   'signin.html',
   'create-account.html',
   'assets/auth.css',
+  'assets/motion.css',
+  'assets/motion.js',
   'assets/cinematic-app.css',
   'assets/hero-scene.jpg',
   'assets/band.jpg',
