@@ -65,7 +65,8 @@ export function parseDraftPackage(raw) {
   return modules; // allowlisted only; never persist unknown model-authored fields
 }
 
-export async function generateDraftPackage({ record }, provider) {
+export async function generateDraftPackage({ record, externalAIConsent = false }, provider) {
+  if (externalAIConsent !== true) throw new Error('Founder consent for external AI synthesis is required');
   if (typeof provider !== 'function') throw new TypeError('a consented model provider is required');
   const { ideaId, system, messages } = prepareSynthesis({ record });
   const response = await provider({ system, messages });
