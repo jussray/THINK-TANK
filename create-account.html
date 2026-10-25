@@ -144,13 +144,7 @@
     <p class="foot">Already have an account? <a href="./signin.html">Sign in &rarr;</a></p>
   </section>
 </main>
-<script>
-  // Entry, not account creation: discard anything typed and open the workspace.
-  document.getElementById('create-form').addEventListener('submit', function (event) {
-    event.preventDefault();
-    window.location.href = './index.html';
-  });
-</script>
+<script src="assets/auth-entry.js"></script>
 <script src="assets/motion.js" defer></script>
 </body>
 </html>

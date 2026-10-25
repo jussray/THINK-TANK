@@ -8,14 +8,15 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '..', '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const controller = fs.readFileSync(path.join(root, 'app/index-page.js'), 'utf8');
 
 test('New idea no longer calls reset() directly', () => {
   assert.doesNotMatch(
-    html,
+    controller,
     /\$\('resetBtn'\)\.addEventListener\('click',\(\)=>void runCapability\(C\.IDEA_EDIT,reset\)\)/,
     'resetBtn must open the confirmation, not delete the record'
   );
-  assert.match(html, /\$\('resetBtn'\)\.addEventListener\('click',\(\)=>showResetConfirm\(\)\)/);
+  assert.match(controller, /\$\('resetBtn'\)\.addEventListener\('click',\(\)=>showResetConfirm\(\)\)/);
 });
 
 test('confirmation container, warning copy and both actions exist', () => {
@@ -27,7 +28,7 @@ test('confirmation container, warning copy and both actions exist', () => {
 });
 
 test('only the explicit delete action reaches reset(), via confirmReset', () => {
-  assert.match(html, /\$\('resetDelete'\)\.addEventListener\('click',\(\)=>void runCapability\(C\.IDEA_EDIT,confirmReset\)\)/);
-  assert.match(html, /async function confirmReset\(\)\{hideResetConfirm\(\);await reset\(\)\}/);
-  assert.match(html, /\$\('resetCancel'\)\.addEventListener\('click',\(\)=>hideResetConfirm\(\)\)/);
+  assert.match(controller, /\$\('resetDelete'\)\.addEventListener\('click',\(\)=>void runCapability\(C\.IDEA_EDIT,confirmReset\)\)/);
+  assert.match(controller, /async function confirmReset\(\)\{hideResetConfirm\(\);await reset\(\)\}/);
+  assert.match(controller, /\$\('resetCancel'\)\.addEventListener\('click',\(\)=>hideResetConfirm\(\)\)/);
 });
