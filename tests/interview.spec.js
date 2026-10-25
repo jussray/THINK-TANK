@@ -116,6 +116,7 @@ test('in-progress portable record resumes after import', async ({ page }) => {
 test('new idea from Start preserves the previous idea as an independent record', async ({ page }) => {
   await completeInterview(page, 'First idea kept separate from the second idea');
   const first = await downloadRecord(page);
+  await page.reload(); // show the Start panel again after a completed interview
 
   await page.getByTestId('idea-input').fill('Second independent idea about a different user need');
   await page.getByTestId('start-interview').click();
@@ -140,8 +141,9 @@ test('restarting an incomplete interview with the same idea resumes answers with
   await answerInterview(page, DEFAULT_ANSWERS.slice(0, 2));
   const before = await downloadRecord(page);
   await page.reload();
-  await page.getByTestId('idea-input').fill(DEFAULT_IDEA);
-  await page.getByTestId('start-interview').click();
+  // The protected resume branch is also called directly: the input stays
+  // hidden during an active interview and must never reset existing answers.
+  await page.evaluate(async (idea) => { document.getElementById('ideaInput').value = idea; await start(); }, DEFAULT_IDEA);
 
   await expect(page.locator('#sessionState')).toHaveText('QUESTION 3/4');
   const after = await downloadRecord(page);
