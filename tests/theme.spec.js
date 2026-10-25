@@ -47,10 +47,10 @@ for (const { path, surface } of PAGES) {
   });
 }
 
-test('day theme renders with JavaScript disabled (pure CSS mechanism)', async ({ browser }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false });
+test('day theme renders with JavaScript disabled (pure CSS mechanism)', async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
   const page = await context.newPage();
-  await page.goto('http://127.0.0.1:4173/signin.html');
+  await page.goto('/signin.html');
   expect(await ink(page)).toBe('#F3EFFA');
   const nightBg = await surfaceBg(page, '.card');
   await page.locator('.theme-btn').click();
