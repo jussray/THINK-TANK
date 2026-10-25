@@ -36,7 +36,9 @@ test('every provider turn is reduced to one founder-facing question without muta
   assert.equal(result.source, 'provider-generated-unverified');
   assert.equal(history.length, 2);
   assert.equal(record.idea, 'An app that helps founders clarify their startup ideas');
-  assert.equal(sent[0].messages[0].content, 'Founder idea: ' + record.idea);
+  assert.ok(sent[0].messages[0].content.startsWith('Founder idea: ' + record.idea));
+  assert.deepEqual(sent[0].messages.map(m => m.role), ['user','assistant','user']);
+  assert.ok(sent[0].messages[0].content.includes('My audience is students.'));
 });
 
 test('model input contains only the explicitly selected idea and supplied history', () => {
