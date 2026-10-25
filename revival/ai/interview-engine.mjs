@@ -56,11 +56,14 @@ export function prepareInterview({ record, history = [], answer = null }) {
   const ideaId = requireText(record.id, 'record.id', 200);
   const idea = requireText(record.idea, 'record.idea', 4000);
   const prior = normalizeHistory(history);
-  const messages = [
-    { role: 'user', content: 'Founder idea: ' + idea },
-    { role: 'assistant', content: 'What specific problem are you trying to solve?' },
-    ...prior
-  ];
+  const messages = [{ role: 'user', content: 'Founder idea: ' + idea }];
+  // First turn: let the cofounder ask its first genuine question. For a
+  // pre-existing V0 answer, add a synthetic first interviewer prompt only
+  // when the caller did not supply an interview transcript.
+  if (answer !== null && prior.length === 0) {
+    messages.push({ role: 'assistant', content: 'What specific problem are you trying to solve?' });
+  }
+  messages.push(...prior);
   if (answer !== null) messages.push({ role: 'user', content: requireText(answer, 'answer') });
   if (messages[messages.length - 1].role !== 'user') {
     throw new TypeError('the latest turn must be from the founder');
