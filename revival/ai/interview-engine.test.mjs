@@ -12,6 +12,13 @@ test('June founder interview dimensions are retained in the revived agent prompt
   assert.equal(plan.ideaId, record.id);
 });
 
+test('a new idea can request its first adaptive question without fake history', async () => {
+  const plan = prepareInterview({ record });
+  assert.deepEqual(plan.messages, [{role:'user',content:'Founder idea: '+record.idea}]);
+  const turn = await interviewTurn({ record }, async () => 'Who first experiences this problem?');
+  assert.equal(turn.question, 'Who first experiences this problem?');
+});
+
 test('every provider turn is reduced to one founder-facing question without mutating state', async () => {
   const history = Object.freeze([
     Object.freeze({ role: 'user', content: 'My audience is students.' }),
