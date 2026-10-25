@@ -585,7 +585,14 @@ body:has(.tt-theme-toggle:checked) .bl-head svg{color:#9A6B14;}
   .grid{grid-template-columns:1fr;}
   .card.span{grid-column:auto;}
   .hero-in{grid-template-columns:1fr;padding-block:56px 46px;}
-  .brand-name{font-size:13px;}
+  /* Phone nav must fit its own row: at desktop gaps the brand + tools are
+     ~372px of fixed content and spill past a 358px (390px screen) row —
+     in some renderers that measured 1px of document overflow. Tighten the
+     gaps/letter-spacing so the row fits with real slack at 360px too. */
+  .nav-in{gap:12px;}
+  .brand{gap:8px;}
+  .brand-name{font-size:13px;letter-spacing:.08em;}
+  .nav-tools{gap:8px;}
   .hero-bg::after{
     background:
       linear-gradient(180deg,rgba(10,7,16,.3) 0%,rgba(10,7,16,.72) 40%,rgba(10,7,16,.92) 100%),
