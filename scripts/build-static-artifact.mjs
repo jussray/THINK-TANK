@@ -13,6 +13,10 @@ const requiredFiles = [
   'signin.html',
   'create-account.html',
   'assets/auth.css',
+  'assets/motion.css',
+  'assets/motion.js',
+  'assets/auth-entry.js',
+  'assets/cinematic-app.css',
   'assets/hero-scene.jpg',
   'assets/band.jpg',
   'assets/c1.jpg',
@@ -28,7 +32,9 @@ const requiredFiles = [
   'app/stores/local-idea-store.js',
   'app/domain/deterministic-engine.js',
   'app/policy/capability-service.js',
-  'app/policy/local-capability-policy.js'
+  'app/policy/local-capability-policy.js',
+  'app/index-page.js',
+  'app/workspace-page.js'
 ];
 
 function sha256(value) {

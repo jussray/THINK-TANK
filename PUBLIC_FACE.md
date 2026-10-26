@@ -61,6 +61,8 @@ was removed rather than left as a dormant second owner. A Vercel project
 also builds this repository; it is not a deployment surface for this
 product and nothing here treats its output as public truth.
 
+The review-only `.github/workflows/deploy-worker.yml` is a manual-only fallback (`workflow_dispatch`). Merging it cannot deploy. Before it can invoke Wrangler, the operator must confirm the competing Workers Builds integration is disabled, choose the exact current `main` SHA, and pass the project gates. Never run both deployers against the same Worker. `verify-live.yml` remains the separate required proof after either deployment path.
+
 ## Marketplace boundary
 
 Do not describe the project as a live SaaS merely because the repository and Playwright lane are green. Marketplace-readiness additionally requires verified public deployment and the account/persistence capabilities demanded by the target marketplace at decision time.

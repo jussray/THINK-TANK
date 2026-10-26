@@ -4,12 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Sign in · Think Tank</title>
-<meta name="description" content="Think Tank accounts are not part of this version. Sign-in is a disabled preview; your Idea Record stays in your browser.">
+<meta name="description" content="Sign in to Think Tank and continue exploring, challenging, and building your ideas into real opportunities.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="assets/auth.css">
+<link rel="stylesheet" href="assets/motion.css">
 </head>
 <body>
-<div class="bg" aria-hidden="true"><img src="assets/hero-scene.jpg" alt=""></div>
+<div class="bg" aria-hidden="true"><img src="assets/hero-scene.jpg" alt="" data-parallax></div>
 
 <header class="top gutter">
   <div class="top-in">
@@ -22,62 +23,68 @@
     <nav class="nav-links" aria-label="Main">
       <a href="./landing.html">Home</a>
       <a href="./index.html">Ideas</a>
-      <span class="nav-off" aria-disabled="true">Resources <i>not in V0</i></span>
+      <a href="./landing.html#ideas">Resources</a>
       <a href="./landing.html#truth">About</a>
     </nav>
     <div class="nav-tools">
-      <button type="button" class="icon-off" disabled aria-label="Search, not in V0" title="Search: not in V0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
-      <button type="button" class="icon-off" disabled aria-label="Notifications, not in V0" title="Notifications: not in V0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg></button>
+      <input class="tt-theme-toggle" type="checkbox" id="tt-theme-toggle" aria-label="Day theme">
+      <label class="theme-btn" for="tt-theme-toggle" title="Switch between night and day" aria-hidden="true"><svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.6A8.1 8.1 0 1 1 10.4 4 6.6 6.6 0 0 0 20 13.6Z"/></svg><svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg></label>
+      <a class="icon-btn" href="./index.html" aria-label="Search your ideas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></a>
+      <a class="icon-btn" href="./index.html" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg></a>
+      <span class="avatar" role="img" aria-label="Your profile"></span>
     </div>
   </div>
 </header>
 
 <main class="main gutter">
-  <section class="hero-copy" aria-labelledby="hero-title">
+  <section class="hero-copy" aria-labelledby="hero-title" data-reveal>
     <p class="kicker-line">Same curiosity. A brighter tomorrow.</p>
     <h1 id="hero-title">Welcome back to <em>Think Tank.</em></h1>
     <p class="lede">Pick up where you left off and keep exploring, challenging, and building your ideas into real opportunities.</p>
   </section>
 
-  <section class="card" aria-labelledby="signin-title">
-    <p class="kicker">Accounts · not in V0</p>
-    <h2 id="signin-title">Welcome back.</h2>
-    <p class="sub">Sign in to continue your journey.</p>
+  <section class="card" aria-labelledby="signin-title" data-reveal="2" data-tilt>
+    <h2 id="signin-title" class="center">Welcome back.</h2>
+    <p class="sub center">Sign in to continue your journey.</p>
 
-    <div class="notice" role="note">
-      <strong>Not in V0.</strong> Accounts, sign-in and cloud sync come later. Nothing typed here is sent or saved.
-    </div>
+    <!-- Entry form: per the founder's 2026-10-25 decision this navigates
+         straight into the workspace. Nothing typed here is sent or stored. -->
+    <form id="signin-form" action="./index.html" method="get">
+      <label class="field" for="email">
+        <span class="lbl">Email</span>
+        <span class="input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+          <input id="email" type="email" autocomplete="email" placeholder="you@thinktank.ai">
+        </span>
+      </label>
 
-    <label class="field" for="email">
-      <span class="lbl">Email</span>
-      <span class="input">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-        <input id="email" type="email" autocomplete="email" placeholder="you@thinktank.ai" disabled>
-      </span>
-    </label>
+      <label class="field" for="password">
+        <span class="lbl">Password</span>
+        <span class="input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password">
+          <svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 3l18 18M10.6 6.1A9.6 9.6 0 0 1 12 6c5 0 8.5 4.5 9.5 6a13 13 0 0 1-2.4 2.9M6.3 6.8C4 8.3 2.6 10.3 2.5 12c1 1.5 4.5 6 9.5 6a9.5 9.5 0 0 0 4-.9"/></svg>
+        </span>
+      </label>
 
-    <label class="field" for="password">
-      <span class="lbl">Password</span>
-      <span class="input">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-        <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" disabled>
-        <svg class="input-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 3l18 18M10.6 6.1A9.6 9.6 0 0 1 12 6c5 0 8.5 4.5 9.5 6a13 13 0 0 1-2.4 2.9M6.3 6.8C4 8.3 2.6 10.3 2.5 12c1 1.5 4.5 6 9.5 6a9.5 9.5 0 0 0 4-.9"/></svg>
-      </span>
-    </label>
+      <div class="row">
+        <label class="check"><input type="checkbox" checked><span>Remember me</span></label>
+        <a href="./create-account.html">Forgot password?</a>
+      </div>
 
-    <div class="row">
-      <label class="check"><input type="checkbox" disabled><span>Remember me</span></label>
-      <span class="off">Forgot password? <small>Not in V0</small></span>
-    </div>
-
-    <button type="button" class="btn-primary" disabled>Sign In <small>Not in V0</small></button>
+      <button type="submit" class="btn-primary btn-motion">Sign In <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+    </form>
 
     <div class="or">or continue with</div>
-    <button type="button" class="btn-social" disabled><span class="g" aria-hidden="true">G</span>Continue with Google <small>Not in V0</small></button>
+    <a class="btn-social btn-motion" href="./index.html">
+      <svg class="glogo" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.3-2.1 3.7-5.2 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.7-2.9c-1 .7-2.4 1.2-4.2 1.2-3.2 0-5.9-2.1-6.8-5.1L1.3 17.2C3.3 21.2 7.3 24 12 24z"/><path fill="#FBBC05" d="M5.2 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3L1.3 6.8C.5 8.4 0 10.1 0 12s.5 3.6 1.3 5.2l3.9-2.9z"/><path fill="#EA4335" d="M12 4.7c1.8 0 3 .8 3.7 1.4l3.3-3.2C17.9 1.1 15.2 0 12 0 7.3 0 3.3 2.8 1.3 6.8l3.9 2.9c.9-2.9 3.6-5 6.8-5z"/></svg>
+      Continue with Google
+    </a>
 
     <p class="foot">Don&rsquo;t have an account? <a href="./create-account.html">Create one &rarr;</a></p>
-    <a class="open" href="./index.html">Open the workspace without an account</a>
   </section>
 </main>
+<script src="assets/auth-entry.js"></script>
+<script src="assets/motion.js" defer></script>
 </body>
 </html>
