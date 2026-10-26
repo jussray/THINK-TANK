@@ -29,21 +29,24 @@ https://github.com/jussray/THINK-TANK
 
 ## Live hostname roles (2026-10-22)
 
-- Public marketing entrance: `https://thinktank.jussco.company/`.
+- Public marketing entrance (canonical): `https://www.thinktank.jussco.company/`.
   Dedicated Cloudflare Worker `think-tank-public-front-door`; public root
   works with and without a query string.
-- WWW alias: `https://www.thinktank.jussco.company/`, permanent 301 to
-  the canonical public hostname, preserving path and query string.
+- Apex alias: `https://thinktank.jussco.company/`, permanent 301 to the
+  canonical www host, preserving path and query string (Cloudflare Redirect
+  Rule, managed in Cloudflare, not in this repository).
 - Protected V0 static app: `https://thinktank-app.jussco.company/`,
   served by the `think-tank` Worker under its existing Cloudflare Access
   policy. The local-first interview lives at `index.html`, and the idea
   workspace at `workspace.html`.
-- Legacy non-root URLs on the public hostname temporarily 302 to the
+- Legacy non-root URLs on the public hostnames temporarily 302 to the
   protected application hostname. The public Worker is NOT authorized to
   expose private application files or assets.
-- `wrangler.jsonc` declares the private app route exclusively. Public
-  Worker routes and redirects are managed in Cloudflare and must be
-  verified separately from every Workers Builds deployment.
+- `wrangler.jsonc` declares the private app route and the exact public
+  journey file routes on the www host only. It never declares a wildcard or
+  a Worker Custom Domain on a public hostname. The public root and the apex
+  redirect are managed in Cloudflare and must be verified separately from
+  every Workers Builds deployment.
 
 Unauthenticated Cloudflare browser tests confirmed a public homepage and
 Access protection for the private V0 workspace on 2026-10-22. This is

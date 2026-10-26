@@ -123,10 +123,10 @@ The proof chain covers:
 
 ## Public deployment boundary
 
-**Canonical public entrance:** `https://thinktank.jussco.company/` is
+**Canonical public entrance:** `https://www.thinktank.jussco.company/` is
 served by the dedicated `think-tank-public-front-door` Cloudflare Worker.
-`https://www.thinktank.jussco.company` uses a permanent 301 redirect to
-the canonical hostname, preserving paths and query strings.
+`https://thinktank.jussco.company` (apex) uses a permanent 301 redirect to
+the canonical www hostname, preserving paths and query strings.
 
 **Access-protected V0 runtime:** `https://thinktank-app.jussco.company/`
 is routed to the separate `think-tank` Worker. Its existing Cloudflare
