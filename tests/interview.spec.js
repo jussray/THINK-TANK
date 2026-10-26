@@ -79,6 +79,8 @@ test('founder can export and restore a portable V1 Idea Record', async ({ page }
   expect(payload.record.versions[0].schemaVersion).toBe('IdeaVersionV1');
 
   await page.getByTestId('new-idea').click();
+  await expect(page.getByTestId('idea-record')).toContainText('subscription service');
+  await page.getByTestId('confirm-new-idea').click();
   await expect(page.getByTestId('idea-record')).toContainText('No active record');
 
   await page.getByTestId('import-record').setInputFiles({
@@ -98,6 +100,7 @@ test('in-progress portable record resumes after import', async ({ page }) => {
   const payload = await downloadRecord(page);
 
   await page.getByTestId('new-idea').click();
+  await page.getByTestId('confirm-new-idea').click();
   await page.getByTestId('import-record').setInputFiles({
     name: 'in-progress.json',
     mimeType: 'application/json',
