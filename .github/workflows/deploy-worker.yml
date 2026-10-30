@@ -1,0 +1,100 @@
+name: deploy-worker
+
+# Deploys the Think Tank Worker from this repository's own gated build.
+#
+# Why this exists: the Cloudflare Workers Builds git integration has failed on
+# every main head since d378f32 within about a second of starting, and its build
+# log is only readable in the Cloudflare dashboard. This workflow runs the same
+# gates locally in CI, then publishes the gated _site artifact with the pinned
+# project-local Wrangler CLI.
+#
+# This is a MANUAL, explicit-cutover fallback only. Merely merging this file
+# cannot deploy. The operator must independently confirm Cloudflare Workers
+# Builds is disconnected, supply the exact current main SHA, and authorize
+# that specific deployment. The acknowledgement is not provider proof.
+# verify-live.yml remains the independent release proof.
+#
+# Requires scoped secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
+# Never disable a live Cloudflare integration based on this workflow alone.
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_main_sha:
+        description: "Full 40-character SHA of current main to deploy"
+        required: true
+        type: string
+      workers_builds_cutover_confirmed:
+        description: "Confirm the competing Cloudflare Workers Builds deployer was disabled"
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-think-tank
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      EXPECTED_MAIN_SHA: ${{ inputs.expected_main_sha }}
+      CUTOVER_CONFIRMED: ${{ inputs.workers_builds_cutover_confirmed }}
+    steps:
+      - name: Enforce founder-selected exact main and provider cutover
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$GITHUB_REF" == "refs/heads/main" ]] || { echo "::error::Dispatch from main only"; exit 1; }
+          [[ "$CUTOVER_CONFIRMED" == "true" ]] || { echo "::error::Competing Workers Builds must be disabled and independently checked"; exit 1; }
+          [[ "$EXPECTED_MAIN_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::Supply a full 40-character SHA"; exit 1; }
+          [[ "$GITHUB_SHA" == "$EXPECTED_MAIN_SHA" ]] || { echo "::error::Dispatch head and requested SHA differ"; exit 1; }
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.expected_main_sha }}
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Check current remote main before build
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$EXPECTED_MAIN_SHA" ]] || exit 1
+          CURRENT="$(git ls-remote origin refs/heads/main | cut -f1)"
+          [[ "$CURRENT" == "$EXPECTED_MAIN_SHA" ]] || { echo "::error::Main advanced; new approval required"; exit 1; }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies (Wrangler pinned in package.json)
+        run: npm install --no-audit --no-fund
+      - name: Build and gate the exact commit
+        env:
+          THINK_TANK_SOURCE_SHA: ${{ inputs.expected_main_sha }}
+          THINK_TANK_RUNTIME_ENV: cloudflare-workers
+        run: |
+          set -euo pipefail
+          npm run build
+          npm run check:storage-boundary
+          npm run check:domain-purity
+          npm run test:unit
+      - name: Refuse to deploy without credentials
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN secret is not set"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID secret is not set"; exit 1; }
+      - name: Recheck main did not move before provider mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          CURRENT="$(git ls-remote origin refs/heads/main | cut -f1)"
+          [[ "$CURRENT" == "$EXPECTED_MAIN_SHA" ]] || { echo "::error::Main moved during verification"; exit 1; }
+      - name: Deploy the gated _site artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --no-install wrangler deploy --config wrangler.jsonc
