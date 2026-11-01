@@ -1,0 +1,149 @@
+/* Think Tank motion system — modelled on the jussco.company company site:
+   smooth scrolling, a hero that parallaxes at a quarter of scroll speed,
+   sections that fade and rise as they enter the screen, cards that lift on
+   hover, all on one ease curve: cubic-bezier(.2,.7,.2,1).
+
+   CSP-FIRST: the public front door serves script-src 'none', so the reveal
+   and parallax effects are implemented with CSS scroll-driven animations
+   inside @supports. The companion motion.js is only a progressive
+   enhancement for browsers without scroll-timeline support, and it is
+   written so content is fully visible when no script ever runs:
+   the pre-reveal hidden state below applies ONLY under html.tt-anim,
+   a class motion.js adds to <html> itself before observing anything. */
+
+html{scroll-behavior:smooth;}
+
+/* ── Scroll reveals (CSS-first path) ─────────────────────────────────────
+   Elements marked [data-reveal] rise/fade via a view() timeline. Where
+   scroll timelines are unsupported nothing is hidden and nothing animates:
+   the content simply sits in its final, visible state. */
+@supports (animation-timeline: view()){
+  [data-reveal]{
+    animation:tt-reveal linear both;
+    animation-timeline:view();
+    animation-range:entry 0% entry 62%;
+  }
+  [data-reveal="2"]{animation-range:entry 6% entry 68%;}
+  [data-reveal="3"]{animation-range:entry 12% entry 74%;}
+  [data-reveal="4"]{animation-range:entry 18% entry 80%;}
+}
+@keyframes tt-reveal{
+  from{opacity:0;transform:translateY(26px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ── Hero parallax (CSS-first path) ──────────────────────────────────────
+   The hero plate drifts down at roughly a quarter of the scroll rate,
+   matching the company site's scrollY * 0.25. The plate is oversized via
+   the pages' own hero markup (scale keeps edges covered while it moves). */
+@supports (animation-timeline: scroll()){
+  [data-parallax]{
+    animation:tt-parallax linear both;
+    animation-timeline:scroll(root block);
+  }
+}
+@keyframes tt-parallax{
+  from{transform:translate3d(0,0,0) scale(1.12);}
+  to{transform:translate3d(0,120px,0) scale(1.12);}
+}
+
+/* ── JS progressive-enhancement path ─────────────────────────────────────
+   Only when motion.js has run (html.tt-anim) AND scroll timelines are
+   unavailable does the IntersectionObserver path own the reveals. The
+   @supports guard keeps the two paths from fighting: if CSS scroll-driven
+   animations exist, these rules never hide anything. */
+@supports not (animation-timeline: view()){
+  html.tt-anim [data-reveal]{
+    opacity:0;transform:translateY(26px);
+    transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);
+  }
+  html.tt-anim [data-reveal="2"]{transition-delay:.08s;}
+  html.tt-anim [data-reveal="3"]{transition-delay:.16s;}
+  html.tt-anim [data-reveal="4"]{transition-delay:.24s;}
+  html.tt-anim [data-reveal].tt-in{opacity:1;transform:translateY(0);}
+}
+
+/* ── Hover lifts (same ease + timing family as the company site) ─────── */
+.lift{
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s cubic-bezier(.2,.7,.2,1),border-color .35s cubic-bezier(.2,.7,.2,1);
+}
+.lift:hover{
+  transform:translateY(-3px) scale(1.01);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 26px 54px rgba(0,0,0,.5);
+  border-color:rgba(196,166,251,.38);
+}
+.btn-motion{
+  transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s cubic-bezier(.2,.7,.2,1),background .25s cubic-bezier(.2,.7,.2,1),border-color .25s cubic-bezier(.2,.7,.2,1);
+}
+.btn-motion:hover{transform:translateY(-1px);}
+.btn-motion:active{transform:translateY(1px);box-shadow:0 3px 12px rgba(0,0,0,.35);}
+
+/* ── Tactile glass ───────────────────────────────────────────────────────
+   Layered depth on every raised surface: a 1px inner top highlight (the
+   light a real glass edge catches), backdrop blur, and a deep soft drop
+   shadow. In day theme the same stack turns warm (see the theme section
+   below) — depth, not decoration. */
+.card,.guides-in,.guide,.role{
+  backdrop-filter:blur(16px) saturate(1.15);
+  -webkit-backdrop-filter:blur(16px) saturate(1.15);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 24px 60px rgba(2,0,10,.38);
+}
+
+/* ── Day / night toggle (pure CSS) ───────────────────────────────────────
+   The switch is a real checkbox in the nav; the theme itself is driven by
+   body:has(.tt-theme-toggle:checked) variable blocks in auth.css and in
+   landing.html's own sheet, so it works with zero JavaScript (the public
+   front door serves script-src 'none'). motion.js only persists the choice.
+   Night is the default and the brand look; the checkbox means "day". */
+.tt-theme-toggle{
+  position:absolute;width:1px;height:1px;margin:0;padding:0;
+  opacity:0;pointer-events:none;overflow:hidden;
+}
+.theme-btn{
+  width:40px;height:40px;display:grid;place-items:center;border-radius:50%;flex:none;
+  border:1px solid transparent;color:var(--ink-dim,#A99DC2);cursor:pointer;
+  transition:color .25s cubic-bezier(.2,.7,.2,1),border-color .25s cubic-bezier(.2,.7,.2,1),background .25s cubic-bezier(.2,.7,.2,1),transform .25s cubic-bezier(.2,.7,.2,1);
+}
+.theme-btn:hover{color:var(--ink,#F3EFFA);border-color:var(--edge-soft,rgba(188,160,255,.08));background:rgba(255,255,255,.04);}
+.theme-btn:active{transform:translateY(1px);}
+.theme-btn svg{width:18px;height:18px;display:block;}
+.theme-btn .ic-sun{display:none;}
+body:has(.tt-theme-toggle:checked) .theme-btn .ic-sun{display:block;}
+body:has(.tt-theme-toggle:checked) .theme-btn .ic-moon{display:none;}
+body:has(.tt-theme-toggle:checked) .theme-btn:hover{background:rgba(120,85,30,.08);}
+.tt-theme-toggle:focus-visible + .theme-btn{
+  outline:2px solid var(--violet-soft,#C4A6FB);outline-offset:2px;
+}
+
+/* Day depth: the glass stack, warm-toned (Ray: tan takes over in day). */
+body:has(.tt-theme-toggle:checked) .card,
+body:has(.tt-theme-toggle:checked) .guides-in,
+body:has(.tt-theme-toggle:checked) .guide,
+body:has(.tt-theme-toggle:checked) .role{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 24px 54px rgba(101,72,28,.22);
+}
+body:has(.tt-theme-toggle:checked) .lift:hover{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 30px 60px rgba(101,72,28,.3);
+  border-color:rgba(154,107,35,.45);
+}
+body:has(.tt-theme-toggle:checked) .btn-motion:active{
+  box-shadow:0 3px 12px rgba(101,72,28,.3);
+}
+
+/* ── Pointer tilt (JS enhancement, set by motion.js) ─────────────────────
+   While tilting, the element's own reveal animation is paused so the two
+   transforms never fight; the tilt itself is an inline transform written
+   by motion.js and cleared on pointer leave. No JS → no tilt, ever. */
+[data-tilt].tt-tilt{animation:none!important;transition:transform .15s ease-out;}
+
+/* ── Reduced motion: the company site's kill switch, verbatim in spirit ── */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation:none!important;
+    transition:none!important;
+    scroll-behavior:auto!important;
+  }
+  html{scroll-behavior:auto;}
+  html.tt-anim [data-reveal]{opacity:1;transform:none;}
+  [data-tilt]{transform:none!important;}
+}

@@ -38,6 +38,17 @@ All builder agents (Claude, Codex, Copilot, Gemini, ChatGPT, and any future agen
 
 Until the founder accepts verified Playwright desktop/mobile comparisons against the original, the mockup is an **active implementation target**, not an implemented or deployed state. Preserve the proven local-first deterministic interview, Idea Record, scoring, version recovery, export/import, and capability-policy boundaries. Do not claim new AI or provider-backed features because the mockup depicts them. Never close the visual target using green unit tests alone; require real browser screenshots, working user journeys, accessibility checks, and founder signoff.
 
+## Reds rule — implant on sight (standing law, installed 2026-10-26)
+
+Any error or red that surfaces in this repository — CI/Actions failure,
+failing test, broken build, runtime defect — is diagnosed and fixed in the
+same flow it is seen, with the smallest reversible change, landed through
+this repo's normal gate and verified green on the exact head. A seen red is
+never parked as a report. Never merge over a blocked mandatory gate or a
+red exact head. A credential- or founder-gated red gets a full diagnosis
+plus the one unblocking action named — never silence, never a faked fix.
+Full charter: `.github/agents/reds-implant.agent.md`.
+
 ## Founder convergence directive (2026-10-25)
 
 THINK-TANK must unite the June 8 AI cofounder foundation with the later,
