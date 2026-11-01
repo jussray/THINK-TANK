@@ -11,3 +11,12 @@ test('starting a new interview refuses to overwrite an unfinished interview', ()
   assert.ok(start.indexOf("prior?.status==='interviewing'") < start.indexOf('showInterviewMode(true,idea)'), 'guard must precede UI changes');
   assert.ok(start.indexOf("prior?.status==='interviewing'") < start.indexOf('record={'), 'guard must precede record replacement');
 });
+
+test('starting another interview cannot silently replace a completed idea or its workspace', () => {
+  const source = readFileSync(new URL('../../app/index-page.js', import.meta.url), 'utf8');
+  const start = source.match(/async function start\(\)\{([\s\S]*?)\}\nasync function answer\(/)?.[1];
+  assert.ok(start);
+  assert.match(start, /if\(prior\)/);
+  assert.ok(start.indexOf('if(prior)') < start.indexOf('showInterviewMode(true,idea)'));
+  assert.ok(start.indexOf('if(prior)') < start.indexOf('record={'));
+});
