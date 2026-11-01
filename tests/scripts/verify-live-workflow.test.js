@@ -22,7 +22,7 @@ test('verify-live retains a separate source build and live byte verification ste
   const liveStep = live.indexOf('      - name: Verify live bytes against trusted source artifact');
   assert.ok(sourceStep >= 0 && liveStep > sourceStep, 'live proof must follow the source build');
   assert.match(live.slice(sourceStep, liveStep), /npm run test:unit/);
-  assert.match(live.slice(liveStep), /node scripts\\/verify-live-runtime\\.mjs/);
+  assert.ok(live.slice(liveStep).includes('node scripts/verify-live-runtime.mjs'));
   assert.match(live, /^  workflow_dispatch:$/m);
   assert.match(live, /^  contents: read$/m);
 });
