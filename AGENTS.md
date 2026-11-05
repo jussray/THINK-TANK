@@ -48,3 +48,26 @@ never parked as a report. Never merge over a blocked mandatory gate or a
 red exact head. A credential- or founder-gated red gets a full diagnosis
 plus the one unblocking action named — never silence, never a faked fix.
 Full charter: `.github/agents/reds-implant.agent.md`.
+
+## Founder convergence directive (2026-10-25)
+
+THINK-TANK must unite the June 8 AI cofounder foundation with the later,
+founder-approved cinematic product experience. **This is one evolving app,
+not a choice between two competing products.**
+
+- Keep the new visuals, existing user journeys, and verified offline continuity
+  as the baseline. Redesign is permitted **only** when integrating both versions
+  creates a genuine overall product upgrade, with visual comparison and founder
+  approval before replacing an approved state.
+- Preserve original idea records, founder-edited modules, concept history,
+  versions, exports, and rollback paths. Starting a new idea must not
+  implicitly convert it into a pivot or overwrite a previous idea.
+- AI provider connections are explicit opt-in; no founder content is sent to
+  outside models, made public, shared, migrated, or deleted without the
+  founder's permission. Never expose provider keys to the browser.
+- Keep the June foundation recovery archive unmodified. Revive deliberately
+  under a reviewable branch with authenticated, per-idea-scoped API calls.
+- Do not claim production AI, account sync, research or public matchmaking
+  until their implementations and real-path tests pass.
+- Do not modify `main`, merge a PR, or deploy this revival without the
+  founder's review and approval.
