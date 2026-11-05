@@ -62,7 +62,7 @@ for (const [name, viewport] of [
     await page.goto('/landing.html');
     await page.evaluate(() => localStorage.setItem('onboarding-continuity-probe', 'preserve-me'));
     await page.locator('a.start-btn').click();
-    await expect(page).toHaveURL(/onboarding\\.html$/);
+    await expect(page).toHaveURL(/onboarding\.html$/);
     await expect(page.locator('main')).toContainText('No account or payment is needed');
     await expect(page.locator('main')).toContainText('not market validation');
     await expect(page.getByRole('link', { name: 'Open My Ideas' })).toHaveAttribute('href', './index.html#idea-hub');
