@@ -42,8 +42,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       EXPECTED_MAIN_SHA: ${{ inputs.expected_main_sha }}
       CUTOVER_CONFIRMED: ${{ inputs.workers_builds_cutover_confirmed }}
     steps:
@@ -83,6 +81,9 @@ jobs:
           npm run check:domain-purity
           npm run test:unit
       - name: Refuse to deploy without credentials
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
           test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN secret is not set"; exit 1; }
@@ -95,6 +96,9 @@ jobs:
           [[ "$CURRENT" == "$EXPECTED_MAIN_SHA" ]] || { echo "::error::Main moved during verification"; exit 1; }
       - name: Deploy the gated _site artifact
         shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
           npx --no-install wrangler deploy --config wrangler.jsonc
