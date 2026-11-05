@@ -57,16 +57,20 @@ for (const [name, viewport] of [
   ['desktop', { width: 1440, height: 1000 }],
   ['mobile', { width: 390, height: 844 }]
 ]) {
-  test('onboarding preserves browser state and fits ' + name, async ({ page }) => {
+  test('onboarding preserves browser state and fits ' + name, async ({ page, context }) => {
     await page.setViewportSize(viewport);
+    await page.goto('/index.html');
+    await page.getByTestId('idea-input').fill('A founder idea to preserve through onboarding.');
+    await page.getByTestId('start-interview').click();
+    await expect(page.locator('#sessionState')).toHaveText('QUESTION 1/4');
+    const savedState = await context.storageState();
     await page.goto('/landing.html');
-    await page.evaluate(() => localStorage.setItem('onboarding-continuity-probe', 'preserve-me'));
     await page.locator('a.start-btn').click();
     await expect(page).toHaveURL(/onboarding\.html$/);
     await expect(page.locator('main')).toContainText('No account or payment is needed');
     await expect(page.locator('main')).toContainText('not market validation');
     await expect(page.getByRole('link', { name: 'Open My Ideas' })).toHaveAttribute('href', './index.html#idea-hub');
-    expect(await page.evaluate(() => localStorage.getItem('onboarding-continuity-probe'))).toBe('preserve-me');
+    expect(await context.storageState()).toEqual(savedState);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
     const broken = await page.evaluate(() => [...document.images].filter(img => !img.complete || img.naturalWidth === 0).length);
     expect(broken).toBe(0);
