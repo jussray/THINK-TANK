@@ -12,12 +12,17 @@ const allowed = new Set([
   'scripts/check-domain-purity.mjs',
   'tests/scripts/gate-mutation.test.js',
   // Browser proof asserting on persisted state is verification, not app access.
-  'tests/interview.spec.js'
+  'tests/interview.spec.js',
+  // Display preference only: motion.js persists the 'tt-theme' day/night
+  // flag (founder addendum 2026-10-25). It never reads or writes Idea
+  // Record data — records still flow solely through app/stores.
+  'assets/motion.js'
 ]);
 
-// The V0 application controller is the inline <script> in index.html, and the
-// build/check gates are .mjs. A '*.js'-only pathspec exempted both, so direct
-// localStorage access outside the store layer passed this gate unseen.
+// The V0 application controllers live in .js files (app/index-page.js,
+// app/workspace-page.js), and the build/check gates are .mjs. A '*.js'-only
+// pathspec once exempted an inline controller, so direct localStorage access
+// outside the store layer passed this gate unseen.
 const result = spawnSync(
   'git',
   ['grep', '-n', 'localStorage', '--', '*.js', '*.mjs', '*.cjs', '*.ts', '*.html'],

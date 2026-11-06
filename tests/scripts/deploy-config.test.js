@@ -36,12 +36,14 @@ test('the Worker serves the inspected artifact directory, not the working tree',
   assert.equal(config.main, undefined, 'V0 must not gain a server entrypoint through deploy config');
 });
 
-test('the canonical hostname is bound as a Cloudflare custom domain', () => {
+test('private Worker deploy cannot claim the public Think Tank hostnames', () => {
   const config = readWranglerConfig();
-  const routes = config.routes ?? [];
-  const canonical = routes.find((route) => route.pattern === 'thinktank.jussco.company');
-  assert.ok(canonical, 'thinktank.jussco.company must be declared in wrangler.jsonc');
-  assert.equal(canonical.custom_domain, true, 'the Worker is the origin for this hostname');
+  // Public root and WWW redirect are separately owned in Cloudflare. A Worker
+  // Builds deployment must not recreate an overlapping public custom domain.
+  assert.deepEqual(config.routes, [
+    { pattern: 'thinktank-app.jussco.company/*', zone_name: 'jussco.company' }
+  ]);
+  assert.equal(config.routes.some((route) => route.custom_domain), false);
 });
 
 test('Version/Preview URLs are explicitly disabled', () => {
@@ -72,7 +74,6 @@ test('Cloudflare deployment uses a pinned, project-local Wrangler CLI', () => {
   assert.equal(pin, '4.149.0', 'production deploy requires the reviewed exact Wrangler version');
   assert.match(pin, /^\d+\.\d+\.\d+$/, 'do not permit implicit latest, caret, or range');
 });
-
 
 test('all local stylesheet links and their image assets belong to the signed static artifact', () => {
   const path = require('node:path');
@@ -107,4 +108,23 @@ test('all local stylesheet links and their image assets belong to the signed sta
     }
   }
   assert.ok(checked >= 2, 'at least interactive UI and authentication CSS must be accounted for');
+});
+
+test('verify-live keeps its live-proof step as a real YAML step', () => {
+  // A literal backslash-n inside a comment swallowed this step and left a duplicate
+  // `shell:` key in the build step, so the live proof never ran.
+  const src = fs.readFileSync('.github/workflows/verify-live.yml', 'utf8');
+  assert.doesNotMatch(src, /\\n/, 'verify-live.yml must not contain literal backslash-n sequences');
+  assert.match(src, /^ {6}- name: Verify live bytes against trusted source artifact$/m);
+});
+
+test('the Cloudflare deploy credentials are scoped to the credential and deploy steps, not the whole job', () => {
+  // Job-level env reaches every step, including npm install and the unit tests,
+  // which run dependency and repository code before any deploy step.
+  const src = fs.readFileSync('.github/workflows/deploy-worker.yml', 'utf8');
+  const jobEnv = src.match(/^    env:\n([\s\S]*?)^    steps:/m);
+  assert.ok(jobEnv, 'deploy job env block must exist');
+  assert.doesNotMatch(jobEnv[1], /CLOUDFLARE_(API_TOKEN|ACCOUNT_ID)/, 'job-level env would expose deploy credentials to npm install and tests');
+  const deployStep = src.slice(src.indexOf('- name: Deploy the gated _site artifact'));
+  assert.match(deployStep, /CLOUDFLARE_API_TOKEN: \$\{\{ secrets\.CLOUDFLARE_API_TOKEN \}\}/);
 });
