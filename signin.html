@@ -2,87 +2,59 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Sign in · Think Tank</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in — Think Tank</title>
 <meta name="description" content="Sign in to Think Tank and continue exploring, challenging, and building your ideas into real opportunities.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/auth.css">
-<link rel="stylesheet" href="assets/motion.css">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/auth.css">
 </head>
 <body>
-<div class="bg" aria-hidden="true"><img src="assets/hero-scene.jpg" alt="" data-parallax></div>
-
-<header class="top gutter">
-  <div class="top-in">
-    <a class="brand" href="./landing.html" aria-label="Think Tank home">
-      <span class="mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round"><path d="M9 4a2.6 2.6 0 0 0-2.6 2.6A2.4 2.4 0 0 0 4.5 9c0 .9.5 1.7 1.2 2.1A2.5 2.5 0 0 0 5 13.2c0 1.2.8 2.2 1.9 2.5A2.4 2.4 0 0 0 9.3 20 2.7 2.7 0 0 0 12 17.6V5.9A2 2 0 0 0 9 4Z"/><path d="M15 4a2.6 2.6 0 0 1 2.6 2.6A2.4 2.4 0 0 1 19.5 9c0 .9-.5 1.7-1.2 2.1a2.5 2.5 0 0 1 .7 2.1c0 1.2-.8 2.2-1.9 2.5A2.4 2.4 0 0 1 14.7 20 2.7 2.7 0 0 1 12 17.6"/></svg>
-      </span>
-      <span class="brand-name">Think Tank</span>
-    </a>
-    <nav class="nav-links" aria-label="Main">
-      <a href="./landing.html">Home</a>
-      <a href="./index.html">Ideas</a>
-      <a href="./landing.html#ideas">Resources</a>
-      <a href="./landing.html#truth">About</a>
-    </nav>
-    <div class="nav-tools">
-      <input class="tt-theme-toggle" type="checkbox" id="tt-theme-toggle" aria-label="Day theme">
-      <label class="theme-btn" for="tt-theme-toggle" title="Switch between night and day" aria-hidden="true"><svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.6A8.1 8.1 0 1 1 10.4 4 6.6 6.6 0 0 0 20 13.6Z"/></svg><svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg></label>
-      <a class="icon-btn" href="./index.html" aria-label="Search your ideas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></a>
-      <a class="icon-btn" href="./index.html" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21a2 2 0 0 0 3 0"/></svg></a>
-      <span class="avatar" role="img" aria-label="Your profile"></span>
-    </div>
+<nav class="site-nav" aria-label="Primary">
+  <a class="brand" href="./landing.html" aria-label="Think Tank home"><span class="brandmark" aria-hidden="true">✧</span>THINK TANK</a>
+  <div class="navlinks">
+    <a href="./landing.html">Home</a>
+    <a href="./index.html#idea-hub">Ideas</a>
+    <span class="not-v0">Resources<small>not in V0</small></span>
+    <a href="./landing.html#about">About</a>
   </div>
-</header>
+  <div class="nav-tools"><a class="sign-in" href="./create-account.html">Create account</a></div>
+</nav>
 
-<main class="main gutter">
-  <section class="hero-copy" aria-labelledby="hero-title" data-reveal>
-    <p class="kicker-line">Same curiosity. A brighter tomorrow.</p>
-    <h1 id="hero-title">Welcome back to <em>Think Tank.</em></h1>
-    <p class="lede">Pick up where you left off and keep exploring, challenging, and building your ideas into real opportunities.</p>
-  </section>
+<main class="hero" style="min-height:0">
+  <div class="hero-art" aria-hidden="true" style="background-position:50% 22%"></div>
+  <div class="account">
+    <div class="account-copy">
+      <p class="eyebrow">Same curiosity. A brighter tomorrow.</p>
+      <h1>Welcome back to <em>Think Tank.</em></h1>
+      <p class="lede">Keep exploring, challenging, and building your ideas. In V0 your Idea Record stays in this browser, so there is nothing to sign in to yet.</p>
+    </div>
 
-  <section class="card" aria-labelledby="signin-title" data-reveal="2" data-tilt>
-    <h2 id="signin-title" class="center">Welcome back.</h2>
-    <p class="sub center">Sign in to continue your journey.</p>
-
-    <!-- Entry form: per the founder's 2026-10-25 decision this navigates
-         straight into the workspace. Nothing typed here is sent or stored. -->
-    <form id="signin-form" action="./index.html" method="get">
-      <label class="field" for="email">
-        <span class="lbl">Email</span>
-        <span class="input">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-          <input id="email" type="email" autocomplete="email" placeholder="you@thinktank.ai">
-        </span>
-      </label>
-
-      <label class="field" for="password">
-        <span class="lbl">Password</span>
-        <span class="input">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-          <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password">
-          <svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 3l18 18M10.6 6.1A9.6 9.6 0 0 1 12 6c5 0 8.5 4.5 9.5 6a13 13 0 0 1-2.4 2.9M6.3 6.8C4 8.3 2.6 10.3 2.5 12c1 1.5 4.5 6 9.5 6a9.5 9.5 0 0 0 4-.9"/></svg>
-        </span>
-      </label>
-
-      <div class="row">
-        <label class="check"><input type="checkbox" checked><span>Remember me</span></label>
-        <a href="./create-account.html">Forgot password?</a>
-      </div>
-
-      <button type="submit" class="btn-primary btn-motion">Sign In <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
-    </form>
-
-    <div class="or">or continue with</div>
-    <a class="btn-social btn-motion" href="./index.html">
-      <svg class="glogo" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.3-2.1 3.7-5.2 3.7-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.7-2.9c-1 .7-2.4 1.2-4.2 1.2-3.2 0-5.9-2.1-6.8-5.1L1.3 17.2C3.3 21.2 7.3 24 12 24z"/><path fill="#FBBC05" d="M5.2 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3L1.3 6.8C.5 8.4 0 10.1 0 12s.5 3.6 1.3 5.2l3.9-2.9z"/><path fill="#EA4335" d="M12 4.7c1.8 0 3 .8 3.7 1.4l3.3-3.2C17.9 1.1 15.2 0 12 0 7.3 0 3.3 2.8 1.3 6.8l3.9 2.9c.9-2.9 3.6-5 6.8-5z"/></svg>
-      Continue with Google
-    </a>
-
-    <p class="foot">Don&rsquo;t have an account? <a href="./create-account.html">Create one &rarr;</a></p>
-  </section>
+    <section class="card" aria-labelledby="signin-title">
+      <h2 id="signin-title" style="text-align:center">Welcome back.</h2>
+      <p class="sub" style="text-align:center">Sign in to continue your journey.</p>
+      <p class="notice"><strong>Not in V0.</strong> Sign-in is not part of this version. This page previews the layout; nothing you enter is sent or saved.</p>
+      <form id="signin-form" aria-describedby="signin-title">
+        <label class="field"><span class="label">Email</span>
+          <span class="input"><svg class="lead" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg><input type="email" name="email" placeholder="you@thinktank.ai" required></span>
+        </label>
+        <label class="field"><span class="label">Password</span>
+          <span class="input"><svg class="lead" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><input type="password" name="password" placeholder="Enter your password" required><button type="button" class="eye" disabled aria-label="Show password is not in V0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></span>
+        </label>
+        <div class="row-between">
+          <label><input type="checkbox" name="remember" checked disabled> Remember me</label>
+          <span class="link" aria-disabled="true">Forgot password?</span>
+        </div>
+        <button type="submit" class="primary-btn">Sign In <span aria-hidden="true">→</span></button>
+      </form>
+      <div class="divider">or continue with</div>
+      <button type="button" class="social-btn" disabled><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg> Continue with Google</button>
+      <p class="foot-line">Don't have an account? <a href="./create-account.html">Create one <span aria-hidden="true">→</span></a></p>
+      <p class="foot-line"><a class="open" href="./index.html">Use Think Tank without an account <span aria-hidden="true">→</span></a></p>
+    </section>
+  </div>
 </main>
 <script src="assets/auth-entry.js"></script>
 <script src="assets/motion.js" defer></script>
