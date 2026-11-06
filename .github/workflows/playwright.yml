@@ -13,7 +13,8 @@ concurrency:
 
 jobs:
   interview-loop:
-    runs-on: ubuntu-latest
+    # Playwright 1.55 Chromium install supports Ubuntu 24.04, not runner Ubuntu 26.04.
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
       PROOF_SUBJECT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}

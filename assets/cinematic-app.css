@@ -1,0 +1,48 @@
+/* Canonical interactive Think Tank entry — approved portal composition.
+   Keep the local-first interview, rubric, save and export functions intact.
+   Do not disguise heuristics as external validation or enable disabled voice. */
+body{background:radial-gradient(ellipse at 50% 0%,rgba(126,69,169,.17),transparent 40%),#090914}
+.site-nav{background:rgba(8,8,25,.8);border-bottom:1px solid rgba(187,139,255,.32);backdrop-filter:blur(20px)}
+.hero{min-height:clamp(470px,43vw,650px);background:radial-gradient(ellipse at 57% 23%,rgba(242,171,177,.2),transparent 37%),linear-gradient(#171227,#090914)}
+.hero-art{background:url("./think-tank-hero-scene.webp") center 45%/cover no-repeat}
+.hero-art .sky-haze,.hero-art .ridge,.hero-art .lake{opacity:0}
+.hero-art .portal{opacity:0}
+.hero::after{background:linear-gradient(90deg,rgba(4,5,17,.89),rgba(9,8,26,.5) 45%,rgba(6,8,25,.26) 72%,rgba(4,5,17,.62)),linear-gradient(0deg,rgba(7,8,20,.9),transparent 50%)}
+.hero-copy h1{font-size:clamp(3.2rem,5.8vw,6.8rem);letter-spacing:-.052em;text-shadow:0 3px 30px rgba(2,3,15,.45)}
+.hero-copy h1 em{background:linear-gradient(110deg,#b798ff,#e1aeff);background-clip:text;-webkit-background-clip:text;color:transparent}
+.hero-perks{border:1px solid rgba(199,164,255,.21);border-radius:16px;padding:clamp(16px,2vw,26px);background:rgba(8,8,26,.48);backdrop-filter:blur(15px)}
+.board{background:radial-gradient(ellipse at 50% 2%,rgba(108,49,164,.14),transparent 49%),#090914}
+.panel,.card,.rolecard{background:linear-gradient(140deg,rgba(24,17,46,.82),rgba(10,10,30,.78));border-color:rgba(171,127,252,.34);box-shadow:inset 0 1px rgba(255,255,255,.05),0 18px 45px rgba(0,0,0,.26)}
+.panel-art{background:linear-gradient(0deg,rgba(8,7,23,.85),rgba(8,7,23,.48)),url("./band.jpg") center/cover no-repeat}
+.field textarea,.field input{background:rgba(11,9,28,.74);border-color:rgba(171,116,255,.63)}
+.btn.primary{box-shadow:0 6px 25px rgba(167,114,255,.3)}
+@media(max-width:760px){.hero{min-height:510px}.hero-art{background-position:55% center}.hero::after{background:linear-gradient(90deg,rgba(4,5,17,.84),rgba(4,5,17,.48)),linear-gradient(0deg,rgba(7,8,20,.85),transparent)}.hero-copy h1{font-size:clamp(2.8rem,11vw,4.8rem)}.hero-perks{backdrop-filter:none;background:rgba(10,8,27,.72)}}
+@media(prefers-reduced-transparency:reduce){.hero-perks,.panel,.card,.rolecard{backdrop-filter:none;background:#17102c}.site-nav{backdrop-filter:none;background:#090b1c}}
+
+/* Desktop fidelity pass: bring the approved single-scene hero and six-step
+   board closer together, without truncating or hiding functional content. */
+@media(min-width:1101px){
+  .hero{min-height:430px}
+  .hero-content{padding-top:32px;padding-bottom:34px}
+  .hero-copy h1{font-size:clamp(53px,4.4vw,69px);margin:10px 0 12px}
+  .hero-lede{font-size:15px;line-height:1.48}
+  .hero-actions{margin-top:15px}
+  .hero-perks{padding:15px 18px}
+  .hero-perks p{font-size:21px}
+  .hero-perks li{padding:8px 0}
+  .truth-note{font-size:11px;line-height:1.5;margin-top:12px;padding:8px 11px}
+  .board{padding:16px 0 28px}
+  .board-row{gap:12px}
+  .board-row+.board-row{margin-top:12px}
+  .panel-head{padding:10px 14px}
+  .panel-body{padding:16px}
+  .panel h2{font-size:clamp(24px,2vw,30px);margin:9px 0 8px}
+  .panel h3{font-size:clamp(21px,1.8vw,26px);margin:8px 0}
+  .roster{gap:9px;margin-top:13px}
+  .rolecard{min-height:0;padding:12px 10px}
+  .rolecard .orb{width:72px;height:72px;margin-bottom:10px;font-size:21px}
+  .rolecard b{font-size:18px}
+  .rolecard span{font-size:11.5px}
+  .field textarea{min-height:112px}
+  .starter-list{margin-top:12px}
+}

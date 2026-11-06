@@ -21,19 +21,62 @@ A coherent interview record can improve an idea, but it does not convert assumpt
 
 The canonical entry surface is `index.html`.
 
-`landing.html` is a presentation surface only. It introduces the product and routes into `index.html`; it runs no deterministic role, stores nothing, and is covered by `tests/landing.spec.js`, which fails if it claims accounts, billing, team seats or API access. Which surface the public root serves is a founder decision and is **not** settled here.
+`landing.html` is a presentation surface only. It introduces the product and routes into `index.html`; it runs no deterministic role, stores nothing, and is covered by `tests/landing.spec.js`, which fails if it claims accounts, billing, team seats or API access. Which surface the public root serves was settled by founder ruling on 2026-10-25: the public root serves `landing.html`, and every artifact path is public product surface (see Live hostname roles, 2026-10-28).
 
 Canonical source repository:
 
 https://github.com/jussray/THINK-TANK
 
-The intended public deployment URL is `https://thinktank.jussco.company`, served by **Cloudflare Workers** (`wrangler.jsonc`, assets-only, serving the inspected `_site` artifact). Cloudflare is the single owner of that hostname.
+## Live hostname roles (2026-10-28)
 
-Whether that URL is **live** remains **UNVERIFIED** here. It becomes verified when `scripts/verify-live-runtime.mjs` passes against it: that script re-fetches every file named in `artifactFileHashes` and re-hashes the bytes, so a pass attests to the served application rather than merely to a reachable page or a `version.json` that claims a SHA. Until such a run exists, treat the URL as intended, not as evidence of a deployment.
+- Public entrance: `https://thinktank.jussco.company/`. The dedicated
+  Cloudflare Worker `think-tank-public-front-door` serves the complete
+  `_site` artifact — `landing.html` at the root, plus `signin.html`,
+  `create-account.html`, `index.html`, `workspace.html`, `/assets/*`,
+  `/app/*`, and `/version.json` — by forwarding each request to the
+  `think-tank` Worker through an internal Cloudflare service binding.
+  The artifact is served, never copied, so the public entrance cannot
+  drift from the deployed release. The front door applies the
+  production Content-Security-Policy (`script-src 'self'`) and security
+  headers at the edge.
+- Edge protection on the public hostname: Cloudflare Managed WAF rules
+  enabled, Bot Fight Mode on, and a rate-limit rule (100 requests per
+  10 seconds per visitor IP, then a 10-second block). Protection guards
+  the edge; it never walls a public journey (founder standing rule,
+  2026-10-25: block hackers, not users).
+- WWW alias: `https://www.thinktank.jussco.company/`, permanent 301 to
+  the canonical public hostname, preserving path and query string.
+- Origin hostname: `https://thinktank-app.jussco.company/`, served by
+  the `think-tank` Worker under its Cloudflare Access policy (the
+  policy is bound to the Worker itself). It is an origin, not a public
+  surface: no public link or redirect sends users there. The 2026-10-22
+  legacy rule that 302-redirected non-root public paths to this
+  hostname was retired on 2026-10-28.
+- `wrangler.jsonc` declares the app route exclusively; the app Worker
+  is never attached to a public hostname. Public Worker routes,
+  bindings, and redirect rules are managed in Cloudflare and must be
+  verified separately from every Workers Builds deployment.
 
-`wrangler.jsonc` binds `thinktank.jussco.company` as a Cloudflare custom domain and sets `preview_urls: false`, so no branch build publishes an unapproved artifact under this product's name at a public `*.workers.dev` URL. Whether Workers Builds runs at all for non-production branches is a dashboard setting this repository cannot express.
+Verified live on 2026-10-28: every hashed file served by the public
+hostname matches the release manifest of `main` commit
+`02e2d68d79744dee24925fdebf6aaca71ad96069` (29/29 files, byte-for-byte);
+a real-browser walk passed the full journey on the public hostname
+(landing, day/night toggle, sign-in and create-account entries into the
+interview, four-question interview to a rendered scorecard, and the
+workspace showing the locally saved Idea Record) with no Access wall
+and no redirect off the public hostname; a controlled burst tripped
+the rate limit (HTTP 429) and normal browsing recovered immediately
+after; the app hostname still answers with the Access login. This is
+not an account signup or backend authentication capability: those
+features remain outside V0, and the sign-in and create-account pages
+remain entry surfaces that send and store nothing.
 
-Cloudflare is the **only** publication path. The GitHub Pages workflow was removed rather than left as a dormant second owner. A Vercel project also builds this repository; it is not a deployment surface for this product and nothing here treats its output as public truth. Disconnecting it is a provider-side action that this repository cannot perform.
+Cloudflare is the **only** publication path. The GitHub Pages workflow
+was removed rather than left as a dormant second owner. A Vercel project
+also builds this repository; it is not a deployment surface for this
+product and nothing here treats its output as public truth.
+
+The review-only `.github/workflows/deploy-worker.yml` is a manual-only fallback (`workflow_dispatch`). Merging it cannot deploy. Before it can invoke Wrangler, the operator must confirm the competing Workers Builds integration is disabled, choose the exact current `main` SHA, and pass the project gates. Never run both deployers against the same Worker. `verify-live.yml` remains the separate required proof after either deployment path.
 
 ## Marketplace boundary
 
