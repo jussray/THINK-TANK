@@ -6,11 +6,13 @@
   },
   "previews": {},
 
-  // PRIVATE V0 runtime only. Cloudflare's public Worker
-  // (think-tank-public-front-door) owns thinktank.jussco.company/;
-  // www.thinktank.jussco.company permanently redirects to that hostname.
-  // Non-homepage public-host paths temporarily redirect to this Access-
-  // protected application hostname at the Cloudflare edge.
+  // Origin Worker for the public product. Since 2026-10-28 the public
+  // front door (think-tank-public-front-door) serves this Worker's exact
+  // artifact at thinktank.jussco.company through an internal service
+  // binding; the founder ruling of 2026-10-25 settled that the whole
+  // artifact is public product surface. This Worker stays Access-
+  // protected on its own hostname, and no public link or redirect sends
+  // users there.
   //
   // IMPORTANT: Never attach this Worker as a Custom Domain to either public
   // hostname: doing so would overwrite the public entrance on the next deploy.

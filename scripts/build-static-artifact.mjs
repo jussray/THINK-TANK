@@ -10,6 +10,9 @@ const requiredFiles = [
   'assets/think-tank-hero-scene.webp',
   'workspace.html',
   'landing.html',
+  'onboarding.html',
+  'robots.txt',
+  'sitemap.xml',
   'signin.html',
   'create-account.html',
   'assets/auth.css',
@@ -167,3 +170,4 @@ for (const required of manifestCore.artifactFiles) {
 }
 
 console.log(`Static artifact ready: ${artifactFiles.length} files, source ${sourceSha}, manifest ${manifest.manifestFingerprint}, no forbidden secret markers.`);
+

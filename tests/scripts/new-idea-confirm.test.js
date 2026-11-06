@@ -1,6 +1,5 @@
-// Contract: the interview "New idea" button must not delete the saved Idea Record
-// without an explicit, separate confirmation. reset() clears the record from
-// browser storage through ideaStore.clearCurrent() and there is no undo in the app.
+// Contract: starting another idea requires confirmation. The existing idea
+// remains in the validated collection, and reset only clears the active pointer.
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -19,15 +18,15 @@ test('New idea no longer calls reset() directly', () => {
   assert.match(controller, /\$\('resetBtn'\)\.addEventListener\('click',\(\)=>showResetConfirm\(\)\)/);
 });
 
-test('confirmation container, warning copy and both actions exist', () => {
-  assert.match(html, /<div id="resetConfirm" class="hidden reset-confirm"/, 'hidden confirmation region');
-  assert.match(html, /Delete the saved Idea Record in this browser, including its versions\?/, 'states what is deleted');
-  assert.match(html, /Export JSON first/, 'points to the only backup');
-  assert.match(html, /<button[^>]*id="resetCancel"[^>]*>Keep it<\/button>/, 'cancel keeps the record');
-  assert.match(html, /<button[^>]*id="resetDelete"[^>]*data-testid="confirm-new-idea"[^>]*>Delete saved record<\/button>/, 'explicit delete action');
+test('new idea confirmation explicitly preserves stored records', () => {
+  assert.match(html, /<div id="resetConfirm" class="hidden reset-confirm"/);
+  assert.match(html, /Your current Idea Record, answers, and versions will remain in My Ideas/);
+  assert.match(html, /Export JSON for an additional backup/);
+  assert.match(html, /<button[^>]*id="resetCancel"[^>]*>Keep it<\/button>/);
+  assert.match(html, /<button[^>]*id="resetDelete"[^>]*data-testid="confirm-new-idea"[^>]*>Keep idea &amp; start new<\/button>/);
 });
 
-test('only the explicit delete action reaches reset(), via confirmReset', () => {
+test('only the confirmed non-destructive action clears the active pointer', () => {
   assert.match(controller, /\$\('resetDelete'\)\.addEventListener\('click',\(\)=>void runCapability\(C\.IDEA_EDIT,confirmReset\)\)/);
   assert.match(controller, /async function confirmReset\(\)\{hideResetConfirm\(\);await reset\(\)\}/);
   assert.match(controller, /\$\('resetCancel'\)\.addEventListener\('click',\(\)=>hideResetConfirm\(\)\)/);
