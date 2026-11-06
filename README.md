@@ -22,7 +22,7 @@ Provider-backed agents, server-side persistence, authentication, billing, Team, 
 
 ## Capability truth
 
-V0 now has one project-owned capability policy for the local founder runtime. Browser actions are checked against that policy rather than assuming every future product feature exists.
+The interview page (`index.html`) checks its browser actions against one project-owned capability policy. The other pages (`workspace.html`, `landing.html`) do not load that policy, so it is not a platform-wide gate.
 
 Currently enabled and proved:
 
@@ -123,10 +123,10 @@ The proof chain covers:
 
 ## Public deployment boundary
 
-**Canonical public entrance:** `https://www.thinktank.jussco.company/` is
+**Canonical public entrance:** `https://thinktank.jussco.company/` is
 served by the dedicated `think-tank-public-front-door` Cloudflare Worker.
-`https://thinktank.jussco.company` (apex) uses a permanent 301 redirect to
-the canonical www hostname, preserving paths and query strings.
+`https://www.thinktank.jussco.company` uses a permanent 301 redirect to
+the canonical hostname, preserving paths and query strings.
 
 **Access-protected V0 runtime:** `https://thinktank-app.jussco.company/`
 is routed to the separate `think-tank` Worker. Its existing Cloudflare

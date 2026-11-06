@@ -56,7 +56,9 @@ jobs:
           npm run check:storage-boundary
           npm run check:domain-purity
           npm run test:unit
-      # The production app is protected by Cloudflare Access. A live verifier\n      # without a scoped, authorized Access session/service token MUST fail.\n      - name: Verify live bytes against trusted source artifact
+      # The production app is protected by Cloudflare Access. A live verifier
+      # without a scoped, authorized Access session/service token MUST fail.
+      - name: Verify live bytes against trusted source artifact
         shell: bash
         env:
           THINK_TANK_EXPECTED_SHA: ${{ inputs.expected_head_sha }}
