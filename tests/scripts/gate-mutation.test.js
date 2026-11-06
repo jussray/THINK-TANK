@@ -73,26 +73,23 @@ test('domain-purity fails on nondeterminism and network reachable without a lite
   }
 });
 
-test('storage-boundary fails on direct localStorage access in the index.html controller', () => {
+test('storage-boundary fails on direct localStorage access in the index page controller', () => {
   const dir = freshCopy();
   try {
     gitCommitAll(dir);
     assert.equal(run(dir, 'check-storage-boundary.mjs').status, 0, 'baseline must be clean');
 
-    const indexPath = path.join(dir, 'index.html');
-    const source = fs.readFileSync(indexPath, 'utf8');
-    const marker = '<script>\n';
-    const at = source.indexOf(marker);
-    assert.notEqual(at, -1, 'index.html must contain the inline controller script');
+    const controllerPath = path.join(dir, 'app/index-page.js');
+    const source = fs.readFileSync(controllerPath, 'utf8');
     fs.writeFileSync(
-      indexPath,
-      `${source.slice(0, at + marker.length)}localStorage.setItem('think-tank.shadow', 'leak');\n${source.slice(at + marker.length)}`
+      controllerPath,
+      `localStorage.setItem('think-tank.shadow', 'leak');\n${source}`
     );
     gitCommitAll(dir);
 
     const result = run(dir, 'check-storage-boundary.mjs');
     assert.notEqual(result.status, 0, 'the application controller must not be exempt from the storage boundary');
-    assert.match(result.stderr, /index\.html/);
+    assert.match(result.stderr, /app\/index-page\.js/);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
