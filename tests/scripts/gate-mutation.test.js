@@ -16,7 +16,12 @@ function freshCopy() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tt-gate-'));
   fs.cpSync(repoRoot, dir, {
     recursive: true,
-    filter: (src) => !src.includes(`${path.sep}node_modules`) && !src.includes(`${path.sep}_site`)
+    // Never copy .git. In a linked worktree .git is a file that points at the real
+    // repository, so a copied .git lets gitCommitAll commit mutations into the real branch.
+    filter: (src) =>
+      path.basename(src) !== '.git' &&
+      !src.includes(`${path.sep}node_modules`) &&
+      !src.includes(`${path.sep}_site`)
   });
   return dir;
 }
@@ -30,6 +35,10 @@ function run(dir, script, env = {}) {
 }
 
 function gitCommitAll(dir) {
+  // The copy is always gitless, so give it its own repository. check-storage-boundary reads
+  // tracked files with git grep and would otherwise fail its baseline before any mutation runs.
+  const init = spawnSync('git', ['init', '-q'], { cwd: dir, encoding: 'utf8' });
+  assert.equal(init.status, 0, 'git init failed in throwaway copy: ' + init.stderr);
   for (const args of [
     ['config', 'user.email', 'gate@test.local'],
     ['config', 'user.name', 'gate-test'],
@@ -64,26 +73,23 @@ test('domain-purity fails on nondeterminism and network reachable without a lite
   }
 });
 
-test('storage-boundary fails on direct localStorage access in the index.html controller', () => {
+test('storage-boundary fails on direct localStorage access in the index page controller', () => {
   const dir = freshCopy();
   try {
     gitCommitAll(dir);
     assert.equal(run(dir, 'check-storage-boundary.mjs').status, 0, 'baseline must be clean');
 
-    const indexPath = path.join(dir, 'index.html');
-    const source = fs.readFileSync(indexPath, 'utf8');
-    const marker = '<script>\n';
-    const at = source.indexOf(marker);
-    assert.notEqual(at, -1, 'index.html must contain the inline controller script');
+    const controllerPath = path.join(dir, 'app/index-page.js');
+    const source = fs.readFileSync(controllerPath, 'utf8');
     fs.writeFileSync(
-      indexPath,
-      `${source.slice(0, at + marker.length)}localStorage.setItem('think-tank.shadow', 'leak');\n${source.slice(at + marker.length)}`
+      controllerPath,
+      `localStorage.setItem('think-tank.shadow', 'leak');\n${source}`
     );
     gitCommitAll(dir);
 
     const result = run(dir, 'check-storage-boundary.mjs');
     assert.notEqual(result.status, 0, 'the application controller must not be exempt from the storage boundary');
-    assert.match(result.stderr, /index\.html/);
+    assert.match(result.stderr, /app\/index-page\.js/);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }

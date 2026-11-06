@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Get started · Think Tank</title>
+<meta name="description" content="Meet your four guides, understand browser-local records, and continue to the Think Tank idea interview.">
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://thinktank.jussco.company/onboarding.html">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/auth.css">
+<style>
+.skip-link{position:absolute;top:8px;left:16px;z-index:10;padding:12px;background:var(--void);transform:translateY(-160%)}
+.skip-link:focus{transform:none}
+.journey{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none;font-size:12px;color:var(--ink-dim)}
+.journey [aria-current]{color:var(--violet-soft);font-weight:700}
+.setup-steps{padding-left:22px;margin:22px 0;display:grid;gap:18px}
+.setup-steps li{padding-left:6px;line-height:1.5}
+.setup-steps strong{display:block}
+.setup-steps p,.privacy-note{font-size:14px;line-height:1.6;color:var(--lede)}
+.privacy-note{padding-top:18px;border-top:1px solid var(--edge)}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#setup">Skip to getting started</a>
+<div class="bg" aria-hidden="true"><img src="assets/hero-scene.jpg" alt=""></div>
+<header class="top gutter">
+  <div class="top-in">
+    <a class="brand" href="./landing.html"><span class="brand-name">Think Tank</span></a>
+    <nav aria-label="Your journey">
+      <ol class="journey">
+        <li><a href="./landing.html">1. Welcome</a></li>
+        <li aria-current="step">2. Get started</li>
+        <li>3. Idea workspace</li>
+      </ol>
+    </nav>
+  </div>
+</header>
+<main class="main gutter" id="setup">
+  <section class="hero-copy" aria-labelledby="setup-title">
+    <p class="kicker-line">Your curiosity. Your next step.</p>
+    <h1 id="setup-title">Give your idea <em>room to grow.</em></h1>
+    <p class="lede">Start with one idea. Answer four questions. Leave with a clearer next step and a record you own.</p>
+  </section>
+  <section class="card" aria-labelledby="guide-title">
+    <p class="kicker">Before you begin</p>
+    <h2 id="guide-title">A little direction.</h2>
+    <ol class="setup-steps">
+      <li><strong>Describe what you want to build.</strong><p>The interview asks who pays, what they use today, why they would switch and what makes your idea hard to copy.</p></li>
+      <li><strong>Explore four perspectives.</strong><p>Critic, Scorecard, Synthesizer and Matchmaker use fixed rules over your answers. Their feedback is a starting point, not market validation.</p></li>
+      <li><strong>Keep your progress.</strong><p>Your Idea Record stays in this browser. Export a copy from the workspace to keep a portable backup; clearing browser storage can remove local records.</p></li>
+    </ol>
+    <p class="privacy-note">No account or payment is needed for this local version. This screen collects nothing and does not change any existing idea.</p>
+    <a class="btn-primary" href="./index.html#start" data-testid="continue-to-interview">Continue to idea interview →</a>
+    <p class="foot">Already exploring? <a href="./index.html#idea-hub">Open My Ideas</a></p>
+  </section>
+</main>
+</body>
+</html>

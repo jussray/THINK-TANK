@@ -10,9 +10,16 @@ const requiredFiles = [
   'assets/think-tank-hero-scene.webp',
   'workspace.html',
   'landing.html',
+  'onboarding.html',
+  'robots.txt',
+  'sitemap.xml',
   'signin.html',
   'create-account.html',
   'assets/auth.css',
+  'assets/motion.css',
+  'assets/motion.js',
+  'assets/auth-entry.js',
+  'assets/cinematic-app.css',
   'assets/hero-scene.jpg',
   'assets/band.jpg',
   'assets/c1.jpg',
@@ -28,7 +35,9 @@ const requiredFiles = [
   'app/stores/local-idea-store.js',
   'app/domain/deterministic-engine.js',
   'app/policy/capability-service.js',
-  'app/policy/local-capability-policy.js'
+  'app/policy/local-capability-policy.js',
+  'app/index-page.js',
+  'app/workspace-page.js'
 ];
 
 function sha256(value) {
@@ -161,3 +170,4 @@ for (const required of manifestCore.artifactFiles) {
 }
 
 console.log(`Static artifact ready: ${artifactFiles.length} files, source ${sourceSha}, manifest ${manifest.manifestFingerprint}, no forbidden secret markers.`);
+
