@@ -8,6 +8,7 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '..', '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const controller = fs.readFileSync(path.join(root, 'app/index-page.js'), 'utf8');
 
 test('item 4: each role card uses its approved orb art, not a glyph', () => {
   const roles = [
@@ -41,7 +42,7 @@ test('item 3: hub New Idea is non-destructive and never calls reset or clearCurr
   assert.ok(btn, 'hubNewIdea button sits in the hub panel');
   const hub = html.slice(html.indexOf('id="idea-hub"'), html.indexOf('id="about"'));
   assert.match(hub, /id="hubNewIdea"/, 'button is inside #idea-hub');
-  const handler = html.match(/\$\('hubNewIdea'\)\.addEventListener\('click',\(\)=>\{([^}]*)\}\)/);
+  const handler = controller.match(/\$\('hubNewIdea'\)\.addEventListener\('click',\(\)=>\{([^}]*)\}\)/);
   assert.ok(handler, 'hubNewIdea click handler present');
   assert.doesNotMatch(handler[1], /reset\(|clearCurrent|removeItem|saveCurrent/, 'handler must not delete or overwrite the saved record');
   assert.match(handler[1], /ideaInput/, 'handler moves focus to the Start idea input');
