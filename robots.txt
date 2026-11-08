@@ -2,3 +2,16 @@ User-agent: *
 Allow: /
 
 Sitemap: https://thinktank.jussco.company/sitemap.xml
+
+# Answer Engine Optimization
+User-agent: GPTBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Perplexity
+Allow: /
+
+User-agent: CCBot
+Allow: /
