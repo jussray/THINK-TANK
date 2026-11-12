@@ -11,7 +11,7 @@ export default defineRailway((ctx) => {
     build: 'test -n "$RAILWAY_GIT_COMMIT_SHA" && THINK_TANK_SOURCE_SHA="$RAILWAY_GIT_COMMIT_SHA" THINK_TANK_EXPECTED_SHA="$RAILWAY_GIT_COMMIT_SHA" npm run build',
     start: "npx http-server _site -p ${PORT:-3000} -a 0.0.0.0 -c-1",
     healthcheck: "/",
-    replicas: { iad: 1 },
+    // Replica placement is deferred until the provider import confirms the service-region key.
     env: {
       THINK_TANK_EXPECTED_SHA: preserve(),
       THINK_TANK_RUNTIME_ENV: preserve(),
