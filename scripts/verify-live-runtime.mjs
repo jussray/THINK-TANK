@@ -10,6 +10,7 @@
 //        THINK_TANK_EXPECTED_SHA and THINK_TANK_EXPECTED_ENV are also honored.
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import { assertProductionLiveOrigin } from './live-origin-policy.mjs';
 
 const baseInput = process.argv[2] || process.env.THINK_TANK_LIVE_URL;
 if (!baseInput) {
@@ -25,9 +26,7 @@ if (!trustedManifestPath) throw new Error('Trusted locally rebuilt artifact mani
 const trusted = JSON.parse(fs.readFileSync(trustedManifestPath, 'utf8'));
 if (trusted.source?.sha !== expectedSha) throw new Error('Trusted artifact source SHA mismatch');
 if (expectedEnv && trusted.runtime?.environment !== expectedEnv) throw new Error('Trusted artifact environment mismatch');
-if (expectedEnv === 'cloudflare-workers' && new URL(base).origin !== 'https://thinktank-app.jussco.company') {
-  throw new Error('Production proof must target the protected Cloudflare application hostname');
-}
+assertProductionLiveOrigin(base, expectedEnv);
 
 const sha256 = (value) => crypto.createHash('sha256').update(value).digest('hex');
 
