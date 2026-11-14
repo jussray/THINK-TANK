@@ -123,41 +123,17 @@ The proof chain covers:
 
 ## Public deployment boundary
 
-**Canonical public entrance:** `https://thinktank.jussco.company/` is
-served by the dedicated `think-tank-public-front-door` Cloudflare Worker.
-`https://www.thinktank.jussco.company` uses a permanent 301 redirect to
-the canonical hostname, preserving paths and query strings.
+**Canonical public entrance:** https://thinktank.jussco.company/ is served by the dedicated `think-tank-public-front-door` Cloudflare Worker. https://www.thinktank.jussco.company/ redirects permanently to the canonical hostname, preserving paths and queries.
 
-**Access-protected V0 runtime:** `https://thinktank-app.jussco.company/`
-is routed to the separate `think-tank` Worker. Its existing Cloudflare
-Access application requires sign-in before serving the local-first static
-runtime, including `index.html` and `workspace.html`. Think Tank V0 has
-no implemented account signup, backend persistence, provider-backed agents,
-or billing; the `signin.html` and `create-account.html` pages are disabled
-previews, not working product authentication.
+The entire built `_site` artifact is intentional public product surface: `landing.html`, `index.html`, `signin.html`, `create-account.html`, `workspace.html`, `/assets/*`, `/app/*`, and `/version.json`. In particular, `workspace.html` is public and stores its local-first Idea Record in the browser. The sign-in and create-account pages are previews, **not** working server authentication. The public front-door Worker forwards to the `think-tank` Worker via an internal Cloudflare service binding, without redirecting visitors off the public hostname.
 
-**Compatibility:** As of 2026-10-22, Cloudflare uses a temporary 302
-redirect from non-root paths on the public hostname to the same path on
-the protected app hostname, preserving queries. The public root also works
-with query strings. This is an infrastructure routing bridge, not an
-application auth implementation.
+**Protected origin:** https://thinktank-app.jussco.company/ reaches the separate `think-tank` Worker. Its Cloudflare Access application remains separate from the public front door. A 2026-11-13 read-only Access configuration inspection found that this origin's `Login` policy currently includes a One-time PIN identity provider without an owner-email restriction. That is **not** verified founder-only access; restrict the origin using an app-specific authorized-identity policy and verify both allowed and denied access before claiming the origin is owner-only. The reusable `Login` policy also serves other Workers and must not be edited globally without a dependency audit.
 
-**Deployment owner:** Cloudflare Workers Builds deploys the private
-`think-tank` Worker from `main` using `wrangler.jsonc`. The Wrangler
-config intentionally binds **only** `thinktank-app.jussco.company/*`;
-it must never reclaim either public-facing hostname as a custom domain.
-The public-facing Worker, 301 WWW redirect, and 302 legacy-path bridge are
-managed separately in Cloudflare. Preview deployments are disabled.
+**Intentional public bypass:** Cloudflare's Access application `think-tank-public-front-door - Public Only` currently uses `Bypass` → `Everyone`. Cloudflare documents that a public Worker may require exactly this Worker-level bypass when account-wide Worker Access is enabled. Security Insights flagged it as `access_policy_insecure` (Critical) on 2026-11-11, even though the founder-approved product boundary requires anonymous entry. **Do not replace the public bypass with an owner-only rule, remove it, or archive the finding as repaired without checking account-wide Access settings and independently verifying public/private flows.** The Security Insights finding remained active after a 2026-11-13 attempt to classify it as accepted risk returned HTTP 401 (insufficient write permission).
 
-**Exact artifact proof:** `.github/workflows/verify-live.yml` rebuilds an
-exact source SHA, then runs `scripts/verify-live-runtime.mjs` against the
-protected application hostname. Because Cloudflare Access requires login
-and the verifier does not have an Access token, successful private live
-content attestation additionally requires an explicitly authorized
-service-token route or secure authenticated test session. A public-homepage
-200 is not evidence that the private artifact matches GitHub, and a
-successful source build is not evidence of a deployed production feature.
-The GitHub Pages publication workflow remains removed.
+**Single deployment owner:** `wrangler.jsonc` binds only `thinktank-app.jussco.company/*`, never either public hostname. The public Worker, route/binding mapping, and WWW redirect are managed in Cloudflare separately from Workers Builds. Cloudflare is the sole publication path; the GitHub Pages workflow was removed. `.github/workflows/deploy-worker.yml` is manual-only and must not compete with Workers Builds. `.github/workflows/verify-live.yml` provides the separate exact-source, live-artifact proof (it requires an authorized Access session for the protected origin).
+
+**Historical live proof, not current verification:** On 2026-10-28, the public hostname served 29/29 hashed files matching the inspected source artifact, a browser journey through `workspace.html` completed without an Access wall, and the protected origin challenged for Access. These receipts do not establish live reachability or private-owner authorization on 2026-11-13; both require a fresh independent check.
 
 ## Acquire readiness
 
