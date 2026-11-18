@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     .eq('id', sessionId)
     .single()
 
-  if (!session || (session.ideas as { owner_id: string }).owner_id !== userId) {
+  if (!session || (session.ideas as unknown as { owner_id: string }).owner_id !== userId) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
