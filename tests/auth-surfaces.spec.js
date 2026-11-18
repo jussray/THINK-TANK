@@ -29,10 +29,9 @@ test('sign-in matches the mockup and routes into the workspace', async ({ page }
   await expect(page.getByTestId('idea-input')).toBeVisible();
 });
 
-test('sign-in Google action and forgot-password route correctly', async ({ page }) => {
+test('sign-in has no Google link and forgot-password route correctly', async ({ page }) => {
   await page.goto('/signin.html');
-  await page.getByRole('link', { name: /Continue with Google/ }).click();
-  await expect(page).toHaveURL(/index\.html$/);
+  await expect(page.getByRole('link', { name: /Continue with Google/ })).toHaveCount(0);
 
   await page.goto('/signin.html');
   await page.getByRole('link', { name: /Forgot password/ }).click();
@@ -41,6 +40,9 @@ test('sign-in Google action and forgot-password route correctly', async ({ page 
   await page.goto('/signin.html');
   await page.getByRole('link', { name: /Create one/ }).click();
   await expect(page).toHaveURL(/create-account\.html$/);
+
+  await page.goto('/create-account.html');
+  await expect(page.getByRole('link', { name: /Continue with Google/ })).toHaveCount(0);
 });
 
 test('create-account preselects Founder and routes into the workspace', async ({ page }) => {
