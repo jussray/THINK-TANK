@@ -164,7 +164,7 @@ function ModuleViewer({
 // ─── Per-module content renderers ─────────────────────────────────────────────
 
 function ModuleContentRenderer({ module, onPivotMode }: { module: Module; onPivotMode: () => void }) {
-  const content = module.content_json as Record<string, unknown>
+  const content = module.content_json as unknown as Record<string, unknown>
 
   switch (module.module_type) {
     case 'summary':

@@ -32,11 +32,13 @@ export async function POST(req: NextRequest) {
   let event: { type: string; data: Record<string, unknown> }
   try {
     const wh = new Webhook(WEBHOOK_SECRET)
-    event = wh.verify(body, {
+    // svix verify() throws on a bad signature and returns nothing; parse the body only after it passes.
+    wh.verify(body, {
       'svix-id': svixId,
       'svix-timestamp': svixTimestamp,
       'svix-signature': svixSignature,
-    }) as typeof event
+    })
+    event = JSON.parse(body) as typeof event
   } catch {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
