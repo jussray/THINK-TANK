@@ -78,7 +78,14 @@
     }
 
     async clearCurrent() {
-      // "New idea" clears only the selected record, never deletes other ideas.
+      // Legacy V0 records might exist only in the active key. Persist the entire
+      // validated collection BEFORE clearing that pointer, so New idea cannot
+      // silently discard someone's only saved copy.
+      const current = await this.loadCurrent();
+      if (current) {
+        const records = await this.listRecords();
+        this.storage.setItem(this.collectionKey, JSON.stringify(records));
+      }
       this.storage.removeItem(this.storageKey);
     }
   }

@@ -30,8 +30,19 @@ function gitlessCopy() {
 // Workers Builds exports WORKERS_CI and WORKERS_CI_COMMIT_SHA into every process
 // it runs. A case that means "local" must not inherit them, or the suite passes
 // on a laptop and fails inside Cloudflare. Each case opts in explicitly instead.
+// The project's own THINK_TANK_* vars get the same treatment: verify-live.yml
+// sets THINK_TANK_SOURCE_SHA / THINK_TANK_EXPECTED_SHA / THINK_TANK_RUNTIME_ENV
+// on the step that also runs this suite, and inherited values silently override
+// the WORKERS_CI fallback and the local-static label these cases assert on.
 function run(dir, script, env = {}) {
-  const { WORKERS_CI, WORKERS_CI_COMMIT_SHA, ...ambient } = process.env;
+  const {
+    WORKERS_CI,
+    WORKERS_CI_COMMIT_SHA,
+    THINK_TANK_SOURCE_SHA,
+    THINK_TANK_EXPECTED_SHA,
+    THINK_TANK_RUNTIME_ENV,
+    ...ambient
+  } = process.env;
   return spawnSync(process.execPath, [path.join('scripts', script)], {
     cwd: dir,
     encoding: 'utf8',
