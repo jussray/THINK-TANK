@@ -133,8 +133,9 @@ is routed to the separate `think-tank` Worker. Its existing Cloudflare
 Access application requires sign-in before serving the local-first static
 runtime, including `index.html` and `workspace.html`. Think Tank V0 has
 no implemented account signup, backend persistence, provider-backed agents,
-or billing; the `signin.html` and `create-account.html` pages are disabled
-previews, not working product authentication.
+or billing; the `signin.html` and `create-account.html` pages are entry
+screens, not product authentication. Submitting either one opens the
+workspace; nothing typed into them is sent, stored or checked.
 
 **Compatibility:** As of 2026-10-22, Cloudflare uses a temporary 302
 redirect from non-root paths on the public hostname to the same path on
