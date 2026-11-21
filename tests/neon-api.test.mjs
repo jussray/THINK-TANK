@@ -93,4 +93,8 @@ test('email verification and reset endpoints delegate only to dedicated Neon Aut
   assert.equal((await api(request('/api/auth/password-reset/start', 'POST', { email: 'a@example.test' }), env, '/api/auth/password-reset/start')).status, 202);
   assert.equal((await api(request('/api/auth/password-reset/complete', 'POST', { email: 'a@example.test', otp: '123456', password: 'newpassword12345' }), env, '/api/auth/password-reset/complete')).status, 200);
   assert.ok(calls.every(c => new URL(c.url).hostname.includes('.neonauth.')));
+  assert.ok(calls.some(c => new URL(c.url).pathname.endsWith('/email-otp/verify-email')));
+  assert.ok(calls.some(c => new URL(c.url).pathname.endsWith('/email-otp/request-password-reset')));
+  assert.ok(calls.some(c => new URL(c.url).pathname.endsWith('/email-otp/reset-password')));
+  assert.ok(!calls.some(c => new URL(c.url).pathname.endsWith('/email-otp/forget-password')));
 }));
