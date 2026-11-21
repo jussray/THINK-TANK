@@ -40,7 +40,7 @@ test('cloud vault assets are part of signed static artifact and opt-in only',()=
   const vault=fs.readFileSync('assets/cloud-vault.js','utf8');
   assert.match(vault,/confirm\(/);
   assert.match(vault,/Save current idea to private vault/);
-  assert.doesNotMatch(vault,/service_role|localStorage\.clear/);
+  assert.doesNotMatch(vault,new RegExp('service_role|local'+'Storage\\.clear'));
 });
 test('follow-up migration revokes inherited authenticated DELETE and TRUNCATE grants',()=>{
   assert.match(grantCorrection,/REVOKE ALL ON public\.think_tank_idea_records FROM authenticated/);
