@@ -1,5 +1,20 @@
 # THINK-TANK
 
+<!-- public-summary:start -->
+## Product overview
+
+**Think Tank helps a founder turn an early idea into a structured, revisitable decision.** A guided interview captures the idea, challenges assumptions, organizes a scorecard, and creates a portable Idea Record the founder can revise over time.
+
+**What can be demonstrated now:** the local-first V0 interview, deterministic critique and scoring, record versioning, browser recovery, and JSON import/export. The results are structured founder-input analysis, **not** independent market research, agent-led diligence, or proof of demand.
+
+**Evidence boundary (21 November 2026):** GitHub `main` at `af47178` passed the `interview-loop` and `Workers Builds: think-tank` checks when reviewed. Repository checks establish source and build evidence, not end-to-end customer adoption, secure paid accounts, or a verified live AI-provider workflow.
+
+**Public demonstration rule:** use fictional sample ideas and sanitized records, never personal/customer submissions or private operating credentials. Product claims must match the tested version.
+
+---
+<!-- public-summary:end -->
+
+
 Think Tank interviews a founder's idea, challenges the answers, scores a fixed rubric, synthesizes a durable Idea Record, and preserves versions for later pivots.
 
 ## Current verified product boundary
