@@ -62,6 +62,15 @@ test('unconfigured gateway and alternate origins fail closed', async () => {
   assert.equal((await api(request('/api/auth/me'), { ...env, NEON_AUTH_RELEASE: 'closed' }, '/api/auth/me')).status, 503);
   assert.equal((await api(request('/api/auth/me'), { ...env, NEON_DATA_API_URL: 'https://evil.test' }, '/api/auth/me')).status, 503);
 });
+test('public signup stays closed until separately released', async () => withProvider(async ({ calls }) => {
+  const body = { email: 'a@example.test', password: 'longpassword123' };
+  const closed = await api(request('/api/auth/signup', 'POST', body), env, '/api/auth/signup');
+  assert.equal(closed.status, 503);
+  assert.equal(calls.length, 0);
+  const opened = await api(request('/api/auth/signup', 'POST', body), { ...env, NEON_SIGNUP_RELEASE: 'enabled' }, '/api/auth/signup');
+  assert.equal(opened.status, 202);
+  assert.ok(calls.some(c => new URL(c.url).pathname.endsWith('/sign-up/email')));
+}));
 test('anonymous idea records are denied and cookies cleared', async () => withProvider(async () => {
   const res = await api(request('/api/ideas'), env, '/api/ideas');
   assert.equal(res.status, 401);
