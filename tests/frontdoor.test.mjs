@@ -1,6 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import frontdoor from '../worker/frontdoor.mjs';
+import deployedFrontdoor from '../worker/frontdoor.mjs';
+import { api as legacyApi } from '../worker/secure-api.mjs';
+// Preserve isolated Supabase legacy contract tests without routing the public Worker to FCR.
+const frontdoor = { fetch(request, env) {
+  const path = new URL(request.url).pathname;
+  return path === '/api' || path.startsWith('/api/') ? legacyApi(request, env, path) : deployedFrontdoor.fetch(request, env);
+} };
 
 const SITE = 'https://thinktank.jussco.company';
 const A = '11111111-1111-4111-8111-111111111111';
