@@ -11,7 +11,7 @@
 ## Implemented source on the focused fix branch
 
 - worker/frontdoor.mjs dispatches account and idea API requests to worker/neon-api.mjs before public asset forwarding. The CSP permits connect-src self.
-- worker/neon-api.mjs requires a canonical PUBLIC_ORIGIN, NEON_AUTH_URL, NEON_DATA_API_URL and the NEON_AUTH_RELEASE=enabled flag, and rejects invalid or absent configuration with HTTP 503.
+- worker/neon-api.mjs requires a canonical PUBLIC_ORIGIN, NEON_AUTH_URL, NEON_DATA_API_URL and the NEON_AUTH_RELEASE=enabled flag. Public signup additionally requires NEON_SIGNUP_RELEASE=enabled and provider-side signups enabled; the account API can be staged with signup closed, and rejects invalid or absent configuration with HTTP 503.
 - Sessions use Secure HttpOnly cookies, with JWT use restricted to server-to-Neon Data API calls. Supports signup, verified sign-in, OTP verification and password recovery, logout, owner-specific idea list/create/read/update and optimistic revision checks. No DELETE route or service-role key.
 - assets/auth-entry.js renders code verification and password reset controls only after the account API is available. Without it, credential fields stay disabled and local exploration works.
 - tests/neon-api.test.mjs checks fail-closed behavior, CSRF origin restrictions, anonymous denial, session cookies, cross-tenant ownership and revision conflicts.
