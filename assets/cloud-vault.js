@@ -88,7 +88,8 @@
   }
   async function boot() {
     try {
-      const { user } = await call('/api/auth/me');
+      const { user, service } = await call('/api/auth/me');
+      if (service !== 'think-tank-auth-v1' || !user?.userId) throw new Error('Invalid account service');
       const email = typeof user?.email === 'string' ? user.email : 'your account';
       tell('Signed in as ' + email + '. Nothing is uploaded automatically.');
       tools.append(button('Save current idea to private vault', saveCurrent), button('Refresh vault', refresh), button('Sign out of cloud', signOut));
