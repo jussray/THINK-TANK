@@ -12,7 +12,7 @@ test('account credentials remain disabled when the secure API is unavailable', a
 });
 
 test('verified sign-in navigates to the workspace without URL credential leakage', async ({ page }) => {
-  await page.route('**/api/auth/me', route => route.fulfill({status:401,contentType:'application/json',body:'{"error":"Sign in required"}'}));
+  await page.route('**/api/auth/me', route => route.fulfill({status:401,contentType:'application/json',body:'{"service":"think-tank-auth-v1","error":"Sign in required"}'}));
   await page.route('**/api/auth/login', route => route.fulfill({status:200,contentType:'application/json',body:'{"user":{"userId":"test-user","email":"a@example.test"}}'}));
   await page.goto('/signin.html');
   await expect(page.locator('#email')).toBeEnabled();
@@ -26,7 +26,7 @@ test('verified sign-in navigates to the workspace without URL credential leakage
 });
 
 test('signup requires consent and password match before using the account API', async ({ page }) => {
-  await page.route('**/api/auth/me', route => route.fulfill({status:401,contentType:'application/json',body:'{"error":"Sign in required"}'}));
+  await page.route('**/api/auth/me', route => route.fulfill({status:401,contentType:'application/json',body:'{"service":"think-tank-auth-v1","error":"Sign in required"}'}));
   let signupCalls=0;
   await page.route('**/api/auth/signup', route => {signupCalls++;return route.fulfill({status:202,contentType:'application/json',body:'{"message":"Check your email to verify your account, then sign in."}'});});
   await page.goto('/create-account.html');
