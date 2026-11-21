@@ -3,13 +3,13 @@ const { test, expect } = require('@playwright/test');
 test('sign-in is clearly local mode and cannot accept credentials', async ({ page }) => {
   await page.goto('/signin.html');
   await expect(page.getByRole('heading', { level: 2 })).toContainText('Explore without signing in');
-  await expect(page.locator('p[role="note"]')).toContainText('does not');
+  await expect(page.locator('p[role="note"]')).toContainText('not enabled');
   await expect(page.locator('#signin-form #email')).toBeDisabled();
   await expect(page.locator('#signin-form #password')).toBeDisabled();
   await expect(page.locator('#signin-form input[type="checkbox"]')).toBeDisabled();
   await expect(page.getByRole('link', { name: /Forgot password/ })).toHaveCount(0);
   await page.getByRole('button', { name: /Explore Locally/ }).click();
-  await expect(page).toHaveURL(/index\\.html$/);
+  await expect(page).toHaveURL(/index\.html$/);
   await expect(page.getByTestId('idea-input')).toBeVisible();
 });
 
@@ -30,7 +30,7 @@ test('create account is a non-credential local preview', async ({ page }) => {
   }
   await expect(page.locator('input[type="radio"][value="founder"]')).toBeChecked();
   await page.getByRole('button', { name: /Explore Locally/ }).click();
-  await expect(page).toHaveURL(/index\\.html$/);
+  await expect(page).toHaveURL(/index\.html$/);
   await expect(page.getByTestId('idea-input')).toBeVisible();
 });
 
