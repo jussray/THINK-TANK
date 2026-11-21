@@ -1,35 +1,54 @@
 const { test, expect } = require('@playwright/test');
 
-test('sign-in is clearly local mode and cannot accept credentials', async ({ page }) => {
-  await page.goto('/signin.html');
-  await expect(page.getByRole('heading', { level: 2 })).toContainText('Explore without signing in');
-  await expect(page.locator('p[role="note"]')).toContainText('not enabled');
-  await expect(page.locator('#signin-form #email')).toBeDisabled();
-  await expect(page.locator('#signin-form #password')).toBeDisabled();
-  await expect(page.locator('#signin-form input[type="checkbox"]')).toBeDisabled();
-  await expect(page.getByRole('link', { name: /Forgot password/ })).toHaveCount(0);
-  await page.getByRole('button', { name: /Explore Locally/ }).click();
-  await expect(page).toHaveURL(/index\.html$/);
-  await expect(page.getByTestId('idea-input')).toBeVisible();
-});
-
-test('local entry screens do not advertise working OAuth or registration', async ({ page }) => {
+test('account credentials remain disabled when the secure API is unavailable', async ({ page }) => {
+  await page.route('**/api/auth/me', route => route.fulfill({status:503,contentType:'application/json',body:'{"error":"Account service unavailable"}'}));
   for (const path of ['/signin.html', '/create-account.html']) {
     await page.goto(path);
-    await expect(page.getByRole('link', { name: /Continue with Google/ })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: /Sign In|Create Account/ })).toHaveCount(0);
-    await expect(page.locator('p[role="note"]')).toContainText('not enabled');
+    await expect(page.locator('#accountStatus')).toContainText('not available');
+    await expect(page.locator('#email')).toBeDisabled();
+    await expect(page.locator('#password')).toBeDisabled();
+    await expect(page.getByRole('link', { name: 'Explore locally without an account' })).toBeVisible();
   }
 });
 
-test('create account is a non-credential local preview', async ({ page }) => {
+test('verified sign-in navigates to the workspace without URL credential leakage', async ({ page }) => {
+  await page.route('**/api/auth/me', route => route.fulfill({status:401,contentType:'application/json',body:'{"error":"Sign in required"}'}));
+  await page.route('**/api/auth/login', route => route.fulfill({status:200,contentType:'application/json',body:'{"user":{"userId":"test-user","email":"a@example.test"}}'}));
+  await page.goto('/signin.html');
+  await expect(page.locator('#email')).toBeEnabled();
+  await expect(page.locator('#password')).toBeEnabled();
+  await page.locator('#email').fill('a@example.test');
+  await page.locator('#password').fill('a-strong-demo-password');
+  await page.getByRole('button', {name:/Sign in/i}).click();
+  await expect(page).toHaveURL(/workspace\.html$/);
+  expect(page.url()).not.toContain('a@example.test');
+  expect(page.url()).not.toContain('a-strong-demo-password');
+});
+
+test('signup requires consent and password match before using the account API', async ({ page }) => {
+  await page.route('**/api/auth/me', route => route.fulfill({status:401,contentType:'application/json',body:'{"error":"Sign in required"}'}));
+  let signupCalls=0;
+  await page.route('**/api/auth/signup', route => {signupCalls++;return route.fulfill({status:202,contentType:'application/json',body:'{"message":"Check your email to verify your account, then sign in."}'});});
   await page.goto('/create-account.html');
-  await expect(page.getByRole('heading', { level: 2 })).toContainText('Explore the local workspace');
-  for (const id of ['name', 'email', 'password', 'confirm']) {
-    await expect(page.locator('#create-form #' + id)).toBeDisabled();
-  }
-  await expect(page.locator('input[type="radio"][value="founder"]')).toBeChecked();
-  await page.getByRole('button', { name: /Explore Locally/ }).click();
+  await expect(page.locator('#name')).toBeDisabled();
+  await expect(page.locator('#email')).toBeEnabled();
+  await page.locator('#email').fill('a@example.test');
+  await page.locator('#password').fill('a-strong-demo-password');
+  await page.locator('#confirm').fill('different-password');
+  await page.locator('input[name="accountConsent"]').check();
+  await page.getByRole('button', {name:/Create account/i}).click();
+  await expect(page.locator('#accountStatus')).toContainText('Passwords do not match');
+  expect(signupCalls).toBe(0);
+  await page.locator('#confirm').fill('a-strong-demo-password');
+  await page.getByRole('button', {name:/Create account/i}).click();
+  await expect(page.locator('#accountStatus')).toContainText('Check your email');
+  expect(signupCalls).toBe(1);
+});
+
+test('public local-first exploration works without account service', async ({page}) => {
+  await page.route('**/api/auth/me', route => route.fulfill({status:503,contentType:'application/json',body:'{}'}));
+  await page.goto('/signin.html');
+  await page.getByRole('link', {name:'Explore locally without an account'}).click();
   await expect(page).toHaveURL(/index\.html$/);
   await expect(page.getByTestId('idea-input')).toBeVisible();
 });
