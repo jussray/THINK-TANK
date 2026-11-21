@@ -121,6 +121,11 @@
         submit.disabled = true;
         return;
       }
+      if (signup && state.signupEnabled !== true) {
+        enable(false);
+        say('Account registration is not open yet. You can still explore locally.');
+        return;
+      }
       enable(true);
       extra.replaceChildren(action(signup ? 'I have an email verification code' : 'Forgot your password?', signup ? showVerification : showRecovery));
       say(signup ? 'Create your private account. You will need to verify your email before signing in.' :
