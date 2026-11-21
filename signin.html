@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Explore locally · Think Tank</title>
+<title>Sign in securely · Think Tank</title>
 <meta name="description" content="Explore Think Tank locally. Account sign-in is not yet available.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="assets/auth.css">
@@ -44,17 +44,17 @@
   </section>
 
   <section class="card" aria-labelledby="signin-title" data-reveal="2" data-tilt>
-    <h2 id="signin-title" class="center">Explore without signing in.</h2>
-    <p class="sub center" role="note">Account sign-in is not enabled. This page opens a local workspace, not a private account. Your ideas stay in this browser unless you export them.</p>
+    <h2 id="signin-title" class="center">Sign in to your private vault.</h2>
+    <p class="sub center" role="note">Account login activates only when the secure service is available. You can always explore locally without an account; private cloud backups require verified sign-in.</p>
 
     <!-- Entry form: per the founder's 2026-10-25 decision this navigates
          straight into the workspace. Nothing typed here is sent or stored. -->
-    <form id="signin-form" action="./index.html" method="get">
+    <form id="signin-form" action="#" method="post">
       <label class="field" for="email">
         <span class="lbl">Email</span>
         <span class="input">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-          <input id="email" type="email" autocomplete="email" placeholder="Account login not enabled" disabled>
+          <input id="email" type="email" autocomplete="email" placeholder="Email address" disabled>
         </span>
       </label>
 
@@ -62,7 +62,7 @@
         <span class="lbl">Password</span>
         <span class="input">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-          <input id="password" type="password" autocomplete="off" placeholder="Password login not enabled" disabled>
+          <input id="password" type="password" autocomplete="off" placeholder="Your password" disabled>
           <svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 3l18 18M10.6 6.1A9.6 9.6 0 0 1 12 6c5 0 8.5 4.5 9.5 6a13 13 0 0 1-2.4 2.9M6.3 6.8C4 8.3 2.6 10.3 2.5 12c1 1.5 4.5 6 9.5 6a9.5 9.5 0 0 0 4-.9"/></svg>
         </span>
       </label>
@@ -72,10 +72,10 @@
         <span>Password recovery not enabled</span>
       </div>
 
-      <button type="submit" class="btn-primary btn-motion">Explore Locally <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+      <button type="submit" class="btn-primary btn-motion" disabled>Sign in <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
     </form>
 
-    <p class="foot">No account is required for local mode. <a href="./create-account.html">About accounts &rarr;</a></p>
+    <p class="foot">Need an account? <a href="./create-account.html">Create a private account &rarr;</a></p>
   </section>
 </main>
 <script src="assets/auth-entry.js"></script>
