@@ -137,9 +137,10 @@ test('live verifier fails when the manifest is edited to match tampered content'
   }
 });
 
-test('production verifier targets only the protected app hostname', () => {
+test('production verifier targets only the canonical public hostname', () => {
   const source = fs.readFileSync('scripts/verify-live-runtime.mjs', 'utf8');
-  assert.match(source, /https:\/\/thinktank-app\.jussco\.company/);
+  assert.match(source, /https:\/\/thinktank\.jussco\.company/);
+  assert.doesNotMatch(source, /https:\/\/thinktank-app\.jussco\.company/);
   assert.doesNotMatch(source, /https:\/\/www\.thinktank\.jussco\.company/);
 });
 
