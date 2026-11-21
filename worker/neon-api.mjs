@@ -150,7 +150,7 @@ export async function api(request, env, pathname) {
     }
     if (pathname === '/api/auth/password-reset/start' && method === 'POST') {
       if (!validEmail(body?.email)) return reply({ error: 'Valid email required' }, 400);
-      await neonAuth(cfg, '/email-otp/forget-password', 'POST', { email: body.email });
+      await neonAuth(cfg, '/email-otp/request-password-reset', 'POST', { email: body.email });
       return reply({ message: 'If the address has an account, a reset code will be sent.' }, 202);
     }
     if (pathname === '/api/auth/password-reset/complete' && method === 'POST') {
