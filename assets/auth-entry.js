@@ -41,7 +41,8 @@
   async function initialize() {
     try {
       const response = await fetch('/api/auth/me', { credentials: 'same-origin', cache: 'no-store' });
-      if (response.status !== 200 && response.status !== 401) throw Error('Unavailable');
+      const state = await response.json().catch(() => null);
+      if (!state || state.service !== 'think-tank-auth-v1' || (response.status !== 200 && response.status !== 401)) throw Error('Unavailable');
       if (response.status === 200) {
         say('You are already signed in. Open your workspace to save ideas to your private vault.');
         submit.disabled = true;
