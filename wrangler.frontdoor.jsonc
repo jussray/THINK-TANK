@@ -1,0 +1,14 @@
+{
+  "name": "think-tank-public-front-door",
+  "main": "worker/frontdoor.mjs",
+  "compatibility_date": "2026-10-16",
+  "services": [
+    {
+      "binding": "APP",
+      "service": "think-tank",
+      "environment": "production"
+    }
+  ],
+  "preview_urls": false,
+  "workers_dev": false
+}
