@@ -1,35 +1,47 @@
-# Think Tank customer security — implementation and release gates
+# Think Tank customer identity: dedicated Neon implementation
 
-## Boundary
-- Public: thinktank.jussco.company landing, onboarding, local-first interview, workspace, static assets.
-- Private customer: /api/auth/* and /api/ideas* handled by think-tank-public-front-door **before** any asset proxy. Credentials are only sent to the same-origin API when GET /api/auth/me returns 200 or 401.
-- Founder: FCR founder interfaces, creator-only projects, keys, and privileges remain separate. Think Tank signup never calls or updates founder_users, is_founder(), projects or FCR founder operations.
-- Origin: thinktank-app.jussco.company remains Cloudflare Access protected, with public access granted only to the **separate** frontdoor Worker.
-- Local records: unchanged LocalIdeaStore. Browser-local storage is device/browser scoped, not account isolated. Logout cannot and does not delete local work; share-device warning is mandatory.
+## Canonical boundary
 
-## Backend source candidate
-- worker/frontdoor.mjs preserves public proxy routes and strict CSP, with connect-src 'self' for API requests.
-- worker/secure-api.mjs implements email signup, verified login, HttpOnly __Host- session cookies, same-origin mutation checks, token refresh, logout, and private IdeaRecordV1 CRUD **without DELETE**.
-- No user content is transmitted to external AI or made public. The cloud vault requires an explicit Save action.
-- Supabase project: existing founder-control-room identity project, with a **separate** think_tank_idea_records table. RLS is owner-bound, scoped to authenticated non-anonymous users. No service_role key is used by the public Worker; only a publishable key and each verified user's JWT.
-- Optimistic revision preconditions fail on stale updates; collisions require an explicit founder/user decision, never overwrite silently.
-- This is an additive integration, not proof that a separate new Supabase project has been created.
+- Public product: https://thinktank.jussco.company. Landing, onboarding, deterministic interview, browser-local Idea Records and exports remain available without sign-in.
+- Private origin: https://thinktank-app.jussco.company, protected separately by Cloudflare Access.
+- Dedicated identity + customer database: Neon project cool-bar-40730429 (think-tank), branch br-proud-fog-beq03glb, database think_tank. Neon Auth (Better Auth) issues end-user JWTs for the Neon Data API.
+- Founder Control Room stays independent. Never reuse FCR founder auth or provider secrets for Think Tank customers. Historical FCR Supabase migration files remain preserved but are not the selected customer backend.
+- Cloud saves are explicit opt-in. Do not transmit founder idea content to third-party AI or delete existing local records.
 
-## Non-negotiable release gates
-1. Owner approves reusing the existing FCR auth tenant for customer identity; separate app data must never have founder grants.
-2. Supabase Auth email confirmations, redirect allowlist and password recovery flow are configured and tested. Existing FCR leaked-password advisory must be addressed.
-3. Apply migration from supabase/migrations/20261121000000_think_tank_private_idea_records.sql to the correct FCR project. Verify RLS, grants, schema and security advisors **in the live project**.
-4. Configure public Worker environment: SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY; set PUBLIC_ORIGIN to the canonical https://thinktank.jussco.company. The publishable key is NOT a service-role key. No secret values committed to GitHub.
-5. Add auth-specific Cloudflare WAF/rate-limit and bot/Turnstile protections without gating legitimate public pages. Confirm public Worker route bindings, no overlapping deployments, and rollback to prior worker version.
-6. Pass Node unit/security tests, Playwright desktop+mobile, static artifact manifest, live anonymous public flow, signup/verification/login/recovery, tenant A vs B read/write denial, and private origin Access denial.
-7. Exact-head green checks, founder release authority, no unrelated production deployment, and a rollback receipt before enabling production. **Do not deploy from this draft PR until gates pass.**
+## Implemented source on the focused fix branch
+
+- worker/frontdoor.mjs dispatches account and idea API requests to worker/neon-api.mjs before public asset forwarding. The CSP permits connect-src self.
+- worker/neon-api.mjs requires a canonical PUBLIC_ORIGIN, NEON_AUTH_URL, NEON_DATA_API_URL and the NEON_AUTH_RELEASE=enabled flag, and rejects invalid or absent configuration with HTTP 503.
+- Sessions use Secure HttpOnly cookies, with JWT use restricted to server-to-Neon Data API calls. Supports signup, verified sign-in, OTP verification and password recovery, logout, owner-specific idea list/create/read/update and optimistic revision checks. No DELETE route or service-role key.
+- assets/auth-entry.js renders code verification and password reset controls only after the account API is available. Without it, credential fields stay disabled and local exploration works.
+- tests/neon-api.test.mjs checks fail-closed behavior, CSRF origin restrictions, anonymous denial, session cookies, cross-tenant ownership and revision conflicts.
+- .github/workflows/playwright.yml now includes fix branch push events for full browser proof.
+
+## Verified provider status (2026-11-21)
+
+- Dedicated Neon project, Neon Auth and Data API provisioned. Email verification is mandatory, OTP is selected, localhost is disallowed, and sessions are revoked on password reset.
+- Registration remains DISABLED. Dedicated production SMTP and real email delivery proof are pending.
+- Separate idea table: zero records. RLS enabled and forced, authenticated SELECT/INSERT/UPDATE owner-bound via auth.user_id(), no anonymous table grants and no DELETE grants.
+- Direct anonymous Neon Data API call returned 401.
+- Current public homepage and local workspace returned 200, private origin 403.
+- The live public account API returned 404; the deployed old CSP has connect-src none. Branch code is NOT deployed. No public account is live.
+
+## Proof and remaining gates
+
+- Local: isolated new Neon gateway passed eight focused Node unit tests against mock upstream responses.
+- Staged browser: six Playwright checks passed with exact branch UI source and simulated API responses, including mobile signup, OTP input, desktop recovery and narrow-screen overflow.
+- These mocks DO NOT prove live Neon signup, email delivery, account recovery or end-user JWT and RLS enforcement.
+- Current exact-head GitHub CI, real email transport, two-user isolation, production WAF/rate limits, deployment and live Playwright remain required.
+
+## Release order
+
+1. Pass the exact-branch Node + full Playwright CI and reconcile against current main, without unrelated changes.
+2. Configure dedicated production SMTP, test real OTP email receipt and recovery.
+3. Configure auth-specific edge rate limits and bot protection without gating public pages.
+4. Deploy and verify only a staged public Worker version with a closed release gate and canonical Neon endpoints.
+5. Test authorized disposable account A vs B: signup, verify, login, logout, reset, read/write ownership, revisions, local fallback and mobile/desktop behavior.
+6. Require explicit founder approval tied to exact head before production promotion or opening registration.
 
 ## Rollback
-- Roll back only the public frontdoor Worker to its previously observed version. Local V0 workspaces continue to function; no account credentials are accepted while account API is absent.
-- Revoke environment variables if needed; do not delete customer cloud records automatically.
-- The additive RLS-protected table may remain closed/unused. Any data deletion requires separate authorization.
 
-## Evidence status
-- Source authored/committed to draft Think Tank PR #50; branch integration and exact-head CI must be rechecked.
-- Local isolated Worker tests passed. That is not production proof.
-- No production Cloudflare API Worker update or FCR database migration is claimed by this document.
+Disable NEON_AUTH_RELEASE, or restore the previous verified public Worker deployment; preserve user records and local-first continuity. Never delete customer content as an automatic rollback.
