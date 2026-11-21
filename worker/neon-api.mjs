@@ -31,7 +31,7 @@ function settings(env) {
         !auth.hostname.endsWith('.neon.tech') || !data.hostname.endsWith('.neon.tech') ||
         auth.pathname !== '/think_tank/auth' || data.pathname !== '/think_tank/rest/v1' ||
         auth.username || data.username || auth.search || data.search || auth.hash || data.hash) return null;
-    return { auth: auth.href.replace(/\/$/, ''), data: data.href.replace(/\/$/, '') };
+    return { auth: auth.href.replace(/\/$/, ''), data: data.href.replace(/\/$/, ''), signupEnabled: env.NEON_SIGNUP_RELEASE === 'enabled' };
   } catch { return null; }
 }
 function csrf(request) {
@@ -138,6 +138,7 @@ export async function api(request, env, pathname) {
   }
   try {
     if (pathname === '/api/auth/signup' && method === 'POST') {
+      if (!cfg.signupEnabled) return reply({ error: 'Account registration is not open yet' }, 503);
       if (!validEmail(body?.email) || !validPassword(body?.password)) return reply({ error: 'Valid email and 12–128-character password required' }, 400);
       const { response } = await neonAuth(cfg, '/sign-up/email', 'POST', { email: body.email, password: body.password, name: 'Think Tank Member' });
       if (!response.ok) return reply({ error: 'Sign-up not available' }, response.status === 429 ? 429 : 400);
@@ -173,8 +174,8 @@ export async function api(request, env, pathname) {
       return reply({ signedOut: true }, 200, [sessionCookie('', 0)]);
     }
     const signed = await identity(cfg, readCookie(request));
-    if (!signed) return reply({ error: 'Sign in required', ...(pathname === '/api/auth/me' ? { service: 'think-tank-auth-v1' } : {}) }, 401, [sessionCookie('', 0)]);
-    if (pathname === '/api/auth/me' && method === 'GET') return reply({ service: 'think-tank-auth-v1', user: signed.user });
+    if (!signed) return reply({ error: 'Sign in required', ...(pathname === '/api/auth/me' ? { service: 'think-tank-auth-v1', signupEnabled: cfg.signupEnabled } : {}) }, 401, [sessionCookie('', 0)]);
+    if (pathname === '/api/auth/me' && method === 'GET') return reply({ service: 'think-tank-auth-v1', signupEnabled: cfg.signupEnabled, user: signed.user });
     if (pathname === '/api/ideas' && method === 'GET') {
       const query = new URLSearchParams({ select: 'id,title,revision,updated_at', owner_user_id: `eq.${signed.user.userId}`, order: 'updated_at.desc', limit: '100' });
       const got = await neonData(cfg, `/${TABLE}?${query}`, 'GET', signed.jwt);
