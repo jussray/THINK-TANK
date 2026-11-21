@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const api = fs.readFileSync('worker/secure-api.mjs','utf8');
 const front = fs.readFileSync('worker/frontdoor.mjs','utf8');
 const migration = fs.readFileSync('supabase/migrations/20261121000000_think_tank_private_idea_records.sql','utf8');
+const grantCorrection = fs.readFileSync('supabase/migrations/20261121000100_think_tank_revoke_extra_table_privileges.sql','utf8');
 const build = fs.readFileSync('scripts/build-static-artifact.mjs','utf8');
 const page = fs.readFileSync('workspace.html','utf8');
 
@@ -40,4 +41,9 @@ test('cloud vault assets are part of signed static artifact and opt-in only',()=
   assert.match(vault,/confirm\(/);
   assert.match(vault,/Save current idea to private vault/);
   assert.doesNotMatch(vault,/service_role|localStorage\.clear/);
+});
+test('follow-up migration revokes inherited authenticated DELETE and TRUNCATE grants',()=>{
+  assert.match(grantCorrection,/REVOKE ALL ON public\.think_tank_idea_records FROM authenticated/);
+  assert.match(grantCorrection,/GRANT SELECT, INSERT, UPDATE ON public\.think_tank_idea_records TO authenticated/);
+  assert.doesNotMatch(grantCorrection,/GRANT[^\n]*DELETE/);
 });
