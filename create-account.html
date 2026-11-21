@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Explore locally · Think Tank</title>
+<title>Create a private account · Think Tank</title>
 <meta name="description" content="Explore Think Tank locally. Account registration is not yet available.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="assets/auth.css">
@@ -65,12 +65,12 @@
 
   <section class="card" aria-labelledby="create-title" data-reveal="2" data-tilt>
     <p class="kicker">Join Think Tank</p>
-    <h2 id="create-title">Explore the local workspace.</h2>
-    <p class="sub" role="note">Account registration is not enabled. This preview does not create an account or save your role selection. Your Idea Record stays in this browser unless you export it.</p>
+    <h2 id="create-title">Create your private account.</h2>
+    <p class="sub" role="note">Registration activates only when secure account storage is available. Email and a verified password are required for cloud backups; role and name selections are decorative and do not grant privileges.</p>
 
     <!-- Entry form: per the founder's 2026-10-25 decision this navigates
          straight into the workspace. Nothing typed here is sent or stored. -->
-    <form id="create-form" action="./index.html" method="get">
+    <form id="create-form" action="#" method="post">
       <fieldset class="roles">
         <legend class="sub">Choose how you&rsquo;ll use Think Tank to get started.</legend>
         <div class="role-grid">
@@ -131,12 +131,12 @@
         </span>
       </label>
 
-      <p class="sub">No account or password is created here. Export a backup before clearing this browser.</p>
+      <label class="check terms"><input type="checkbox" name="accountConsent"><span>I understand that account email and explicitly saved ideas are stored by the service, while unsynced ideas stay in this browser.</span></label>
 
-      <button type="submit" class="btn-primary btn-motion">Explore Locally <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+      <button type="submit" class="btn-primary btn-motion" disabled>Create account <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
     </form>
 
-    <p class="foot">Account sign-in is not available yet. <a href="./signin.html">Learn about local mode &rarr;</a></p>
+    <p class="foot">Already registered? <a href="./signin.html">Sign in &rarr;</a></p>
   </section>
 </main>
 <script src="assets/auth-entry.js"></script>
