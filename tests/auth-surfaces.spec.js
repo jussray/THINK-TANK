@@ -26,7 +26,7 @@ test('verified sign-in navigates to the workspace without URL credential leakage
 });
 
 test('signup requires consent and password match before using the account API', async ({ page }) => {
-  await page.route('**/api/auth/me', route => route.fulfill({status:401,contentType:'application/json',body:'{"service":"think-tank-auth-v1","error":"Sign in required"}'}));
+  await page.route('**/api/auth/me', route => route.fulfill({status:401,contentType:'application/json',body:'{"service":"think-tank-auth-v1","error":"Sign in required","signupEnabled":true}'}));
   let signupCalls=0;
   await page.route('**/api/auth/signup', route => {signupCalls++;return route.fulfill({status:202,contentType:'application/json',body:'{"message":"Check your email to verify your account, then sign in."}'});});
   await page.goto('/create-account.html');
@@ -43,6 +43,26 @@ test('signup requires consent and password match before using the account API', 
   await page.getByRole('button', {name:/Create account/i}).click();
   await expect(page.locator('#accountStatus')).toContainText('Check your email');
   expect(signupCalls).toBe(1);
+});
+
+
+test('public registration remains closed when the account service is active but signup is not released', async ({ page }) => {
+  await page.route('**/api/auth/me', route => route.fulfill({
+    status: 401, contentType: 'application/json',
+    body: '{"service":"think-tank-auth-v1","error":"Sign in required","signupEnabled":false}'
+  }));
+  let signupCalls = 0;
+  await page.route('**/api/auth/signup', route => {
+    signupCalls++;
+    return route.fulfill({ status: 503, contentType: 'application/json', body: '{}' });
+  });
+  await page.goto('/create-account.html');
+  await expect(page.locator('#accountStatus')).toContainText('not open yet');
+  await expect(page.locator('#email')).toBeDisabled();
+  await expect(page.locator('#password')).toBeDisabled();
+  await expect(page.getByRole('button', { name: /Create account/i })).toBeDisabled();
+  await expect(page.getByRole('link', { name: 'Explore locally without an account' })).toBeVisible();
+  expect(signupCalls).toBe(0);
 });
 
 test('public local-first exploration works without account service', async ({page}) => {
