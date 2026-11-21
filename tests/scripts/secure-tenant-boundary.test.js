@@ -10,7 +10,11 @@ const build = fs.readFileSync('scripts/build-static-artifact.mjs','utf8');
 const page = fs.readFileSync('workspace.html','utf8');
 
 test('public frontdoor dispatches secure API before asset service proxy',()=>{
-  assert.ok(front.indexOf('return api(request, env, url.pathname)') < front.indexOf('env.APP.fetch'));
+  assert.ok(front.indexOf('return neonApi(request, env, url.pathname)') < front.indexOf('env.APP.fetch'));
+  assert.match(front, /import \{ api as neonApi \} from '\.\/neon-api\.mjs'/);
+  const neon = fs.readFileSync('worker/neon-api.mjs', 'utf8');
+  assert.match(neon, /NEON_AUTH_RELEASE/);
+  assert.doesNotMatch(neon, /SUPABASE_URL|SUPABASE_SERVICE_ROLE_KEY|service_role/);
   assert.match(front,/script-src 'self'/);
   assert.match(front,/connect-src 'self'/);
   assert.match(front,/frame-ancestors 'none'/);
