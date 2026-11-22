@@ -10,11 +10,12 @@ const env = {
   SUPABASE_URL: 'https://auth-example.supabase.co',
   SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_mock_only_sufficient_length',
   PUBLIC_ORIGIN: SITE,
+  AUTH_ENTRY_RATE_LIMITER: { limit: async () => ({ success: true }) },
   APP: { fetch: async r => new Response('<h1>' + new URL(r.url).pathname + '</h1>', { headers: { 'Content-Type':'text/html' } }) }
 };
 function req(path, method='GET', body, token='goodA', extra={}) {
   return new Request(SITE+path,{ method,
-    headers:{...(method==='GET'?{}:{Origin:SITE,'Content-Type':'application/json','Sec-Fetch-Site':'same-origin'}),
+    headers:{'cf-connecting-ip':'203.0.113.10',...(method==='GET'?{}:{Origin:SITE,'Content-Type':'application/json','Sec-Fetch-Site':'same-origin'}),
       ...(token?{Cookie:'__Host-tt_access='+token}:{}), ...extra},
     body:body===undefined?undefined:JSON.stringify(body) });
 }
@@ -72,6 +73,17 @@ test('account API fails closed when the canonical public origin is missing or mi
 test('unconfigured account API fails closed',async()=>{
   const response=await frontdoor.fetch(req('/api/auth/me'),{APP:env.APP});
   assert.equal(response.status,503);
+});
+test('auth entry fails closed when the rate-limit binding is missing',async()=>{
+  const response=await frontdoor.fetch(req('/api/auth/login','POST',{email:'a@example.test',password:'longpassword123'},null),{...env,AUTH_ENTRY_RATE_LIMITER:undefined});
+  assert.equal(response.status,503);
+});
+test('auth entry blocks exhausted visitor limits without contacting Supabase',async()=>{
+  let key=null;
+  const limited={...env,AUTH_ENTRY_RATE_LIMITER:{limit:async({key:k})=>{key=k;return {success:false}}}};
+  const response=await frontdoor.fetch(req('/api/auth/login','POST',{email:'a@example.test',password:'longpassword123'},null),limited);
+  assert.equal(response.status,429);
+  assert.equal(key,'ip:203.0.113.10');
 });
 test('signup rejects weak password and cross-site attempts',async()=>withMock(async({calls})=>{
   const cross=await frontdoor.fetch(req('/api/auth/signup','POST',{email:'a@example.test',password:'longpassword123'},null,{Origin:'https://evil.example'}),env);
