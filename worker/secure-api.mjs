@@ -41,6 +41,22 @@ function sameOriginMutation(request, env) {
   const fetchSite = request.headers.get('Sec-Fetch-Site');
   return suppliedOrigin === env.PUBLIC_ORIGIN && (fetchSite === null || fetchSite === 'same-origin');
 }
+async function authEntryLimit(request, env) {
+  const limiter = env.AUTH_ENTRY_RATE_LIMITER;
+  const ip = request.headers.get('cf-connecting-ip');
+  if (!limiter || typeof limiter.limit !== 'function' || !ip) {
+    return result({ error: 'Account protection unavailable' }, 503);
+  }
+  try {
+    const limited = await limiter.limit({ key: `ip:${ip}` });
+    if (!limited || typeof limited.success !== 'boolean') {
+      return result({ error: 'Account protection unavailable' }, 503);
+    }
+    return limited.success ? null : result({ error: 'Too many authentication attempts' }, 429);
+  } catch {
+    return result({ error: 'Account protection unavailable' }, 503);
+  }
+}
 async function readBody(request) {
   if (!(request.headers.get('Content-Type') || '').toLowerCase().startsWith('application/json')) throw new Error('Expected JSON');
   if (Number(request.headers.get('Content-Length') || 0) > MAX_BODY_BYTES) throw new Error('Payload too large');
@@ -111,6 +127,10 @@ export async function api(request, env, pathname) {
   const method = request.method.toUpperCase();
   if (!['GET', 'POST', 'PUT'].includes(method)) return result({ error: 'Method not allowed' }, 405);
   if (method !== 'GET' && !sameOriginMutation(request, env)) return result({ error: 'Invalid request origin' }, 403);
+  if (method === 'POST' && ['/api/auth/signup', '/api/auth/login'].includes(pathname)) {
+    const limited = await authEntryLimit(request, env);
+    if (limited) return limited;
+  }
   let body;
   if (method !== 'GET') {
     try { body = await readBody(request); }
