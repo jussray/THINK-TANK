@@ -10,5 +10,12 @@
     }
   ],
   "preview_urls": false,
-  "workers_dev": false
+  "workers_dev": false,
+  "ratelimits": [
+    {
+      "name": "AUTH_ENTRY_RATE_LIMITER",
+      "namespace_id": "1005",
+      "simple": { "limit": 10, "period": 60 }
+    }
+  ]
 }
