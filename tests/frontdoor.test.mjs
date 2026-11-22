@@ -63,6 +63,12 @@ test('public entrance is public, with script-src self',async()=>{
   assert.match(await response.text(),/landing/);
   assert.match(response.headers.get('Content-Security-Policy'),/script-src 'self'/);
 });
+test('account API fails closed when the canonical public origin is missing or mismatched',async()=>{
+  const missing=await frontdoor.fetch(req('/api/auth/me'),{...env,PUBLIC_ORIGIN:undefined});
+  const wrong=await frontdoor.fetch(req('/api/auth/me'),{...env,PUBLIC_ORIGIN:'https://wrong.example'});
+  assert.equal(missing.status,503);
+  assert.equal(wrong.status,503);
+});
 test('unconfigured account API fails closed',async()=>{
   const response=await frontdoor.fetch(req('/api/auth/me'),{APP:env.APP});
   assert.equal(response.status,503);
