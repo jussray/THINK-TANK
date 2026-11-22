@@ -15,7 +15,14 @@ test('approved cinematic journey has responsive desktop and mobile browser recei
     await expect(page.getByRole('heading', {name:'Four perspectives. One stronger idea.'})).toBeVisible();
     await expect(page.getByTestId('export-record')).toBeVisible();
     // One anchored atmospheric world belongs to body::before, not an isolated hero crop.
-    const world = await page.locator('body').evaluate(el => getComputedStyle(el, '::before'));
+    const world = await page.locator('body').evaluate(el => {
+      const style = getComputedStyle(el, '::before');
+      return {
+        backgroundImage: style.backgroundImage,
+        position: style.position,
+        pointerEvents: style.pointerEvents
+      };
+    });
     expect(world.backgroundImage).toContain('think-tank-hero-scene.webp');
     expect(world.position).toBe('fixed');
     expect(world.pointerEvents).toBe('none');
