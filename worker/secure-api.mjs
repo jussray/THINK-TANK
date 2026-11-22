@@ -37,10 +37,9 @@ function cookiesFor(request) {
   return out;
 }
 function sameOriginMutation(request, env) {
-  const origin = env.PUBLIC_ORIGIN || DEFAULT_ORIGIN;
   const suppliedOrigin = request.headers.get('Origin');
   const fetchSite = request.headers.get('Sec-Fetch-Site');
-  return suppliedOrigin === origin && (fetchSite === null || fetchSite === 'same-origin');
+  return suppliedOrigin === env.PUBLIC_ORIGIN && (fetchSite === null || fetchSite === 'same-origin');
 }
 async function readBody(request) {
   if (!(request.headers.get('Content-Type') || '').toLowerCase().startsWith('application/json')) throw new Error('Expected JSON');
@@ -62,6 +61,7 @@ async function readBody(request) {
   try { return JSON.parse(new TextDecoder().decode(bytes)); } catch { throw new Error('Invalid JSON'); }
 }
 function configReady(env) {
+  if (env.PUBLIC_ORIGIN !== DEFAULT_ORIGIN) return false;
   if (typeof env.SUPABASE_URL !== 'string' || !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(env.SUPABASE_URL)) return false;
   return typeof env.SUPABASE_PUBLISHABLE_KEY === 'string' && env.SUPABASE_PUBLISHABLE_KEY.length >= 20;
 }
