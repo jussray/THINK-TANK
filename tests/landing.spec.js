@@ -78,3 +78,40 @@ for (const [name, viewport] of [
     await page.screenshot({ path: 'visual-proof/think-tank-onboarding-' + name + '.png', fullPage: true });
   });
 }
+
+
+test('public portal shares one fixed landscape across desktop and mobile', async ({ page }) => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const output = path.resolve(process.cwd(), 'visual-proof');
+  fs.mkdirSync(output, { recursive: true });
+
+  for (const viewport of [
+    { name: 'desktop', width: 1536, height: 1024 },
+    { name: 'mobile', width: 390, height: 844 }
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto('/landing.html');
+    const scene = await page.evaluate(() => {
+      const style = getComputedStyle(document.body, '::after');
+      return {
+        backgroundImage: style.backgroundImage,
+        position: style.position,
+        pointerEvents: style.pointerEvents
+      };
+    });
+    expect(scene.backgroundImage).toContain('think-tank-hero-scene.webp');
+    expect(scene.position).toBe('fixed');
+    expect(scene.pointerEvents).toBe('none');
+    expect(await page.locator('.hero-bg').evaluate(el => getComputedStyle(el).display)).toBe('none');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+    await page.screenshot({
+      path: path.join(output, 'think-tank-public-portal-' + viewport.name + '.png'),
+      fullPage: true,
+      animations: 'disabled'
+    });
+  }
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  expect(await page.evaluate(() => getComputedStyle(document.body, '::after').animationName)).toBe('none');
+});

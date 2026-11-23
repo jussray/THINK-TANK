@@ -46,3 +46,41 @@ body{background:radial-gradient(ellipse at 50% 0%,rgba(126,69,169,.17),transpare
   .field textarea{min-height:112px}
   .starter-list{margin-top:12px}
 }
+
+
+/* Shared atmospheric world — one scene behind every working stage.
+   No duplicate portal crop at the hero/board seam. The image is a backdrop,
+   never a screenshot of form controls. All forms remain live DOM elements.
+   Small, progressive motion is disabled by the OS reduced-motion preference. */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(5,4,16,.20),rgba(5,4,16,.35) 44%,rgba(5,4,16,.72)),
+    url("./think-tank-hero-scene.webp") center 46% / cover no-repeat;
+  transform:scale(1.03);
+}
+body > header,body > main,body > footer{position:relative;z-index:1}
+.hero,.board{background:transparent;}
+.hero-art{background:none;}
+/* Let the same mountain-and-lake world remain visible behind translucent
+   interface surfaces; avoid drawing a second photograph inside each panel. */
+.panel-art{
+  background:linear-gradient(180deg,rgba(8,7,23,.63),rgba(8,7,23,.78));
+}
+@media(prefers-reduced-motion:no-preference){
+  body::before{animation:tt-atmosphere-drift 48s ease-in-out infinite alternate;}
+}
+@keyframes tt-atmosphere-drift{
+  from{transform:scale(1.03) translate3d(0,0,0);}
+  to{transform:scale(1.08) translate3d(-.6%,.4%,0);}
+}
+@media(prefers-reduced-motion:reduce){
+  body::before{animation:none;transform:none;}
+}
+@media(prefers-reduced-transparency:reduce){
+  .panel-art{background:#17102c;}
+}
