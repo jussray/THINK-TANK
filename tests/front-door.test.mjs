@@ -28,7 +28,7 @@ test('public Worker routes exclude the private app hostname', () => {
 test('canonical account API fails closed when Neon release bindings are absent', async () => {
   const response = await worker.fetch(new Request(origin + '/api/auth/me'));
   assert.equal(response.status, 503);
-  assert.match(response.headers.get('Content-Type') || '', /application\\/json/);
+  assert.match(response.headers.get('Content-Type') || '', /application\/json/);
   assert.deepEqual(await response.json(), { error: 'Account service unavailable' });
   const ideas = await worker.fetch(new Request(origin + '/api/ideas'));
   assert.equal(ideas.status, 503);
