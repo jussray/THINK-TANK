@@ -162,6 +162,14 @@ node scripts/verify-access-boundary.mjs
 
 The configuration audit is not a replacement for signed-out public-browser, authorized owner, unauthorized visitor, source-SHA, or runtime-asset verification.
 
+### Owner sign-in evidence gate (not yet completed)
+
+`scripts/verify-owner-login-witness.mjs` is a **read-only** follow-up for the outstanding real-owner authentication gate. It checks Cloudflare Access authentication events from the previous 24 hours for the **private Think Tank origin application only**, compares successful Access login identities against the application's current three-email Allow policy, rejects an approved non-owner, fails closed on absent or incomplete evidence, and prints counts only. It never requests a founder password, reads browser cookies, sends emails, or writes Cloudflare policies.
+
+After this branch becomes available in the default-branch GitHub workflow, the founder can sign in independently through `https://thinktank-app.jussco.company/` using an already-authorized Cloudflare identity and then manually dispatch `.github/workflows/access-boundary-audit.yml` with `verify_owner_login=true`. The manual workflow requires `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_ACCESS_READ_TOKEN` GitHub secrets; the API token also needs **Access: Audit Logs Read**. Missing credentials, missing owner login evidence, or an unexpected allowed user must fail, not silently pass. The normal push/PR source contract never reads account data.
+
+**Evidence distinction:** A successful owner login event establishes that Cloudflare Access accepted an owner identity. It does **not** establish that the protected Think Tank application completed an authenticated browser journey. That further real-browser check still needs an interactive owner session. A completed three-user Access policy simulation (one allowed, two blocked) is separate and does not substitute for this witness.
+
 ## Acquire readiness
 
 Current source is closer to a transferable software asset, but it must **not** be described as Acquire-ready yet.
