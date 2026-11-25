@@ -84,3 +84,5 @@ body > header,body > main,body > footer{position:relative;z-index:1}
 @media(prefers-reduced-transparency:reduce){
   .panel-art{background:#17102c;}
 }
+
+.amethyst-activity{display:flex;align-items:center;gap:.6rem;color:inherit;font:inherit}.amethyst-activity[hidden]{display:none!important}.amethyst-activity img{object-fit:contain;border-radius:10px;animation:amethyst-bob 1.6s ease-in-out infinite}@keyframes amethyst-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}@media(prefers-reduced-motion:reduce){.amethyst-activity img{animation:none}}

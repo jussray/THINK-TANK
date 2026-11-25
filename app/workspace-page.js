@@ -173,7 +173,9 @@ async function generateProposal() {
   w.proposals.push(proposal);
   event('proposal.generated', '', '', '', proposal.id);
   record.updatedAt = timestamp;
-  await persist();
+  const activity = $('amethystActivity');
+  if (activity) activity.hidden = false;
+  try { await persist(); } finally { if (activity) activity.hidden = true; }
   screen = 'proposals'; render();
   tell('Local proposal ready for founder review. Modules remain unchanged.');
 }
