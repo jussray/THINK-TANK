@@ -11,6 +11,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import { assertProductionLiveOrigin } from './live-origin-policy.mjs';
+import { verifyServedFile } from './edge-asset-attestation.mjs';
 
 const baseInput = process.argv[2] || process.env.THINK_TANK_LIVE_URL;
 if (!baseInput) {
@@ -98,10 +99,17 @@ for (const file of trustedKeys) {
 }
 
 const mismatches = [];
+const normalizedByEdge = [];
 for (const [file, expectedHash] of Object.entries(hashes)) {
   const response = await fetchWithRetry(`${base}/${file}`);
-  const actual = `sha256:${sha256(Buffer.from(await response.arrayBuffer()))}`;
-  if (actual !== expectedHash) mismatches.push(`${file}: expected ${expectedHash}, got ${actual}`);
+  const bytes = Buffer.from(await response.arrayBuffer());
+  const proof = verifyServedFile(file, bytes, expectedHash);
+  if (!proof.match) {
+    const actual = `sha256:${sha256(bytes)}`;
+    mismatches.push(`${file}: expected ${expectedHash}, got ${actual}`);
+  } else if (proof.transform !== 'none') {
+    normalizedByEdge.push({ file, transform: proof.transform });
+  }
 }
 if (mismatches.length) {
   throw new Error(`Live runtime content mismatch:\n  ${mismatches.join('\n  ')}`);
@@ -109,5 +117,7 @@ if (mismatches.length) {
 
 console.log(
   `Live runtime content VERIFIED against trusted GitHub source at ${base}: ${manifest.source?.sha} ${manifestFingerprint} ` +
-    `(${Object.keys(hashes).length} files re-hashed, env ${manifest.runtime?.environment})`
+    `(${Object.keys(hashes).length} files re-hashed, env ${manifest.runtime?.environment}, ` +
+    `${normalizedByEdge.length} HTML files normalized for known Cloudflare Web Analytics insertion; ` +
+    `raw HTTP byte parity applies only to the other files)`
 );
