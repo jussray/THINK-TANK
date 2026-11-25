@@ -27,6 +27,17 @@ jobs:
           node --check scripts/access-boundary-contract.mjs
           node --check scripts/verify-access-boundary.mjs
           node --test tests/scripts/access-boundary-contract.test.js tests/scripts/public-access-docs.test.js tests/scripts/live-origin-policy.test.js
+      - name: Run complete Node unit and static artifact acceptance checks
+        env:
+          THINK_TANK_SOURCE_SHA: ${{ github.sha }}
+          THINK_TANK_EXPECTED_SHA: ${{ github.sha }}
+          THINK_TANK_RUNTIME_ENV: cloudflare-workers
+        run: |
+          set -euo pipefail
+          npm run test:unit
+          npm run build
+          npm run check:storage-boundary
+          npm run check:domain-purity
 
   live-configuration-audit:
     if: github.event_name == 'workflow_dispatch'
