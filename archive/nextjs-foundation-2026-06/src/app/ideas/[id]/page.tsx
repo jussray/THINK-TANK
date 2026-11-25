@@ -317,7 +317,6 @@ function GeneratingOverlay() {
         letterSpacing: '0.06em',
         fontFamily: 'ui-monospace, monospace',
         animation: 'fadeUp 0.3s ease-out both',
-        key: step,
       }}>
         {steps[step]}…
       </p>

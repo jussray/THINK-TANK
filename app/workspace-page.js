@@ -315,6 +315,7 @@ document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click'
 $('newIdea').addEventListener('click', () => void safe(createIdea));
 $('exportSelected').addEventListener('click', () => void safe(exportSelected));
 $('exportAll').addEventListener('click', () => void safe(exportAll));
+$('importBackupBtn').addEventListener('click', () => $('importAll').click());
 $('importAll').addEventListener('change', event => {
   const file = event.target.files && event.target.files[0];
   void safe(() => importAll(file));

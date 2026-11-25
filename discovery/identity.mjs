@@ -1,0 +1,14 @@
+export const expected = {
+  "project": "THINK-TANK",
+  "name": "Think Tank",
+  "description": "Structured idea exploration and decision support",
+  "publicPage": "https://www.thinktank.jussco.company/",
+  "source": "https://github.com/jussray/THINK-TANK/blob/745bfa8fe0c110b27f9f6b58ebaae7b0c5e83669/README.md",
+  "intendedUseCases": [
+    "Founder idea interviews",
+    "Versioned idea records"
+  ],
+  "limitations": [
+    "Production AI and hosted persistence not established by this metadata"
+  ]
+};

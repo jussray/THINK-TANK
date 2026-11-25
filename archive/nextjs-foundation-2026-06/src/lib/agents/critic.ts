@@ -5,6 +5,7 @@
 import { claude, openai, MODELS, heliconeTag } from '@/lib/ai/client'
 import type { ScorecardContent, ModuleType } from '@/types/modules'
 import type { SynthesisOutput } from './synthesis'
+import type { ChatCompletion } from 'openai/resources/chat/completions'
 
 // ─── Critic Agent ─────────────────────────────────────────────────────────────
 
@@ -58,7 +59,7 @@ Generate 3 specific investor-grade concerns.`
     heliconeTag(ideaId, 'critic') as never
   )
 
-  const text = response.choices[0]?.message?.content ?? '[]'
+  const text = (response as ChatCompletion).choices[0]?.message?.content ?? '[]'
 
   try {
     // GPT-4o with response_format json_object wraps arrays in an object

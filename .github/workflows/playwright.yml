@@ -15,10 +15,13 @@ jobs:
   interview-loop:
     # Playwright 1.55 Chromium install supports Ubuntu 24.04, not runner Ubuntu 26.04.
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    # Budget includes rebuilding patched Git and all three browser proof suites.
+    timeout-minutes: 25
     env:
       PROOF_SUBJECT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
+      - name: Install upstream Git security release before checkout
+        uses: jussray/founder-control-room/.github/actions/refresh-git-security@0a739664e85443fb79cfe58202e2eea6ce01d7ff
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.PROOF_SUBJECT_SHA }}

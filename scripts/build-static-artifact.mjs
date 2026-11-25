@@ -19,6 +19,7 @@ const requiredFiles = [
   'assets/motion.css',
   'assets/motion.js',
   'assets/auth-entry.js',
+  'assets/cloud-vault.js',
   'assets/cinematic-app.css',
   'assets/hero-scene.jpg',
   'assets/band.jpg',

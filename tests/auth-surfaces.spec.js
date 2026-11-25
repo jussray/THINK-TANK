@@ -1,70 +1,54 @@
 const { test, expect } = require('@playwright/test');
 
-// Founder decision 2026-10-25 (exact-match rebuild) supersedes the earlier
-// disabled-preview behaviour: sign-in and create-account now match the
-// approved mockups and act as entry points into the workspace. They are NOT
-// authentication — nothing typed is sent or stored, and the primary and
-// Google actions navigate straight to ./index.html.
-test('sign-in matches the mockup and routes into the workspace', async ({ page }) => {
-  await page.goto('/signin.html');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Welcome back to Think Tank');
-  await expect(page.locator('.notice')).toHaveCount(0);
-  await expect(page.getByText('Not in V0')).toHaveCount(0);
-
-  // Email, password and "Remember me" are all typeable, nothing disabled.
-  // (Scoped to the form: the nav also carries the day/night theme checkbox.)
-  const inputs = page.locator('#signin-form input');
-  await expect(inputs).toHaveCount(3);
-  for (const input of await inputs.all()) {
-    await expect(input).toBeEnabled();
+test('account credentials remain disabled when the secure API is unavailable', async ({ page }) => {
+  await page.route('**/api/auth/me', route => route.fulfill({status:503,contentType:'application/json',body:'{"error":"Account service unavailable"}'}));
+  for (const path of ['/signin.html', '/create-account.html']) {
+    await page.goto(path);
+    await expect(page.locator('#accountStatus')).toContainText('not available');
+    await expect(page.locator('#email')).toBeDisabled();
+    await expect(page.locator('#password')).toBeDisabled();
+    await expect(page.getByRole('link', { name: 'Explore locally without an account' })).toBeVisible();
   }
-  await page.locator('#email').fill('founder@example.com');
-  await page.locator('#password').fill('not-a-real-secret');
-
-  // Submitting discards the input (no query string carries it) and lands in the app.
-  await page.getByRole('button', { name: /Sign In/ }).click();
-  await expect(page).toHaveURL(/index\.html$/);
-  expect(page.url()).not.toContain('founder@example.com');
-  expect(page.url()).not.toContain('not-a-real-secret');
-  await expect(page.getByTestId('idea-input')).toBeVisible();
 });
 
-test('sign-in Google action and forgot-password route correctly', async ({ page }) => {
+test('verified sign-in navigates to the workspace without URL credential leakage', async ({ page }) => {
+  await page.route('**/api/auth/me', route => route.fulfill({status:401,contentType:'application/json',body:'{"service":"think-tank-auth-v1","error":"Sign in required"}'}));
+  await page.route('**/api/auth/login', route => route.fulfill({status:200,contentType:'application/json',body:'{"user":{"userId":"test-user","email":"a@example.test"}}'}));
   await page.goto('/signin.html');
-  await page.getByRole('link', { name: /Continue with Google/ }).click();
-  await expect(page).toHaveURL(/index\.html$/);
-
-  await page.goto('/signin.html');
-  await page.getByRole('link', { name: /Forgot password/ }).click();
-  await expect(page).toHaveURL(/create-account\.html$/);
-
-  await page.goto('/signin.html');
-  await page.getByRole('link', { name: /Create one/ }).click();
-  await expect(page).toHaveURL(/create-account\.html$/);
+  await expect(page.locator('#email')).toBeEnabled();
+  await expect(page.locator('#password')).toBeEnabled();
+  await page.locator('#email').fill('a@example.test');
+  await page.locator('#password').fill('a-strong-demo-password');
+  await page.getByRole('button', {name:/Sign in/i}).click();
+  await expect(page).toHaveURL(/workspace\.html$/);
+  expect(page.url()).not.toContain('a@example.test');
+  expect(page.url()).not.toContain('a-strong-demo-password');
 });
 
-test('create-account preselects Founder and routes into the workspace', async ({ page }) => {
+test('signup requires consent and password match before using the account API', async ({ page }) => {
+  await page.route('**/api/auth/me', route => route.fulfill({status:401,contentType:'application/json',body:'{"service":"think-tank-auth-v1","error":"Sign in required"}'}));
+  let signupCalls=0;
+  await page.route('**/api/auth/signup', route => {signupCalls++;return route.fulfill({status:202,contentType:'application/json',body:'{"message":"Check your email to verify your account, then sign in."}'});});
   await page.goto('/create-account.html');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Turn your ideas into');
-  await expect(page.getByRole('heading', { level: 2 })).toContainText('Create your account');
-  await expect(page.getByText('Not in V0')).toHaveCount(0);
+  await expect(page.locator('#name')).toBeDisabled();
+  await expect(page.locator('#email')).toBeEnabled();
+  await page.locator('#email').fill('a@example.test');
+  await page.locator('#password').fill('a-strong-demo-password');
+  await page.locator('#confirm').fill('different-password');
+  await page.locator('input[name="accountConsent"]').check();
+  await page.getByRole('button', {name:/Create account/i}).click();
+  await expect(page.locator('#accountStatus')).toContainText('Passwords do not match');
+  expect(signupCalls).toBe(0);
+  await page.locator('#confirm').fill('a-strong-demo-password');
+  await page.getByRole('button', {name:/Create account/i}).click();
+  await expect(page.locator('#accountStatus')).toContainText('Check your email');
+  expect(signupCalls).toBe(1);
+});
 
-  // Role tiles are live single-select radios with Founder pre-selected.
-  const radios = page.locator('input[type="radio"]');
-  await expect(radios).toHaveCount(4);
-  for (const radio of await radios.all()) {
-    await expect(radio).not.toBeDisabled();
-  }
-  await expect(page.locator('input[type="radio"][value="founder"]')).toBeChecked();
-  await page.locator('label.role', { hasText: 'Learner' }).click();
-  await expect(page.locator('input[type="radio"][value="learner"]')).toBeChecked();
-  await expect(page.locator('input[type="radio"][value="founder"]')).not.toBeChecked();
-
-  for (const label of ['Founder', 'Creator', 'Learner', 'Partner']) {
-    await expect(page.getByText(label, { exact: true })).toBeVisible();
-  }
-
-  await page.getByRole('button', { name: /Create Account/ }).click();
+test('public local-first exploration works without account service', async ({page}) => {
+  await page.route('**/api/auth/me', route => route.fulfill({status:503,contentType:'application/json',body:'{}'}));
+  await page.goto('/signin.html');
+  await page.getByRole('link', {name:'Explore locally without an account'}).click();
   await expect(page).toHaveURL(/index\.html$/);
   await expect(page.getByTestId('idea-input')).toBeVisible();
 });
