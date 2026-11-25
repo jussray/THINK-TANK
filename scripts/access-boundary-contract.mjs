@@ -19,7 +19,7 @@ const ownerEmails = (include, label) => {
   const values = include.map(entry => {
     if (!entry || Object.keys(entry).length !== 1 ||
         typeof entry.email?.email !== 'string' ||
-        !/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(entry.email.email)) {
+        !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(entry.email.email)) {
       throw new Error(label + ' must contain only explicit email selectors');
     }
     return entry.email.email.toLowerCase();
