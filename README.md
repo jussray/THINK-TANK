@@ -123,42 +123,52 @@ The proof chain covers:
 
 ## Public deployment boundary
 
-**Canonical public entrance:** `https://thinktank.jussco.company/` is
-served by the dedicated `think-tank-public-front-door` Cloudflare Worker.
-`https://www.thinktank.jussco.company` uses a permanent 301 redirect to
-the canonical hostname, preserving paths and query strings.
+**Canonical public entrance:** https://thinktank.jussco.company/ is served by the dedicated `think-tank-public-front-door` Cloudflare Worker. https://www.thinktank.jussco.company/ redirects permanently to the canonical hostname, preserving paths and queries.
 
-**Access-protected V0 runtime:** `https://thinktank-app.jussco.company/`
-is routed to the separate `think-tank` Worker. Its existing Cloudflare
-Access application requires sign-in before serving the local-first static
-runtime, including `index.html` and `workspace.html`. Think Tank V0 has
-no implemented account signup, backend persistence, provider-backed agents,
-or billing; the `signin.html` and `create-account.html` pages are entry
-screens, not product authentication. Submitting either one opens the
-workspace; nothing typed into them is sent, stored or checked.
+The entire built `_site` artifact is intentional public product surface: `landing.html`, `index.html`, `signin.html`, `create-account.html`, `workspace.html`, `/assets/*`, `/app/*`, and `/version.json`. In particular, `workspace.html` is public and stores its local-first Idea Record in the browser. The sign-in and create-account pages are previews, **not** working server authentication. The public front-door Worker forwards to the `think-tank` Worker via an internal Cloudflare service binding, without redirecting visitors off the public hostname.
 
-**Compatibility:** As of 2026-10-22, Cloudflare uses a temporary 302
-redirect from non-root paths on the public hostname to the same path on
-the protected app hostname, preserving queries. The public root also works
-with query strings. This is an infrastructure routing bridge, not an
-application auth implementation.
+**Protected origin:** https://thinktank-app.jussco.company/ reaches the separate `think-tank` Worker. A read-only audit on 2026-11-24 first observed a shared `Login` policy with `non_identity` → `linked_app_token` (issued for `sekret-backend`), not the One-time PIN rule seen on 2026-11-13. That shared policy is referenced by six Workers, so it must not be edited globally.
 
-**Deployment owner:** Cloudflare Workers Builds deploys the private
-`think-tank` Worker from `main` using `wrangler.jsonc`. The Wrangler
-config intentionally binds **only** `thinktank-app.jussco.company/*`;
-it must never reclaim either public-facing hostname as a custom domain.
-The public-facing Worker, 301 WWW redirect, and 302 legacy-path bridge are
-managed separately in Cloudflare. Preview deployments are disabled.
+**Applied on 2026-11-24:** An application-specific `Allow` policy named `Think Tank origin - owner mailboxes` was created using three existing authorized owner identities, then the application was updated to reference **only** that policy. A fresh Cloudflare API read confirmed that the protected Worker destination was unchanged and that Think Tank **no longer references the shared `Login` policy**. The six-app reusable `Login` policy itself remained unchanged. These are observed configuration results, **not** authorized/unauthorized user-session or production-browser proof.
 
-**Exact artifact proof:** `.github/workflows/verify-live.yml` rebuilds an
-exact source SHA, then runs `scripts/verify-live-runtime.mjs` against the
-protected application hostname. Because Cloudflare Access requires login
-and the verifier does not have an Access token, successful private live
-content attestation additionally requires an explicitly authorized
-service-token route or secure authenticated test session. A public-homepage
-200 is not evidence that the private artifact matches GitHub, and a
-successful source build is not evidence of a deployed production feature.
-The GitHub Pages publication workflow remains removed.
+
+**Intentional public bypass:** Cloudflare's Access application `think-tank-public-front-door - Public Only` currently uses `Bypass` → `Everyone`. Cloudflare documents that a public Worker may require exactly this Worker-level bypass when account-wide Worker Access is enabled. Security Insights flagged it as `access_policy_insecure` (Critical) on 2026-11-11, even though the founder-approved product boundary requires anonymous entry. **Do not replace the public bypass with an owner-only rule, remove it, or archive the finding as repaired without checking account-wide Access settings and independently verifying public/private flows.** The Security Insights finding remains active; a renewed classification attempt on 2026-11-24 returned HTTP 401 (missing Security Insights write permission). No finding was archived, dismissed, or marked repaired.
+
+**Single deployment owner:** `wrangler.jsonc` binds only `thinktank-app.jussco.company/*`, never either public hostname. The public Worker, route/binding mapping, and WWW redirect are managed in Cloudflare separately from Workers Builds. Cloudflare is the sole publication path; the GitHub Pages workflow was removed. `.github/workflows/deploy-worker.yml` is manual-only and must not compete with Workers Builds. `.github/workflows/verify-live.yml` provides the separate exact-source, live-artifact proof (it requires an authorized Access session for the protected origin).
+
+**Historical live proof, not current verification:** On 2026-10-28, the public hostname served 29/29 hashed files matching the inspected source artifact, a browser journey through `workspace.html` completed without an Access wall, and the protected origin challenged for Access. These receipts do not establish live reachability or private-owner authorization on 2026-11-13; both require a fresh independent check.
+
+**2026-11-24 live anonymous browser witness:** Cloudflare Browser Rendering ran Playwright against the production public hostname at a 390 × 844 mobile viewport. The homepage, interview (`/index.html`), workspace (`/workspace.html`), sign-in (`/signin.html`), and `/version.json` returned HTTP 200 without a Cloudflare Access wall or horizontal viewport overflow. The protected origin presented a Cloudflare Access sign-in page instead of the app. The public runtime manifest reported SHA `9ee418840401e1ecb96c618386815bd3b49883c2`, matching the inspected GitHub `main` SHA at the time; it declared 33 hashed files. This is a genuine anonymous browser and manifest identity witness, **not** authorized-owner sign-in proof, unauthorized authenticated identity proof, or independent 33-file byte-for-byte verification.
+
+**2026-11-25 production asset attestation:** Cloudflare Browser Rendering fetched all 33 files listed by the public `version.json`, bound to GitHub `main` SHA `9ee418840401e1ecb96c618386815bd3b49883c2`. Twenty-four network responses matched their declared SHA-256 hashes as returned. Six HTML responses contained exactly one injected Cloudflare Web Analytics beacon each; removing only that identified insertion restored their declared hashes. Three CSS response bodies showed reversible character-encoding conversion in the browser-testing response; reversing it restored their declared hashes. No unexplained file-content differences remained. **This is 33/33 source-content parity after explicitly attributed transformations, not 33/33 raw HTTP byte parity.** Cloudflare zone Auto Minify (CSS/HTML/JS) was observed off. No Cloudflare production setting was changed.
+
+The branch's `scripts/edge-asset-attestation.mjs` makes the live Node verifier accept **only** a narrow, validated Cloudflare Web Analytics HTML insertion, recording the number of normalized files. It does not normalize CSS, unknown scripts, altered page content, or forged manifests. Unexpected differences fail closed. This source change has its own tests and must pass exact-head CI before any merge. The Cloudflare Security Insights finding classification remains blocked by permission, separately from source-byte proof.
+
+**2026-11-25 independent policy-test receipt:** Cloudflare Access policy-test `572e68bf095918b2b532000d7635da252842c8fb2559373e14766b35ebea526f` evaluated the current application-specific `Think Tank origin - owner mailboxes` Allow policy against three existing Access users. The test finished `complete`: **1 allowed, 2 blocked, 0 errors (100% processed)**. This is a simulated authorization-policy evaluation, **not** successful interactive owner login or a completed unauthorized-identity browser denial. A scoped read of the Think Tank origin Access authentication logs beginning `2026-11-25T00:00:00Z` returned zero events; no real session can be attested from that window. No user identifiers or owner email addresses are published in this receipt.
+
+**Security Insights permission boundary:** The intentional `Bypass → Everyone` front-door application remains flagged Critical. An attempt on 2026-11-25 to classify the policy as `accept_risk` returned HTTP 401 and `You need write permissions to change the insight classification`. The original finding therefore remains active. Do not mark it fixed or alter the founder-approved public-bypass rule simply to clear the alert. Classification requires a separately authorized Cloudflare Security Insights write scope.
+
+## Cloudflare Access drift verification (read-only)
+
+`scripts/access-boundary-contract.mjs` defines the observed public-front-door, private-origin, owner-selector, and service-binding configuration requirements. `npm run test:unit` runs its local regression tests. The separate `scripts/verify-access-boundary.mjs` reads Cloudflare's API and refuses to certify an unexpected policy; it **never writes** to Cloudflare, prints no owner email addresses, and cannot demonstrate successful user login.
+
+`.github/workflows/access-boundary-audit.yml` runs the source contract, full unit suite, runtime artifact checks, and storage/domain constraints automatically on pushes and PRs. Its independent production-account API inspection runs **only** on `workflow_dispatch` and requires the GitHub Secrets `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_ACCESS_READ_TOKEN`. Grant that token Access Applications & Policies **read**, plus Workers Scripts **read**, not edit or deploy. Missing secrets must fail the manual audit, not silently pass.
+
+Read-only local invocation (after providing secrets via an approved secure environment, never a committed file):
+
+```bash
+node scripts/verify-access-boundary.mjs
+```
+
+The configuration audit is not a replacement for signed-out public-browser, authorized owner, unauthorized visitor, source-SHA, or runtime-asset verification.
+
+### Owner sign-in evidence gate (not yet completed)
+
+`scripts/verify-owner-login-witness.mjs` is a **read-only** follow-up for the outstanding real-owner authentication gate. It checks Cloudflare Access authentication events from the previous 24 hours for the **private Think Tank origin application only**, compares successful Access login identities against the application's current three-email Allow policy, rejects an approved non-owner, fails closed on absent or incomplete evidence, and prints counts only. It never requests a founder password, reads browser cookies, sends emails, or writes Cloudflare policies.
+
+After this branch becomes available in the default-branch GitHub workflow, the founder can sign in independently through `https://thinktank-app.jussco.company/` using an already-authorized Cloudflare identity and then manually dispatch `.github/workflows/access-boundary-audit.yml` with `verify_owner_login=true`. The manual workflow requires `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_ACCESS_READ_TOKEN` GitHub secrets; the API token also needs **Access: Audit Logs Read**. Missing credentials, missing owner login evidence, or an unexpected allowed user must fail, not silently pass. The normal push/PR source contract never reads account data.
+
+**Evidence distinction:** A successful owner login event establishes that Cloudflare Access accepted an owner identity. It does **not** establish that the protected Think Tank application completed an authenticated browser journey. That further real-browser check still needs an interactive owner session. A completed three-user Access policy simulation (one allowed, two blocked) is separate and does not substitute for this witness.
 
 ## Acquire readiness
 

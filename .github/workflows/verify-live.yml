@@ -1,8 +1,9 @@
 name: verify-live
 
-# Cloudflare publishes the protected app at thinktank-app.jussco.company. Workers Builds
-# is the intended deployer until an explicit provider cutover; the manually gated
-# deploy-worker.yml fallback must NEVER run concurrently with it.
+# Cloudflare publishes the canonical public product through the dedicated
+# think-tank-public-front-door Worker, which serves the same inspected artifact
+# via a service binding to the protected think-tank origin Worker. Workers Builds
+# remains the origin deployer; never run deploy-worker.yml concurrently with it.
 # Regardless of deployment path, this independent proof re-fetches and hashes every
 # live file listed in the runtime manifest artifactFileHashes; a deploy is not evidence.
 #
@@ -19,7 +20,7 @@ on:
       live_url:
         description: Base URL to verify
         required: true
-        default: https://thinktank-app.jussco.company
+        default: https://thinktank.jussco.company
         type: string
 
 permissions:
@@ -56,8 +57,9 @@ jobs:
           npm run check:storage-boundary
           npm run check:domain-purity
           npm run test:unit
-      # The production app is protected by Cloudflare Access. A live verifier
-      # without a scoped, authorized Access session/service token MUST fail.
+      # Default to the anonymous public front-door to verify the complete product.
+      # Operators may explicitly select the protected origin only with an
+      # authorized Access session; neither target grants deployment authority.
       - name: Verify live bytes against trusted source artifact
         shell: bash
         env:
