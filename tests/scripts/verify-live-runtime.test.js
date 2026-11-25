@@ -137,10 +137,14 @@ test('live verifier fails when the manifest is edited to match tampered content'
   }
 });
 
-test('production verifier targets only the protected app hostname', () => {
-  const source = fs.readFileSync('scripts/verify-live-runtime.mjs', 'utf8');
-  assert.match(source, /https:\/\/thinktank-app\.jussco\.company/);
-  assert.doesNotMatch(source, /https:\/\/www\.thinktank\.jussco\.company/);
+test('production verifier accepts only approved public and protected Cloudflare hostnames', async () => {
+  const { assertProductionLiveOrigin } = await import('../../scripts/live-origin-policy.mjs');
+  for (const url of ['https://thinktank.jussco.company/', 'https://thinktank-app.jussco.company/']) {
+    assert.doesNotThrow(() => assertProductionLiveOrigin(url, 'cloudflare-workers'));
+  }
+  for (const url of ['https://www.thinktank.jussco.company/', 'https://evil.example/', 'http://thinktank.jussco.company/']) {
+    assert.throws(() => assertProductionLiveOrigin(url, 'cloudflare-workers'), /approved Think Tank HTTPS hostname/);
+  }
 });
 
 test('live verifier fails on a source SHA mismatch and on an environment mismatch', async () => {
