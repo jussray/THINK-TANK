@@ -7,6 +7,12 @@ on:
       - main
       - fix/think-tank-access-boundary-20261113
   workflow_dispatch:
+    inputs:
+      verify_owner_login:
+        description: 'Fail closed unless a real permitted Think Tank Access login was logged within 24h'
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -26,6 +32,8 @@ jobs:
           set -euo pipefail
           node --check scripts/access-boundary-contract.mjs
           node --check scripts/verify-access-boundary.mjs
+          node --check scripts/owner-login-evidence.mjs
+          node --check scripts/verify-owner-login-witness.mjs
           node --test tests/scripts/access-boundary-contract.test.js tests/scripts/public-access-docs.test.js tests/scripts/live-origin-policy.test.js
       - name: Run complete Node unit and static artifact acceptance checks
         env:
@@ -58,3 +66,12 @@ jobs:
         run: |
           set -euo pipefail
           node scripts/verify-access-boundary.mjs
+      - name: Optional recent owner login evidence (read-only, no PII output)
+        if: inputs.verify_owner_login == true
+        shell: bash
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ACCESS_READ_TOKEN: ${{ secrets.CLOUDFLARE_ACCESS_READ_TOKEN }}
+        run: |
+          set -euo pipefail
+          node scripts/verify-owner-login-witness.mjs
