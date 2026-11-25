@@ -15,5 +15,8 @@ test('README matches the public-front-door and protected-origin contract', () =>
   assert.match(readme, /https:\/\/www\.thinktank\.jussco\.company\//);
   assert.match(readme, /https:\/\/thinktank-app\.jussco\.company\//);
   assert.match(readme, /\`Bypass\`[^\n]*\`Everyone\`/);
+  assert.match(readme, /Think Tank origin - owner mailboxes/);
+  assert.match(readme, /no longer references the shared .*Login.* policy/);
+  assert.doesNotMatch(readme, /currently includes a One-time PIN identity provider/);
   assert.doesNotMatch(readme, /temporary 302|workspace behind Access/i);
 });
