@@ -138,6 +138,20 @@ The entire built `_site` artifact is intentional public product surface: `landin
 
 **Historical live proof, not current verification:** On 2026-10-28, the public hostname served 29/29 hashed files matching the inspected source artifact, a browser journey through `workspace.html` completed without an Access wall, and the protected origin challenged for Access. These receipts do not establish live reachability or private-owner authorization on 2026-11-13; both require a fresh independent check.
 
+## Cloudflare Access drift verification (read-only)
+
+`scripts/access-boundary-contract.mjs` defines the observed public-front-door, private-origin, owner-selector, and service-binding configuration requirements. `npm run test:unit` runs its local regression tests. The separate `scripts/verify-access-boundary.mjs` reads Cloudflare's API and refuses to certify an unexpected policy; it **never writes** to Cloudflare, prints no owner email addresses, and cannot demonstrate successful user login.
+
+`.github/workflows/access-boundary-audit.yml` runs the source contract, full unit suite, runtime artifact checks, and storage/domain constraints automatically on pushes and PRs. Its independent production-account API inspection runs **only** on `workflow_dispatch` and requires the GitHub Secrets `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_ACCESS_READ_TOKEN`. Grant that token Access Applications & Policies **read**, plus Workers Scripts **read**, not edit or deploy. Missing secrets must fail the manual audit, not silently pass.
+
+Read-only local invocation (after providing secrets via an approved secure environment, never a committed file):
+
+```bash
+node scripts/verify-access-boundary.mjs
+```
+
+The configuration audit is not a replacement for signed-out public-browser, authorized owner, unauthorized visitor, source-SHA, or runtime-asset verification.
+
 ## Acquire readiness
 
 Current source is closer to a transferable software asset, but it must **not** be described as Acquire-ready yet.
