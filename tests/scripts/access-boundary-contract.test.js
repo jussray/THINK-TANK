@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 function fixture() {
-  const addresses = ['owner-a@example.net', 'owner-b@example.net', 'owner-c@example.net'];
+  const addresses = ['owner-a@example.net', 'owner-b@example.net', 'sekretowner@example.net'];
   return {
     publicApp: {
       name: 'think-tank-public-front-door - Public Only',
