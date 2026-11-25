@@ -23,29 +23,29 @@ test('accepts one recent real owner login without returning identity data', asyn
 });
 
 test('rejects denied-only events and missing evidence', async () => {
-  assert.throws(() => inspect([]), /no recent approved owner login/i);
-  assert.throws(() => inspect([event('one@example.net', false)]), /no recent approved owner login/i);
+  await assert.rejects(() => inspect([]), /no recent approved owner login/i);
+  await assert.rejects(() => inspect([event('one@example.net', false)]), /no recent approved owner login/i);
 });
 
 test('rejects a successful event from a non-owner (policy regression)', async () => {
-  assert.throws(() => inspect([event('outsider@example.net', true)]), /non-owner/i);
+  await assert.rejects(() => inspect([event('outsider@example.net', true)]), /non-owner/i);
 });
 
 test('ignores successful logins from different Access applications', async () => {
-  assert.throws(() => inspect([event('one@example.net', true, now, 'other-app')]), /no recent approved owner login/i);
+  await assert.rejects(() => inspect([event('one@example.net', true, now, 'other-app')]), /no recent approved owner login/i);
 });
 
 test('rejects stale or implausibly future-dated evidence', async () => {
-  assert.throws(() => inspect([event('one@example.net', true, now - 25 * 3600000)]), /no recent approved owner login/i);
-  assert.throws(() => inspect([event('one@example.net', true, now + 10 * 60000)]), /no recent approved owner login/i);
+  await assert.rejects(() => inspect([event('one@example.net', true, now - 25 * 3600000)]), /no recent approved owner login/i);
+  await assert.rejects(() => inspect([event('one@example.net', true, now + 10 * 60000)]), /no recent approved owner login/i);
 });
 
 test('rejects malformed events and malformed owner allowlists', async () => {
-  assert.throws(() => inspect([{ action: 'login', allowed: true, app_uid: APP }]), /invalid|unverifiable/i);
-  assert.throws(() => inspect([event('one@example.net')], { ownerEmails: ['*'] }), /owner allowlist/i);
+  await assert.rejects(() => inspect([{ action: 'login', allowed: true, app_uid: APP }]), /invalid|unverifiable/i);
+  await assert.rejects(() => inspect([event('one@example.net')], { ownerEmails: ['*'] }), /owner allowlist/i);
 });
 
 test('rejects anonymous bypass and non-login events', async () => {
-  assert.throws(() => inspect([{ ...event('one@example.net'), action: 'bypass' }]), /no recent approved owner login/i);
-  assert.throws(() => inspect([{ ...event('one@example.net'), action: 'login', allowed: 'true' }]), /unverifiable/i);
+  await assert.rejects(() => inspect([{ ...event('one@example.net'), action: 'bypass' }]), /no recent approved owner login/i);
+  await assert.rejects(() => inspect([{ ...event('one@example.net'), action: 'login', allowed: 'true' }]), /unverifiable/i);
 });
