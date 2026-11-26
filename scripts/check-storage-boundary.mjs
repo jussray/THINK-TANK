@@ -13,6 +13,9 @@ const allowed = new Set([
   'tests/scripts/gate-mutation.test.js',
   // Browser proof asserting on persisted state is verification, not app access.
   'tests/interview.spec.js',
+  // The AI consent browser test reads localStorage to prove that a model
+  // preview never writes Idea Record state; it is not application runtime code.
+  'tests/ai-opt-in.spec.js',
   // Display preference only: motion.js persists the 'tt-theme' day/night
   // flag (founder addendum 2026-10-25). It never reads or writes Idea
   // Record data — records still flow solely through app/stores.
