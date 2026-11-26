@@ -21,6 +21,27 @@ jobs:
     env:
       PROOF_SUBJECT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
+      - name: Restore signed Ubuntu package indexes if security build dependencies are missing
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          missing=0
+          for package in build-essential gettext libcurl4-openssl-dev; do
+            if ! apt-cache policy "$package" | grep -Eq 'Candidate: [^ (]'; then
+              missing=1
+            fi
+          done
+          if [ "$missing" -eq 0 ]; then exit 0; fi
+          . /etc/os-release
+          test "$VERSION_CODENAME" = noble
+          test "$(dpkg --print-architecture)" = amd64
+          test -r /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          printf '%s\n' 'Types: deb' 'URIs: https://archive.ubuntu.com/ubuntu/' 'Suites: noble noble-updates' 'Components: main universe' 'Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg' '' 'Types: deb' 'URIs: https://security.ubuntu.com/ubuntu/' 'Suites: noble-security' 'Components: main universe' 'Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg' | sudo tee /etc/apt/sources.list.d/companion-proof-ubuntu.sources >/dev/null
+          sudo apt-get update
+          for package in build-essential gettext libcurl4-openssl-dev; do
+            apt-cache policy "$package" | grep -Eq 'Candidate: [^ (]'
+          done
       - name: Install upstream Git security release before checkout
         uses: jussray/founder-control-room/.github/actions/refresh-git-security@0a739664e85443fb79cfe58202e2eea6ce01d7ff
       - uses: actions/checkout@v4
