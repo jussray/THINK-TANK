@@ -22,6 +22,7 @@ const requiredFiles = [
   'assets/cloud-vault.js',
   'assets/cinematic-app.css',
   'assets/amethyst-companion.webp',
+  'assets/amethyst-states.webp',
   'assets/hero-scene.jpg',
   'assets/band.jpg',
   'assets/c1.jpg',
