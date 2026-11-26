@@ -144,6 +144,17 @@ export async function api(request, env, pathname) {
     const session = await authenticate(request, env);
     if (!session) return result({ error: 'Sign in required', ...(pathname === '/api/auth/me' ? {service: 'think-tank-auth-v1'} : {}) }, 401, clearCookies());
     if (pathname === '/api/auth/me' && method === 'GET') return result({ service: 'think-tank-auth-v1', user: safeMember(session.user) }, 200, session.set);
+    if (pathname === '/api/ai/status' && method === 'GET') {
+      return result({
+        enabled: env.THINK_TANK_AI_ENABLED === 'true' &&
+          typeof env.ANTHROPIC_API_KEY === 'string' && Boolean(env.ANTHROPIC_API_KEY) &&
+          typeof env.THINK_TANK_AI_MODEL === 'string' && Boolean(env.THINK_TANK_AI_MODEL.trim()) &&
+          typeof env.AI_RATE_LIMIT?.limit === 'function',
+        requiresExplicitConsent: true,
+        provider: 'Anthropic',
+        source: 'selected-private-idea'
+      }, 200, session.set);
+    }
     if (pathname === '/api/ai/interview' || pathname === '/api/ai/synthesize') {
       if (method !== 'POST') return result({ error: 'Method not allowed' },405);
       return handleAiAction({ pathname, body, session, env, upstream, reply:result });
