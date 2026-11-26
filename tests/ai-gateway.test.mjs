@@ -21,6 +21,7 @@ function env(extra={}) {
     THINK_TANK_AI_ENABLED:'true',
     ANTHROPIC_API_KEY:'test-placeholder-only',
     THINK_TANK_AI_MODEL:'test-model',
+    THINK_TANK_AI_OWNER_USER_ID:OWNER,
     AI_RATE_LIMIT:{limit:async()=>({success:true})},
     APP:{fetch:async()=>new Response('public asset')},
     ...extra
@@ -79,8 +80,15 @@ test('no AI without authenticated founder and same-origin consent',async()=>fake
 test('AI requires an owner-scoped server-side stored idea, never client content',async()=>fakeUpstream(async calls=>{
   const foreign=await frontdoor.fetch(request('/api/ai/interview',input,{user:'stranger'}),env());
   const invalid=await frontdoor.fetch(request('/api/ai/interview',{...input,ideaId:'not-valid'}),env());
-  assert.equal(foreign.status,404);
+  assert.equal(foreign.status,403);
   assert.equal(invalid.status,400);
+  assert.equal(providerCalls(calls).length,0);
+}));
+test('AI is owner-only until paid entitlements have been verified',async()=>fakeUpstream(async calls=>{
+  const disabled=await frontdoor.fetch(request('/api/ai/interview',input),env({THINK_TANK_AI_OWNER_USER_ID:undefined}));
+  const other=await frontdoor.fetch(request('/api/ai/interview',input,{user:'stranger'}),env());
+  assert.equal(disabled.status,503);
+  assert.equal(other.status,403);
   assert.equal(providerCalls(calls).length,0);
 }));
 test('missing or exhausted rate-limit binding blocks external AI cost',async()=>fakeUpstream(async calls=>{
