@@ -24,6 +24,66 @@ experience rather than replace it.
 - The provider is not allowed to change or publish ideas or infer scores.
   Founder approval and versioned writes remain in the existing app.
 
+## Founder-only authenticated AI pilot (2026-11-25)
+
+The current **public Worker source** now has a staged, disabled-by-default
+server API built on its existing Supabase Auth cookies and private idea vault:
+
+- `GET /api/ai/status` (authenticated) reports whether this account can
+  use the provider without exposing secret configuration.
+- `POST /api/ai/interview` requires `{"ideaId":"<uuid>","externalAIConsent":true}`.
+  The selected private-vault record supplies all model context; the client
+  cannot supply a different idea or transcript. Returns one unverified
+  follow-up question, **not a stored session**.
+- `POST /api/ai/synthesize` uses the same consent and ownership controls,
+  returning nine draft startup modules marked `pending-founder-review`.
+  No version or module is ever overwritten by this endpoint.
+
+Before **any** model call the Worker verifies the signed-in identity through
+Supabase Auth, checks same-origin mutation controls, loads an owner-filtered
+record under that user's bearer token and requires a configured founder user
+ID and Cloudflare `AI_RATE_LIMIT` binding.
+
+The existing private cloud vault UI renders AI actions **only** after
+`/api/ai/status` reports enabled for that signed-in founder. Each request
+presents a separate explicit consent dialog explaining disclosure to
+Anthropic. Dismissing the dialog sends nothing. Neither action auto-saves
+drafts or transmits other local browser ideas.
+
+### Configuration — do not activate without founder approval
+
+Provide these in the deployed public front-door Worker (not in source files):
+
+- `THINK_TANK_AI_OWNER_USER_ID` — actual Supabase Auth UUID from the
+  founder's verified user account; do not use an invented/test UUID.
+- `THINK_TANK_AI_MODEL` — supported Anthropic model identifier, verified
+  from provider configuration.
+- `ANTHROPIC_API_KEY` — secret, server-side only.
+- `THINK_TANK_AI_ENABLED` — set to `true` **only** after owner approval,
+  independent cost authorization and real credentials are verified.
+
+`wrangler.frontdoor.jsonc` declares an `AI_RATE_LIMIT` binding (5 per
+60s **per Cloudflare location**, approximate). It is a misuse safeguard, **not
+a strict global budget cap**; a centralized spend limit and provider usage
+budget are still required before activating paid-model traffic at scale.
+
+Unconfigured AI remains disabled and the existing local deterministic
+interview remains usable. CI tests mock the provider and Supabase Auth;
+they are not proof of actual production token delivery or live RLS.
+Paid/public user entitlements are **not implemented**, so model usage stays
+restricted to a single explicitly configured founder account.
+
+### Additional gates
+
+1. Verify real login, owner identity, Supabase RLS, and Cloudflare bindings
+   without handling or publishing private data in CI logs.
+2. Add durable, exportable AI session history and a per-idea iterative
+   conversation. This first pilot returns a single question per request.
+3. Add founder-approved application of draft modules to the versioned
+   workspace, with conflict checks and rollback.
+4. Require exact-head unit, browser, visual-diff, private-API and production
+   tests before deployment. Cloudflare is the only deploy authority.
+
 ## Developer tests
 
 Run `node --test revival/ai/*.test.mjs` at the repository root.
