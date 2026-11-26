@@ -8,12 +8,16 @@ const ENDPOINT = 'https://api.anthropic.com/v1/messages';
 export function createAnthropicProvider({
   apiKey = process.env.ANTHROPIC_API_KEY,
   model = process.env.THINK_TANK_INTERVIEW_MODEL || 'claude-sonnet-4-20250514',
-  fetcher = fetch
+  fetcher = fetch,
+  maxTokens = 220
 } = {}) {
   if (typeof apiKey !== 'string' || !apiKey.trim()) {
     throw new Error('ANTHROPIC_API_KEY is required for explicitly enabled provider calls');
   }
   if (typeof fetcher !== 'function') throw new TypeError('fetcher is required');
+  if (!Number.isInteger(maxTokens) || maxTokens < 1 || maxTokens > 4096) {
+    throw new RangeError('maxTokens must be between 1 and 4096');
+  }
   return async ({ system, messages }) => {
     const response = await fetcher(ENDPOINT, {
       method: 'POST',
@@ -24,7 +28,7 @@ export function createAnthropicProvider({
       },
       body: JSON.stringify({
         model,
-        max_tokens: 220,
+        max_tokens: maxTokens,
         temperature: 0.4,
         system,
         messages

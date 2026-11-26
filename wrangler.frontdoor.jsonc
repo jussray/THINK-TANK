@@ -10,5 +10,15 @@
     }
   ],
   "preview_urls": false,
-  "workers_dev": false
+  "workers_dev": false,
+  "ratelimits": [
+    {
+      "name": "AI_RATE_LIMIT",
+      "namespace_id": "20261125",
+      "simple": {
+        "limit": 5,
+        "period": 60
+      }
+    }
+  ]
 }
