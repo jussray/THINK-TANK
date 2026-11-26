@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - 'build/**'
+      - 'feat/thinking-companion-amethyst'
   pull_request:
 
 concurrency:
