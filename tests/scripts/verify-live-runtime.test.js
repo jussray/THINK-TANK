@@ -30,7 +30,9 @@ function buildArtifact() {
   return dir;
 }
 
-async function serve(rootDir) {
+const simulatedAnalyticsBeacon = '<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-' + Buffer.alloc(64, 1).toString('base64') + '" data-cf-beacon=\'{"version":"2024.11.0","token":"' + 'a'.repeat(32) + '","r":1,"spa":2}\' crossorigin="anonymous"></script>';
+
+async function serve(rootDir, { injectAnalytics = false } = {}) {
   const server = http.createServer((req, res) => {
     const rel = decodeURIComponent(req.url.split('?')[0]).replace(/^\/+/, '') || 'index.html';
     res.setHeader('Connection', 'close');
@@ -39,7 +41,13 @@ async function serve(rootDir) {
       res.writeHead(404).end('not found');
       return;
     }
-    res.writeHead(200).end(fs.readFileSync(file));
+    let bytes = fs.readFileSync(file);
+    if (injectAnalytics && rel === 'index.html') {
+      const original = bytes.toString('utf8');
+      assert.ok(original.includes('\n</body>'), 'fixture must have a closing body tag');
+      bytes = Buffer.from(original.replace('\n</body>', '\n' + simulatedAnalyticsBeacon + '\n</body>'));
+    }
+    res.writeHead(200).end(bytes);
   });
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
   // fetch keeps connections alive, and server.close() waits for them, which
@@ -77,6 +85,19 @@ test('live verifier passes against an untampered deployment', async () => {
     assert.equal(result.status, 0, `expected pass, got: ${result.stderr}`);
     assert.match(result.stdout, /Live runtime content VERIFIED against trusted GitHub source/);
     assert.match(result.stdout, /files re-hashed/);
+  } finally {
+    stop();
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('live verifier accepts a strictly attributed Cloudflare Analytics injection', async () => {
+  const dir = buildArtifact();
+  const { stop, base } = await serve(dir, { injectAnalytics: true });
+  try {
+    const result = await verify(dir, base);
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /1 HTML files normalized for known Cloudflare Web Analytics insertion/);
   } finally {
     stop();
     fs.rmSync(dir, { recursive: true, force: true });
@@ -137,10 +158,14 @@ test('live verifier fails when the manifest is edited to match tampered content'
   }
 });
 
-test('production verifier targets only the protected app hostname', () => {
-  const source = fs.readFileSync('scripts/verify-live-runtime.mjs', 'utf8');
-  assert.match(source, /https:\/\/thinktank-app\.jussco\.company/);
-  assert.doesNotMatch(source, /https:\/\/www\.thinktank\.jussco\.company/);
+test('production verifier accepts only approved public and protected Cloudflare hostnames', async () => {
+  const { assertProductionLiveOrigin } = await import('../../scripts/live-origin-policy.mjs');
+  for (const url of ['https://thinktank.jussco.company/', 'https://thinktank-app.jussco.company/']) {
+    assert.doesNotThrow(() => assertProductionLiveOrigin(url, 'cloudflare-workers'));
+  }
+  for (const url of ['https://www.thinktank.jussco.company/', 'https://evil.example/', 'http://thinktank.jussco.company/']) {
+    assert.throws(() => assertProductionLiveOrigin(url, 'cloudflare-workers'), /approved Think Tank HTTPS hostname/);
+  }
 });
 
 test('live verifier fails on a source SHA mismatch and on an environment mismatch', async () => {

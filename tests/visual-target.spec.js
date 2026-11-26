@@ -14,8 +14,20 @@ test('approved cinematic journey has responsive desktop and mobile browser recei
     await expect(page.getByTestId('idea-input')).toBeVisible();
     await expect(page.getByRole('heading', {name:'Four perspectives. One stronger idea.'})).toBeVisible();
     await expect(page.getByTestId('export-record')).toBeVisible();
-    const heroImage = await page.locator('.hero-art').evaluate(el => getComputedStyle(el).backgroundImage);
-    expect(heroImage).toContain('think-tank-hero-scene.webp');
+    // One anchored atmospheric world belongs to body::before, not an isolated hero crop.
+    const world = await page.locator('body').evaluate(el => {
+      const style = getComputedStyle(el, '::before');
+      return {
+        backgroundImage: style.backgroundImage,
+        position: style.position,
+        pointerEvents: style.pointerEvents
+      };
+    });
+    expect(world.backgroundImage).toContain('think-tank-hero-scene.webp');
+    expect(world.position).toBe('fixed');
+    expect(world.pointerEvents).toBe('none');
+    const image = await page.request.get('/assets/think-tank-hero-scene.webp');
+    expect(image.ok()).toBe(true);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     expect(overflow, viewport.name + ' horizontal overflow').toBe(false);
     await page.screenshot({path:path.join(output, 'think-tank-'+viewport.name+'.png'),fullPage:true,animations:'disabled'});
