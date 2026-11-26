@@ -121,3 +121,26 @@ test('authorized synthesis returns only reviewable draft modules; no automatic w
   assert.ok(JSON.parse(providerCalls(calls)[0].body).max_tokens>=3000);
   assert.equal(calls.filter(x=>x.path==='/rest/v1/think_tank_idea_records'&&x.body!==undefined).length,0);
 }));
+
+test('AI status is authenticated and hides unavailable founder-only functionality',async()=>fakeUpstream(async calls=>{
+  const ownerRequest=new Request(SITE+'/api/ai/status',{headers:{Cookie:'__Host-tt_access=owner'}});
+  const strangerRequest=new Request(SITE+'/api/ai/status',{headers:{Cookie:'__Host-tt_access=stranger'}});
+  const missingRequest=new Request(SITE+'/api/ai/status');
+  const owner=await frontdoor.fetch(ownerRequest,env());
+  const stranger=await frontdoor.fetch(strangerRequest,env());
+  const missing=await frontdoor.fetch(missingRequest,env());
+  assert.equal(owner.status,200);
+  assert.equal((await owner.json()).enabled,true);
+  assert.equal((await stranger.json()).enabled,false);
+  assert.equal(missing.status,401);
+  assert.equal(providerCalls(calls).length,0);
+});
+
+test('Cloudflare AI limiter binding is explicit and bounded',async()=>{
+  const fs=await import('node:fs');
+  const json=JSON.parse(fs.readFileSync('wrangler.frontdoor.jsonc','utf8'));
+  const binding=json.ratelimits?.find(x=>x.name==='AI_RATE_LIMIT');
+  assert.ok(binding);
+  assert.equal(binding.simple.period,60);
+  assert.ok(binding.simple.limit<=5);
+});
