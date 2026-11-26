@@ -147,6 +147,8 @@ export async function api(request, env, pathname) {
     if (pathname === '/api/ai/status' && method === 'GET') {
       return result({
         enabled: env.THINK_TANK_AI_ENABLED === 'true' &&
+          typeof env.THINK_TANK_AI_OWNER_USER_ID === 'string' &&
+          session.user.id === env.THINK_TANK_AI_OWNER_USER_ID &&
           typeof env.ANTHROPIC_API_KEY === 'string' && Boolean(env.ANTHROPIC_API_KEY) &&
           typeof env.THINK_TANK_AI_MODEL === 'string' && Boolean(env.THINK_TANK_AI_MODEL.trim()) &&
           typeof env.AI_RATE_LIMIT?.limit === 'function',
