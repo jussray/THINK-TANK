@@ -36,6 +36,15 @@ export async function handleAiAction({pathname,body,session,env,upstream,reply})
     return reply({error:'Unsupported AI input'},400);
   }
   if (env.THINK_TANK_AI_ENABLED!=='true') return reply({error:'External AI is disabled'},503);
+  // Owner-only pilot: public user accounts need independently verified paid
+  // entitlements before they may consume external model tokens.
+  if (typeof env.THINK_TANK_AI_OWNER_USER_ID!=='string' ||
+      !UUID.test(env.THINK_TANK_AI_OWNER_USER_ID)) {
+    return reply({error:'AI owner access is not configured'},503);
+  }
+  if (session.user.id!==env.THINK_TANK_AI_OWNER_USER_ID) {
+    return reply({error:'AI is not enabled for this account'},403);
+  }
   if (!env.AI_RATE_LIMIT || typeof env.AI_RATE_LIMIT.limit!=='function' ||
       typeof env.ANTHROPIC_API_KEY!=='string' || !env.ANTHROPIC_API_KEY ||
       typeof env.THINK_TANK_AI_MODEL!=='string' || !env.THINK_TANK_AI_MODEL.trim()) {
