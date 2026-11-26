@@ -134,7 +134,7 @@ test('AI status is authenticated and hides unavailable founder-only functionalit
   assert.equal((await stranger.json()).enabled,false);
   assert.equal(missing.status,401);
   assert.equal(providerCalls(calls).length,0);
-});
+}));
 
 test('Cloudflare AI limiter binding is explicit and bounded',async()=>{
   const fs=await import('node:fs');
