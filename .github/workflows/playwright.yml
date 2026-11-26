@@ -39,6 +39,8 @@ jobs:
       - run: npm run check:storage-boundary
       - run: npm run check:domain-purity
       - run: npm run test:unit
+      - name: Bundle public Worker with Wrangler (dry-run only)
+        run: npx wrangler deploy --dry-run --config wrangler.frontdoor.jsonc --outdir /tmp/think-tank-worker-bundle
       - run: npx playwright install --with-deps chromium
       - name: Source runtime Playwright
         run: npm run test:e2e
